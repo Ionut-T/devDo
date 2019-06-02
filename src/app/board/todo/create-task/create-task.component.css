@@ -1,0 +1,11 @@
+.create-task {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.form-create {
+  display: flex;
+  flex-direction: column;
+  width: 250px;
+}

@@ -1,0 +1,9 @@
+.board {
+  display: flex;
+  width: 90%;
+  height: 80%;
+  margin: 40px auto 0;
+  flex-wrap: wrap;
+  justify-content: space-around;
+  text-align: center;
+}
