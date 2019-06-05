@@ -1,26 +1,61 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
 import { Task } from '../task.model';
-import { MatDialog } from '@angular/material';
-import { CreateTaskComponent } from './create-task/create-task.component';
+import { BoardService } from '../board.service';
+import { Subscription } from 'rxjs';
 
+/**
+ * Todo Component
+ */
 @Component({
   selector: 'app-todo',
   templateUrl: './todo.component.html',
   styleUrls: ['./todo.component.css']
 })
-export class TodoComponent implements OnInit {
-  task: Task;
+export class TodoComponent implements OnInit, OnDestroy {
   tasks: Task[];
+  isOpen = false;
+  private todoSubscription: Subscription;
 
-  constructor(public dialog: MatDialog) {}
+  constructor(private boardService: BoardService) {}
 
-  ngOnInit() {}
-
-  openDialog(title: string, content: string) {
-    const task: Task = { title, content };
-    const dialogRef = this.dialog.open(CreateTaskComponent, {
-      width: '300px',
-      data: { title: task.title, content: task.content }
+  /**
+   * Get todo tasks
+   */
+  ngOnInit() {
+    this.boardService.getTodoTasks();
+    this.todoSubscription = this.boardService.getTodoUpdateListener().subscribe((tasks: Task[]) => {
+      this.tasks = tasks;
     });
   }
+
+  /**
+   * Open Create Component
+   */
+  openCreate() {
+    this.isOpen = true;
+  }
+
+  /**
+   * Close Create Component
+   */
+  closeCreate() {
+    this.isOpen = false;
+  }
+
+  /**
+   * Delete todo task
+   */
+  onDelete(taskId: string) {
+    this.boardService.deleteTodoTask(taskId);
+  }
+
+  /**
+   * Unsubscribe from subscriptions
+   */
+  ngOnDestroy() {
+    if (this.todoSubscription) {
+      this.todoSubscription.unsubscribe();
+    }
+  }
+
 }

@@ -9,7 +9,6 @@ import {
   MatListModule,
   MatDividerModule,
   MatExpansionModule,
-  MatDialogModule,
   MatInputModule
 } from '@angular/material';
 
@@ -24,7 +23,6 @@ import {
     MatListModule,
     MatDividerModule,
     MatExpansionModule,
-    MatDialogModule,
     MatInputModule
   ]
 })

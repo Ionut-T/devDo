@@ -1,6 +1,8 @@
 import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import { FormsModule } from '@angular/forms';
+import { HttpClientModule } from '@angular/common/http';
 
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
@@ -11,7 +13,6 @@ import { TodoComponent } from './board/todo/todo.component';
 import { DoingComponent } from './board/doing/doing.component';
 import { DoneComponent } from './board/done/done.component';
 import { CreateTaskComponent } from './board/todo/create-task/create-task.component';
-import { FormsModule } from '@angular/forms';
 
 @NgModule({
   declarations: [
@@ -26,12 +27,12 @@ import { FormsModule } from '@angular/forms';
     BrowserModule,
     BrowserAnimationsModule,
     FormsModule,
+    HttpClientModule,
     AppRoutingModule,
     MaterialModule,
     CoreModule
   ],
   providers: [],
-  bootstrap: [AppComponent],
-  entryComponents: [CreateTaskComponent]
+  bootstrap: [AppComponent]
 })
 export class AppModule {}

@@ -1,7 +1,8 @@
+<app-create-task *ngIf="isOpen" (close)="closeCreate()"></app-create-task>
 <div class="list">
   <div class="todo">
     <h1>Todo</h1>
-    <button mat-icon-button color="accent" (click)="openDialog()">
+    <button mat-icon-button color="accent" (click)="openCreate()">
       <mat-icon>add</mat-icon>
     </button>
   </div>
@@ -20,7 +21,7 @@
           <button mat-button color="primary">
             <mat-icon>edit</mat-icon>
           </button>
-          <button mat-button color="warn">
+          <button mat-button color="warn" (click)="onDelete(task.id)">
             <mat-icon>delete</mat-icon>
           </button>
         </mat-action-row>
