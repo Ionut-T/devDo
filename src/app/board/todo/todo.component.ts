@@ -4,7 +4,7 @@ import { BoardService } from '../board.service';
 import { Subscription } from 'rxjs';
 
 /**
- * Todo Component
+ * Todo List Component
  */
 @Component({
   selector: 'app-todo',
@@ -23,9 +23,11 @@ export class TodoComponent implements OnInit, OnDestroy {
    */
   ngOnInit() {
     this.boardService.getTodoTasks();
-    this.todoSubscription = this.boardService.getTodoUpdateListener().subscribe((tasks: Task[]) => {
-      this.tasks = tasks;
-    });
+    this.todoSubscription = this.boardService
+      .getTodoUpdateListener()
+      .subscribe((tasks: Task[]) => {
+        this.tasks = tasks;
+      });
   }
 
   /**
@@ -45,8 +47,13 @@ export class TodoComponent implements OnInit, OnDestroy {
   /**
    * Delete todo task
    */
-  onDelete(taskId: string) {
-    this.boardService.deleteTodoTask(taskId);
+  onDelete(id: string) {
+    this.boardService.deleteTodoTask(id);
+  }
+
+  onPushToDoing(id: string, title: string, content: string) {
+    this.boardService.addDoingTask(id, title, content);
+    this.onDelete(id);
   }
 
   /**
@@ -57,5 +64,4 @@ export class TodoComponent implements OnInit, OnDestroy {
       this.todoSubscription.unsubscribe();
     }
   }
-
 }

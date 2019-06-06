@@ -1,12 +1,47 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
+import { Task } from '../task.model';
+import { BoardService } from '../board.service';
+import { Subscription } from 'rxjs';
 
+/**
+ * Doing List Component
+ */
 @Component({
   selector: 'app-doing',
   templateUrl: './doing.component.html',
   styleUrls: ['./doing.component.css']
 })
-export class DoingComponent implements OnInit {
-  constructor() {}
+export class DoingComponent implements OnInit, OnDestroy {
+  doingTasks: Task[];
+  private doingSubscription: Subscription;
 
-  ngOnInit() {}
+  constructor(private boardService: BoardService) {}
+
+  /**
+   * Get doing tasks
+   */
+  ngOnInit() {
+    this.boardService.getDoingTasks();
+    this.doingSubscription = this.boardService
+      .getDoingUpdateListener()
+      .subscribe(tasks => {
+        this.doingTasks = tasks;
+      });
+  }
+
+  /**
+   * Delete doing task
+   */
+  onDelete(id: string) {
+    this.boardService.deleteDoingTask(id);
+  }
+
+  /**
+   * Unsubscribe from subscriptions
+   */
+  ngOnDestroy() {
+    if (this.doingSubscription) {
+      this.doingSubscription.unsubscribe();
+    }
+  }
 }
