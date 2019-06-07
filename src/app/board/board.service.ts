@@ -10,17 +10,32 @@ import { map } from 'rxjs/operators';
 export class BoardService {
   private tasks: Task[] = [];
   private doingTasks: Task[] = [];
+  private doneTasks: Task[] = [];
   private todoUpdate = new BehaviorSubject<Task[]>(this.tasks);
   private doingUpdate = new BehaviorSubject<Task[]>(this.doingTasks);
+  private doneUpdate = new BehaviorSubject<Task[]>(this.doneTasks);
 
   constructor(private http: HttpClient) {}
 
+  /**
+   * Listen to changes in todo list
+   */
   getTodoUpdateListener() {
     return this.todoUpdate.asObservable();
   }
 
+  /**
+   * Listen to changes in doing list
+   */
   getDoingUpdateListener() {
     return this.doingUpdate.asObservable();
+  }
+
+  /**
+   * Listen to changes in done list
+   */
+  getDoneUpdateListener() {
+    return this.doneUpdate.asObservable();
   }
 
   /**
@@ -125,6 +140,59 @@ export class BoardService {
       .subscribe(() => {
         this.doingTasks = this.doingTasks.filter(task => task.id !== taskId);
         this.doingUpdate.next([...this.doingTasks]);
+      });
+  }
+
+  /**
+   * Get all finished tasks from server
+   */
+  getDoneTasks() {
+    this.http
+      .get<{ message: string; tasks: any }>('http://localhost:3000/api/done')
+      .pipe(
+        map(taskData => {
+          return taskData.tasks.map(task => {
+            return {
+              id: task._id,
+              title: task.title,
+              content: task.content
+            };
+          });
+        })
+      )
+      .subscribe(data => {
+        this.doneTasks = data;
+        this.doneUpdate.next([...this.doneTasks]);
+      });
+  }
+
+  /**
+   * Add doing task
+   */
+  addDoneTask(id: string, title: string, content: string) {
+    const task: Task = { id, title, content };
+    this.http
+      .post<{
+        message: string;
+        task: { id: string; title: string; content: string };
+      }>('http://localhost:3000/api/done', task)
+      .subscribe(response => {
+        task.id = response.task.id;
+        this.doneTasks.push(task);
+        this.doneUpdate.next([...this.doneTasks]);
+        console.log(task.id);
+      });
+  }
+
+  /**
+   * Delete doing task
+   */
+  deleteDoneTask(taskId: string) {
+    this.http
+      .delete(`http://localhost:3000/api/done/${taskId}`)
+      .subscribe(() => {
+        this.doneTasks = this.doneTasks.filter(task => task.id !== taskId);
+        this.doneUpdate.next([...this.doneTasks]);
       });
   }
 }

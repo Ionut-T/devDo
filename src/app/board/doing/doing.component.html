@@ -1,5 +1,5 @@
 <div class="list">
-  <h1>Todo</h1>
+  <h1>Doing</h1>
   <div class="content">
     <mat-accordion multi="true">
       <mat-expansion-panel *ngFor="let task of doingTasks">
@@ -9,7 +9,11 @@
 
         {{ task.content }}
         <mat-action-row>
-          <button mat-button color="accent">
+          <button
+            mat-button
+            color="accent"
+            (click)="onPushToDone(task.id, task.title, task.content)"
+          >
             <mat-icon>done_all</mat-icon>
           </button>
           <button mat-button color="warn" (click)="onDelete(task.id)">

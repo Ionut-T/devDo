@@ -1,6 +1,19 @@
 <div class="list">
   <h1>Done</h1>
   <div class="content">
-    Done content
+    <mat-accordion multi="true">
+      <mat-expansion-panel *ngFor="let task of doneTasks">
+        <mat-expansion-panel-header>
+          {{ task.title }}
+        </mat-expansion-panel-header>
+
+        {{ task.content }}
+        <mat-action-row>
+          <button mat-button color="warn" (click)="onDelete(task.id)">
+            <mat-icon>delete</mat-icon>
+          </button>
+        </mat-action-row>
+      </mat-expansion-panel>
+    </mat-accordion>
   </div>
 </div>
