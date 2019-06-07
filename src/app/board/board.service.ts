@@ -41,7 +41,7 @@ export class BoardService {
   /**
    * Create a new task
    */
-  createTask(title: string, content: string) {
+  addTodoTask(title: string, content: string) {
     const task: Task = { id: null, title, content };
     this.http
       .post<{

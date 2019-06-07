@@ -38,6 +38,14 @@ export class DoingComponent implements OnInit, OnDestroy {
   }
 
   /**
+   * Add task back to todo list
+   */
+  onUndo(id: string, title: string, content: string) {
+    this.boardService.addTodoTask(title, content);
+    this.onDelete(id);
+  }
+
+  /**
    * Delete doing task
    */
   onDelete(id: string) {

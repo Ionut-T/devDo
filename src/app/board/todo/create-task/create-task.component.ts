@@ -25,7 +25,7 @@ export class CreateTaskComponent implements OnInit {
       return;
     }
 
-    this.boardService.createTask(form.value.title, form.value.content);
+    this.boardService.addTodoTask(form.value.title, form.value.content);
     form.resetForm();
     this.onClose();
   }
