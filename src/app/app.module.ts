@@ -13,6 +13,7 @@ import { TodoComponent } from './board/todo/todo.component';
 import { DoingComponent } from './board/doing/doing.component';
 import { DoneComponent } from './board/done/done.component';
 import { CreateTaskComponent } from './board/todo/create-task/create-task.component';
+import { EditTaskComponent } from './board/edit-task/edit-task.component';
 
 @NgModule({
   declarations: [
@@ -21,7 +22,8 @@ import { CreateTaskComponent } from './board/todo/create-task/create-task.compon
     TodoComponent,
     DoingComponent,
     DoneComponent,
-    CreateTaskComponent
+    CreateTaskComponent,
+    EditTaskComponent
   ],
   imports: [
     BrowserModule,

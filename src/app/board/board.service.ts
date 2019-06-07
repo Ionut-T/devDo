@@ -52,8 +52,16 @@ export class BoardService {
         task.id = response.task.id;
         this.tasks.push(task);
         this.todoUpdate.next([...this.tasks]);
-        console.log(task.id);
       });
+  }
+
+  /**
+   * Get a single todo task from server
+   */
+  getTodoTask(id: string) {
+    return this.http.get<{ _id: string; title: string; content: string }>(
+      `http://localhost:3000/api/todo/${id}`
+    );
   }
 
   /**
@@ -73,8 +81,27 @@ export class BoardService {
           });
         })
       )
-      .subscribe(data => {
-        this.tasks = data;
+      .subscribe(response => {
+        this.tasks = response;
+        this.todoUpdate.next([...this.tasks]);
+      });
+  }
+
+  /**
+   * Update todo task
+   */
+  updateTodoTask(id: string, title: string, content: string) {
+    const task: Task = { id, title, content };
+    this.http
+      .put<{ message: string; task: Task }>(
+        `http://localhost:3000/api/todo/${id}`,
+        task
+      )
+      .subscribe(response => {
+        const updatedTasks = [...this.tasks];
+        const oldTaskIndex = updatedTasks.findIndex(t => t.id === task.id);
+        updatedTasks[oldTaskIndex] = task;
+        this.tasks = updatedTasks;
         this.todoUpdate.next([...this.tasks]);
       });
   }
@@ -82,34 +109,12 @@ export class BoardService {
   /**
    * Delete todo task from server
    */
-  deleteTodoTask(taskId: string) {
+  deleteTodoTask(id: string) {
     this.http
-      .delete(`http://localhost:3000/api/todo/${taskId}`)
+      .delete(`http://localhost:3000/api/todo/${id}`)
       .subscribe(() => {
-        this.tasks = this.tasks.filter(task => task.id !== taskId);
+        this.tasks = this.tasks.filter(task => task.id !== id);
         this.todoUpdate.next([...this.tasks]);
-      });
-  }
-  /**
-   * Get all tasks in progress from server
-   */
-  getDoingTasks() {
-    this.http
-      .get<{ message: string; tasks: any }>('http://localhost:3000/api/doing')
-      .pipe(
-        map(taskData => {
-          return taskData.tasks.map(task => {
-            return {
-              id: task._id,
-              title: task.title,
-              content: task.content
-            };
-          });
-        })
-      )
-      .subscribe(data => {
-        this.doingTasks = data;
-        this.doingUpdate.next([...this.doingTasks]);
       });
   }
 
@@ -127,20 +132,96 @@ export class BoardService {
         task.id = response.task.id;
         this.doingTasks.push(task);
         this.doingUpdate.next([...this.doingTasks]);
-        console.log(task.id);
+      });
+  }
+
+  /**
+   * Get a single doing task from server
+   */
+  getDoingTask(id: string) {
+    return this.http.get<{ _id: string; title: string; content: string }>(
+      `http://localhost:3000/api/doing/${id}`
+    );
+  }
+
+  /**
+   * Get all tasks in progress from server
+   */
+  getDoingTasks() {
+    this.http
+      .get<{ message: string; tasks: any }>('http://localhost:3000/api/doing')
+      .pipe(
+        map(taskData => {
+          return taskData.tasks.map(task => {
+            return {
+              id: task._id,
+              title: task.title,
+              content: task.content
+            };
+          });
+        })
+      )
+      .subscribe(response => {
+        this.doingTasks = response;
+        this.doingUpdate.next([...this.doingTasks]);
+      });
+  }
+
+  /**
+   * Update doing task
+   */
+  updateDoingTask(id: string, title: string, content: string) {
+    const task: Task = { id, title, content };
+    this.http
+      .put<{ message: string; task: Task }>(
+        `http://localhost:3000/api/doing/${id}`,
+        task
+      )
+      .subscribe(response => {
+        const updatedTasks = [...this.doingTasks];
+        const oldTaskIndex = updatedTasks.findIndex(t => t.id === task.id);
+        updatedTasks[oldTaskIndex] = task;
+        this.doingTasks = updatedTasks;
+        this.doingUpdate.next([...this.doingTasks]);
       });
   }
 
   /**
    * Delete doing task
    */
-  deleteDoingTask(taskId: string) {
+  deleteDoingTask(id: string) {
     this.http
-      .delete(`http://localhost:3000/api/doing/${taskId}`)
+      .delete(`http://localhost:3000/api/doing/${id}`)
       .subscribe(() => {
-        this.doingTasks = this.doingTasks.filter(task => task.id !== taskId);
+        this.doingTasks = this.doingTasks.filter(task => task.id !== id);
         this.doingUpdate.next([...this.doingTasks]);
       });
+  }
+
+  /**
+   * Add done task
+   */
+  addDoneTask(id: string, title: string, content: string) {
+    const task: Task = { id, title, content };
+    this.http
+      .post<{
+        message: string;
+        task: { id: string; title: string; content: string };
+      }>('http://localhost:3000/api/done', task)
+      .subscribe(response => {
+        task.id = response.task.id;
+        this.doneTasks.push(task);
+        this.doneUpdate.next([...this.doneTasks]);
+      });
+  }
+
+  /**
+   * Get a single done task from server
+   */
+  getDoneTask(id: string) {
+    return this.http.get<{ _id: string; title: string; content: string }>(
+      `http://localhost:3000/api/done/${id}`
+    );
   }
 
   /**
@@ -167,32 +248,31 @@ export class BoardService {
   }
 
   /**
-   * Add doing task
+   * Update done task
    */
-  addDoneTask(id: string, title: string, content: string) {
+  updateDoneTask(id: string, title: string, content: string) {
     const task: Task = { id, title, content };
     this.http
-      .post<{
-        message: string;
-        task: { id: string; title: string; content: string };
-      }>('http://localhost:3000/api/done', task)
+      .put<{ message: string; task: Task }>(
+        `http://localhost:3000/api/done/${id}`,
+        task
+      )
       .subscribe(response => {
-        task.id = response.task.id;
-        this.doneTasks.push(task);
+        const updatedTasks = [...this.doneTasks];
+        const oldTaskIndex = updatedTasks.findIndex(t => t.id === task.id);
+        updatedTasks[oldTaskIndex] = task;
+        this.doneTasks = updatedTasks;
         this.doneUpdate.next([...this.doneTasks]);
-        console.log(task.id);
       });
   }
 
   /**
    * Delete doing task
    */
-  deleteDoneTask(taskId: string) {
-    this.http
-      .delete(`http://localhost:3000/api/done/${taskId}`)
-      .subscribe(() => {
-        this.doneTasks = this.doneTasks.filter(task => task.id !== taskId);
-        this.doneUpdate.next([...this.doneTasks]);
-      });
+  deleteDoneTask(id: string) {
+    this.http.delete(`http://localhost:3000/api/done/${id}`).subscribe(() => {
+      this.doneTasks = this.doneTasks.filter(task => task.id !== id);
+      this.doneUpdate.next([...this.doneTasks]);
+    });
   }
 }

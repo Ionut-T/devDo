@@ -1,7 +1,7 @@
 <app-create-task *ngIf="isOpen" (close)="closeCreate()"></app-create-task>
 <div class="list">
   <div class="todo">
-    <h1>Todo</h1>
+    <h1>To do</h1>
     <button mat-icon-button color="accent" (click)="openCreate()">
       <mat-icon>add</mat-icon>
     </button>
@@ -17,11 +17,14 @@
         <mat-action-row>
           <button
             mat-button
-            color="accent"
+            color="primary"
             (click)="onPushToDoing(task.id, task.title, task.content)"
           >
             <mat-icon>done</mat-icon>
           </button>
+          <a mat-button color="accent" [routerLink]="['/todo/edit', task.id]">
+            <mat-icon>edit</mat-icon>
+          </a>
           <button mat-button color="warn" (click)="onDelete(task.id)">
             <mat-icon>delete</mat-icon>
           </button>

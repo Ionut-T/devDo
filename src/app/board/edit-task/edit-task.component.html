@@ -1,0 +1,45 @@
+<div class="backdrop" (click)="onClose()"></div>
+<div class="container">
+  <form class="form-edit" (submit)="onSave(editForm)" #editForm="ngForm">
+    <mat-form-field>
+      <input
+        matInput
+        placeholder="title"
+        [ngModel]="task?.title"
+        name="title"
+        required
+        #title="ngModel"
+      />
+      <mat-error *ngIf="title.invalid">
+        Title field must not be empty
+      </mat-error>
+    </mat-form-field>
+    <mat-form-field>
+      <textarea
+        matInput
+        placeholder="content"
+        rows="5"
+        [ngModel]="task?.content"
+        name="content"
+        required
+        #content="ngModel"
+      ></textarea>
+      <mat-error *ngIf="content.invalid">
+        Content field must not be empty
+      </mat-error>
+    </mat-form-field>
+    <div class="form-edit__actions">
+      <button
+        type="submit"
+        mat-button
+        color="accent"
+        [disabled]="editForm.invalid"
+      >
+        SAVE
+      </button>
+      <button type="button" mat-button color="warn" (click)="onClose()">
+        CANCEL
+      </button>
+    </div>
+  </form>
+</div>
