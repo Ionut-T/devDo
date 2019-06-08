@@ -1,0 +1,31 @@
+<form class="user-form" [formGroup]="loginForm" (ngSubmit)="onSubmit()">
+  <mat-form-field class="user-form-field">
+    <input
+      matInput
+      type="email"
+      placeholder="Enter your email"
+      formControlName="email"
+    />
+    <mat-error *ngIf="form.email.invalid">
+      {{ emailErrorHandler() }}
+    </mat-error>
+  </mat-form-field>
+
+  <mat-form-field class="user-form-field">
+    <input
+      matInput
+      [type]="hidePassword ? 'password' : 'text'"
+      placeholder="Enter your password"
+      formControlName="password"
+    />
+    <mat-icon matSuffix (click)="hidePassword = !hidePassword">
+      {{ hidePassword ? "visibility_off" : "visibility" }}
+    </mat-icon>
+    <mat-error *ngIf="form.password.invalid">
+      {{ passwordErrorHandler() }}
+    </mat-error>
+  </mat-form-field>
+  <button mat-raised-button color="primary" [disabled]="loginForm.invalid">
+    Log In
+  </button>
+</form>

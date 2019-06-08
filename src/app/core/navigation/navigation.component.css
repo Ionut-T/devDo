@@ -11,3 +11,25 @@
   top: 0;
   z-index: 1;
 }
+
+.main-navigation > .mat-list-item {
+  color: #fff;
+}
+
+.main-navigation {
+  display: flex;
+  align-self: baseline;
+}
+
+.spacer {
+  flex: 1 1 0;
+}
+
+a {
+  text-decoration: none;
+  color: #fff;
+}
+
+.mat-nav-list a.active {
+  color: #febf6e;
+}

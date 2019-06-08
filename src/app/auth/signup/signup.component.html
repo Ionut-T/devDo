@@ -1,0 +1,53 @@
+<form class="user-form" [formGroup]="signupForm" (ngSubmit)="onSubmit()">
+  <mat-form-field class="user-form-field">
+    <input
+      matInput
+      type="email"
+      placeholder="Enter your email"
+      formControlName="email"
+    />
+    <mat-error *ngIf="form.email.invalid">{{ emailErrorHandler() }}</mat-error>
+  </mat-form-field>
+
+  <mat-form-field
+    class="user-form-field"
+    hintLabel="Password must contain minim 6 characters"
+  >
+    <input
+      matInput
+      [type]="hidePassword ? 'password' : 'text'"
+      placeholder="Enter a password"
+      formControlName="password"
+    />
+    <mat-icon matSuffix (click)="hidePassword = !hidePassword">
+      {{ hidePassword ? "visibility_off" : "visibility" }}
+    </mat-icon>
+    <mat-hint align="end">{{ form.password.value?.length || 0 }}/6</mat-hint>
+    <mat-error *ngIf="form.password.invalid">
+      {{ passwordErrorHandler() }}
+    </mat-error>
+  </mat-form-field>
+
+  <mat-form-field class="user-form-field">
+    <input
+      matInput
+      [type]="hideConfirmPassword ? 'password' : 'text'"
+      placeholder="Confirm your password"
+      formControlName="confirmPassword"
+    />
+    <mat-icon matSuffix (click)="hideConfirmPassword = !hideConfirmPassword">
+      {{ hideConfirmPassword ? "visibility_off" : "visibility" }}
+    </mat-icon>
+    <mat-error *ngIf="form.confirmPassword.invalid">
+      {{ confirmPasswordErrorHandler() }}
+    </mat-error>
+  </mat-form-field>
+  <button
+    mat-raised-button
+    type="submit"
+    color="primary"
+    [disabled]="signupForm.invalid"
+  >
+    Sign Up
+  </button>
+</form>

@@ -9,9 +9,33 @@
   >
     <mat-toolbar color="primary" class="mat-elevation-z2">Menu</mat-toolbar>
     <mat-nav-list>
-      <a mat-list-item href="#">Link 1</a>
-      <a mat-list-item href="#">Link 2</a>
-      <a mat-list-item href="#">Link 3</a>
+      <a
+        mat-list-item
+        routerLink="/board"
+        routerLinkActive="active"
+        (click)="drawer.close()"
+      >
+        My Board
+      </a>
+      <a
+        mat-list-item
+        routerLink="/signup"
+        routerLinkActive="active"
+        (click)="drawer.close()"
+      >
+        Sign Up
+      </a>
+      <a
+        mat-list-item
+        routerLink="/login"
+        routerLinkActive="active"
+        (click)="drawer.close()"
+      >
+        Log In
+      </a>
+      <a mat-list-item (click)="drawer.close()">
+        Log Out
+      </a>
     </mat-nav-list>
   </mat-sidenav>
   <mat-sidenav-content>
@@ -25,9 +49,24 @@
       >
         <mat-icon aria-label="Side nav toggle icon">menu</mat-icon>
       </button>
-      <span>devdo</span>
+      <span><a routerLink="">devDo</a></span>
+      <div class="spacer"></div>
+      <mat-nav-list class="main-navigation" *ngIf="!(isHandset$ | async)">
+        <a mat-list-item routerLink="/board" routerLinkActive="active">
+          My Board
+        </a>
+        <a mat-list-item routerLink="/signup" routerLinkActive="active">
+          Sign Up
+        </a>
+        <a mat-list-item routerLink="/login" routerLinkActive="active">
+          Log In
+        </a>
+        <a mat-list-item>
+          Log Out
+        </a>
+      </mat-nav-list>
     </mat-toolbar>
-    <!-- Add Content Here -->
+
     <ng-content></ng-content>
   </mat-sidenav-content>
 </mat-sidenav-container>
