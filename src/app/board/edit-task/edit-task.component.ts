@@ -97,6 +97,6 @@ export class EditTaskComponent implements OnInit {
    * Return to board
    */
   onClose() {
-    this.router.navigate(['/']);
+    this.router.navigate(['/board']);
   }
 }

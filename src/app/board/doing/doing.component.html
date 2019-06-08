@@ -22,7 +22,11 @@
           >
             <mat-icon>done_all</mat-icon>
           </button>
-          <a mat-button color="accent" [routerLink]="['/doing/edit', task.id]">
+          <a
+            mat-button
+            color="accent"
+            [routerLink]="['/board/doing/edit', task.id]"
+          >
             <mat-icon>edit</mat-icon>
           </a>
           <button mat-button color="warn" (click)="onDelete(task.id)">
