@@ -25,7 +25,12 @@
       {{ passwordErrorHandler() }}
     </mat-error>
   </mat-form-field>
-  <button mat-raised-button color="primary" [disabled]="loginForm.invalid">
+  <button
+    mat-raised-button
+    type="submit"
+    color="primary"
+    [disabled]="loginForm.invalid"
+  >
     Log In
   </button>
 </form>

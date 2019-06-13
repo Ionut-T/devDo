@@ -13,6 +13,7 @@
         mat-list-item
         routerLink="/board"
         routerLinkActive="active"
+        *ngIf="isAuth"
         (click)="drawer.close()"
       >
         My Board
@@ -21,6 +22,7 @@
         mat-list-item
         routerLink="/user/signup"
         routerLinkActive="active"
+        *ngIf="!isAuth"
         (click)="drawer.close()"
       >
         Sign Up
@@ -29,11 +31,12 @@
         mat-list-item
         routerLink="/user/login"
         routerLinkActive="active"
+        *ngIf="!isAuth"
         (click)="drawer.close()"
       >
         Log In
       </a>
-      <a mat-list-item (click)="drawer.close()">
+      <a mat-list-item *ngIf="isAuth" (click)="onLogout()">
         Log Out
       </a>
     </mat-nav-list>
@@ -52,16 +55,31 @@
       <span><a routerLink="">devDo</a></span>
       <div class="spacer"></div>
       <mat-nav-list class="main-navigation" *ngIf="!(isHandset$ | async)">
-        <a mat-list-item routerLink="/board" routerLinkActive="active">
+        <a
+          mat-list-item
+          routerLink="/board"
+          routerLinkActive="active"
+          *ngIf="isAuth"
+        >
           My Board
         </a>
-        <a mat-list-item routerLink="/user/signup" routerLinkActive="active">
+        <a
+          mat-list-item
+          routerLink="/user/signup"
+          routerLinkActive="active"
+          *ngIf="!isAuth"
+        >
           Sign Up
         </a>
-        <a mat-list-item routerLink="/user/login" routerLinkActive="active">
+        <a
+          mat-list-item
+          routerLink="/user/login"
+          routerLinkActive="active"
+          *ngIf="!isAuth"
+        >
           Log In
         </a>
-        <a mat-list-item>
+        <a mat-list-item *ngIf="isAuth" (click)="onLogout()">
           Log Out
         </a>
       </mat-nav-list>

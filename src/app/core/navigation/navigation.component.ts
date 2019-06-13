@@ -1,19 +1,47 @@
-import { Component } from '@angular/core';
+import { Component, OnInit, OnDestroy, ViewChild } from '@angular/core';
 import { BreakpointObserver, Breakpoints } from '@angular/cdk/layout';
-import { Observable } from 'rxjs';
+import { Observable, Subscription } from 'rxjs';
 import { map } from 'rxjs/operators';
+import { AuthService } from 'src/app/auth/auth.service';
+import { MatSidenav } from '@angular/material/sidenav';
 
 @Component({
   selector: 'app-navigation',
   templateUrl: './navigation.component.html',
   styleUrls: ['./navigation.component.css']
 })
-export class NavigationComponent {
+export class NavigationComponent implements OnInit, OnDestroy {
   isOpened = false;
+  isAuth = false;
+  private authListenerSubscription: Subscription;
+  @ViewChild('drawer', { static: false }) drawer: MatSidenav;
 
   isHandset$: Observable<boolean> = this.breakpointObserver
     .observe(Breakpoints.Handset)
     .pipe(map(result => result.matches));
 
-  constructor(private breakpointObserver: BreakpointObserver) {}
+  constructor(
+    private breakpointObserver: BreakpointObserver,
+    private authService: AuthService
+  ) {}
+
+  ngOnInit() {
+    this.isAuth = this.authService.getIsAuth();
+    this.authListenerSubscription = this.authService
+      .getAuthStatusListener()
+      .subscribe(isAuth => {
+        this.isAuth = isAuth;
+      });
+  }
+
+  onLogout() {
+    this.authService.logout();
+    this.drawer.close();
+  }
+
+  ngOnDestroy() {
+    if (this.authListenerSubscription) {
+      this.authListenerSubscription.unsubscribe();
+    }
+  }
 }

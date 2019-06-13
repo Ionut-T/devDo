@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { FormGroup, FormControl, Validators } from '@angular/forms';
+import { AuthService } from '../auth.service';
 
 @Component({
   selector: 'app-login',
@@ -10,8 +11,11 @@ export class LoginComponent implements OnInit {
   hidePassword = true;
   loginForm: FormGroup;
 
-  constructor() {}
+  constructor(private authService: AuthService) {}
 
+  /**
+   * Create and validate the reactive login form.
+   */
   ngOnInit() {
     this.loginForm = new FormGroup({
       email: new FormControl(null, {
@@ -48,7 +52,9 @@ export class LoginComponent implements OnInit {
   }
 
   /**
-   * Log in the user.
+   * Call log in user.
    */
-  onSubmit() {}
+  onSubmit() {
+    this.authService.login(this.form.email.value, this.form.password.value);
+  }
 }

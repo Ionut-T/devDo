@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 import { MustMatch } from './must-match.validator';
+import { AuthService } from '../auth.service';
 
 @Component({
   selector: 'app-signup',
@@ -12,10 +13,13 @@ export class SignupComponent implements OnInit {
   hidePassword = true;
   hideConfirmPassword = true;
 
-  constructor(private formBuilder: FormBuilder) {}
+  constructor(
+    private formBuilder: FormBuilder,
+    private authService: AuthService
+  ) {}
 
   /**
-   * Create and validate the reactive register form.
+   * Create and validate the reactive sign up form.
    */
   ngOnInit() {
     this.signupForm = this.formBuilder.group(
@@ -73,5 +77,13 @@ export class SignupComponent implements OnInit {
     return null;
   }
 
-  onSubmit() {}
+  /**
+   * Call create user
+   */
+  onSubmit() {
+    this.authService.createUser(
+      this.form.email.value,
+      this.form.password.value
+    );
+  }
 }
