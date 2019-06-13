@@ -1,3 +1,23 @@
-<p>
-  home works!
-</p>
+<section class="home">
+  <div class="container">
+    <figure class="home__image">
+      <img
+        src="../../../assets/img/home-image.jpg"
+        alt="four people watching on white MacBook on top of glass-top table"
+      />
+    </figure>
+    <div class="home__cta">
+      <p class="home__paragraph">
+        devDo helps you to keep track of your project progress and never miss a
+        deadline.
+      </p>
+      <button mat-raised-button color="primary" (click)="onSignUp()">
+        Sign Up!
+      </button>
+      <p>-OR-</p>
+      <button mat-raised-button color="primary" (click)="onLogIn()">
+        Log In!
+      </button>
+    </div>
+  </div>
+</section>
