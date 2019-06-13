@@ -3,6 +3,7 @@ import { HttpClient } from '@angular/common/http';
 import { Task } from './task.model';
 import { BehaviorSubject } from 'rxjs';
 import { map } from 'rxjs/operators';
+import { AuthService } from '../auth/auth.service';
 
 @Injectable({
   providedIn: 'root'
@@ -76,7 +77,8 @@ export class BoardService {
             return {
               id: task._id,
               title: task.title,
-              content: task.content
+              content: task.content,
+              creator: task.creator
             };
           });
         })
@@ -110,12 +112,10 @@ export class BoardService {
    * Delete todo task from server
    */
   deleteTodoTask(id: string) {
-    this.http
-      .delete(`http://localhost:3000/api/todo/${id}`)
-      .subscribe(() => {
-        this.tasks = this.tasks.filter(task => task.id !== id);
-        this.todoUpdate.next([...this.tasks]);
-      });
+    this.http.delete(`http://localhost:3000/api/todo/${id}`).subscribe(() => {
+      this.tasks = this.tasks.filter(task => task.id !== id);
+      this.todoUpdate.next([...this.tasks]);
+    });
   }
 
   /**
@@ -190,12 +190,10 @@ export class BoardService {
    * Delete doing task
    */
   deleteDoingTask(id: string) {
-    this.http
-      .delete(`http://localhost:3000/api/doing/${id}`)
-      .subscribe(() => {
-        this.doingTasks = this.doingTasks.filter(task => task.id !== id);
-        this.doingUpdate.next([...this.doingTasks]);
-      });
+    this.http.delete(`http://localhost:3000/api/doing/${id}`).subscribe(() => {
+      this.doingTasks = this.doingTasks.filter(task => task.id !== id);
+      this.doingUpdate.next([...this.doingTasks]);
+    });
   }
 
   /**
