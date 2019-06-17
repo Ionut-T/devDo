@@ -4,15 +4,18 @@ import { Task } from './task.model';
 import { BehaviorSubject } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { UIService } from '../shared/ui.service';
+import { environment } from '../../environments/environment';
+
+const BACKEND_URL = environment.apiUrl;
 
 @Injectable({
   providedIn: 'root'
 })
 export class BoardService {
-  private tasks: Task[] = [];
+  private todoTasks: Task[] = [];
   private doingTasks: Task[] = [];
   private doneTasks: Task[] = [];
-  private todoUpdate = new BehaviorSubject<Task[]>(this.tasks);
+  private todoUpdate = new BehaviorSubject<Task[]>(this.todoTasks);
   private doingUpdate = new BehaviorSubject<Task[]>(this.doingTasks);
   private doneUpdate = new BehaviorSubject<Task[]>(this.doneTasks);
 
@@ -48,11 +51,11 @@ export class BoardService {
       .post<{
         message: string;
         task: { id: string; title: string; description: string };
-      }>('http://localhost:3000/api/todo', task)
+      }>(`${BACKEND_URL}/todo`, task)
       .subscribe(response => {
         task.id = response.task.id;
-        this.tasks.push(task);
-        this.todoUpdate.next([...this.tasks]);
+        this.todoTasks.push(task);
+        this.todoUpdate.next([...this.todoTasks]);
       });
   }
 
@@ -61,7 +64,7 @@ export class BoardService {
    */
   getTodoTask(id: string) {
     return this.http.get<{ _id: string; title: string; description: string }>(
-      `http://localhost:3000/api/todo/${id}`
+      `${BACKEND_URL}/todo/${id}`
     );
   }
 
@@ -71,7 +74,7 @@ export class BoardService {
   getTodoTasks() {
     this.uiService.loadingStateChanged.next(true);
     this.http
-      .get<{ message: string; tasks: any }>('http://localhost:3000/api/todo')
+      .get<{ message: string; tasks: any }>(`${BACKEND_URL}/todo`)
       .pipe(
         map(taskData => {
           return taskData.tasks.map(task => {
@@ -85,9 +88,9 @@ export class BoardService {
         })
       )
       .subscribe(response => {
-        this.tasks = response;
+        this.todoTasks = response;
         this.uiService.loadingStateChanged.next(false);
-        this.todoUpdate.next([...this.tasks]);
+        this.todoUpdate.next([...this.todoTasks]);
       });
   }
 
@@ -97,16 +100,13 @@ export class BoardService {
   updateTodoTask(id: string, title: string, description: string) {
     const task: Task = { id, title, description };
     this.http
-      .put<{ message: string; task: Task }>(
-        `http://localhost:3000/api/todo/${id}`,
-        task
-      )
+      .put<{ message: string; task: Task }>(`${BACKEND_URL}/todo/${id}`, task)
       .subscribe(response => {
-        const updatedTasks = [...this.tasks];
+        const updatedTasks = [...this.todoTasks];
         const oldTaskIndex = updatedTasks.findIndex(t => t.id === task.id);
         updatedTasks[oldTaskIndex] = task;
-        this.tasks = updatedTasks;
-        this.todoUpdate.next([...this.tasks]);
+        this.todoTasks = updatedTasks;
+        this.todoUpdate.next([...this.todoTasks]);
       });
   }
 
@@ -114,9 +114,9 @@ export class BoardService {
    * Delete todo task from server.
    */
   deleteTodoTask(id: string) {
-    this.http.delete(`http://localhost:3000/api/todo/${id}`).subscribe(() => {
-      this.tasks = this.tasks.filter(task => task.id !== id);
-      this.todoUpdate.next([...this.tasks]);
+    this.http.delete(`${BACKEND_URL}/todo/${id}`).subscribe(() => {
+      this.todoTasks = this.todoTasks.filter(task => task.id !== id);
+      this.todoUpdate.next([...this.todoTasks]);
     });
   }
 
@@ -129,7 +129,7 @@ export class BoardService {
       .post<{
         message: string;
         task: { id: string; title: string; description: string };
-      }>('http://localhost:3000/api/doing', task)
+      }>(`${BACKEND_URL}/doing`, task)
       .subscribe(response => {
         task.id = response.task.id;
         this.doingTasks.push(task);
@@ -142,7 +142,7 @@ export class BoardService {
    */
   getDoingTask(id: string) {
     return this.http.get<{ _id: string; title: string; description: string }>(
-      `http://localhost:3000/api/doing/${id}`
+      `${BACKEND_URL}/doing/${id}`
     );
   }
 
@@ -152,7 +152,7 @@ export class BoardService {
   getDoingTasks() {
     this.uiService.loadingStateChanged.next(true);
     this.http
-      .get<{ message: string; tasks: any }>('http://localhost:3000/api/doing')
+      .get<{ message: string; tasks: any }>(`${BACKEND_URL}/doing`)
       .pipe(
         map(taskData => {
           return taskData.tasks.map(task => {
@@ -177,10 +177,7 @@ export class BoardService {
   updateDoingTask(id: string, title: string, description: string) {
     const task: Task = { id, title, description };
     this.http
-      .put<{ message: string; task: Task }>(
-        `http://localhost:3000/api/doing/${id}`,
-        task
-      )
+      .put<{ message: string; task: Task }>(`${BACKEND_URL}/doing/${id}`, task)
       .subscribe(response => {
         const updatedTasks = [...this.doingTasks];
         const oldTaskIndex = updatedTasks.findIndex(t => t.id === task.id);
@@ -194,7 +191,7 @@ export class BoardService {
    * Delete doing task.
    */
   deleteDoingTask(id: string) {
-    this.http.delete(`http://localhost:3000/api/doing/${id}`).subscribe(() => {
+    this.http.delete(`${BACKEND_URL}/doing/${id}`).subscribe(() => {
       this.doingTasks = this.doingTasks.filter(task => task.id !== id);
       this.doingUpdate.next([...this.doingTasks]);
     });
@@ -209,7 +206,7 @@ export class BoardService {
       .post<{
         message: string;
         task: { id: string; title: string; description: string };
-      }>('http://localhost:3000/api/done', task)
+      }>(`${BACKEND_URL}/done`, task)
       .subscribe(response => {
         task.id = response.task.id;
         this.doneTasks.push(task);
@@ -222,7 +219,7 @@ export class BoardService {
    */
   getDoneTask(id: string) {
     return this.http.get<{ _id: string; title: string; description: string }>(
-      `http://localhost:3000/api/done/${id}`
+      `${BACKEND_URL}/done/${id}`
     );
   }
 
@@ -232,7 +229,7 @@ export class BoardService {
   getDoneTasks() {
     this.uiService.loadingStateChanged.next(true);
     this.http
-      .get<{ message: string; tasks: any }>('http://localhost:3000/api/done')
+      .get<{ message: string; tasks: any }>(`${BACKEND_URL}/done`)
       .pipe(
         map(taskData => {
           return taskData.tasks.map(task => {
@@ -257,10 +254,7 @@ export class BoardService {
   updateDoneTask(id: string, title: string, description: string) {
     const task: Task = { id, title, description };
     this.http
-      .put<{ message: string; task: Task }>(
-        `http://localhost:3000/api/done/${id}`,
-        task
-      )
+      .put<{ message: string; task: Task }>(`${BACKEND_URL}/done/${id}`, task)
       .subscribe(response => {
         const updatedTasks = [...this.doneTasks];
         const oldTaskIndex = updatedTasks.findIndex(t => t.id === task.id);
@@ -274,7 +268,7 @@ export class BoardService {
    * Delete done task.
    */
   deleteDoneTask(id: string) {
-    this.http.delete(`http://localhost:3000/api/done/${id}`).subscribe(() => {
+    this.http.delete(`${BACKEND_URL}/done/${id}`).subscribe(() => {
       this.doneTasks = this.doneTasks.filter(task => task.id !== id);
       this.doneUpdate.next([...this.doneTasks]);
     });
