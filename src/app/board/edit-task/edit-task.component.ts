@@ -35,7 +35,7 @@ export class EditTaskComponent implements OnInit {
           this.task = {
             id: responseData._id,
             title: responseData.title,
-            content: responseData.content
+            description: responseData.description
           };
         });
       } else if (paramMap.has('doingId')) {
@@ -45,7 +45,7 @@ export class EditTaskComponent implements OnInit {
           this.task = {
             id: responseData._id,
             title: responseData.title,
-            content: responseData.content
+            description: responseData.description
           };
         });
       } else {
@@ -55,7 +55,7 @@ export class EditTaskComponent implements OnInit {
           this.task = {
             id: responseData._id,
             title: responseData.title,
-            content: responseData.content
+            description: responseData.description
           };
         });
       }
@@ -74,19 +74,19 @@ export class EditTaskComponent implements OnInit {
       this.boardService.updateTodoTask(
         this.taskId,
         form.value.title,
-        form.value.content
+        form.value.description
       );
     } else if (this.target === 'doing') {
       this.boardService.updateDoingTask(
         this.taskId,
         form.value.title,
-        form.value.content
+        form.value.description
       );
     } else {
       this.boardService.updateDoneTask(
         this.taskId,
         form.value.title,
-        form.value.content
+        form.value.description
       );
     }
 

@@ -42,12 +42,12 @@ export class BoardService {
   /**
    * Create a new task.
    */
-  addTodoTask(title: string, content: string) {
-    const task: Task = { id: null, title, content };
+  addTodoTask(title: string, description: string) {
+    const task: Task = { id: null, title, description };
     this.http
       .post<{
         message: string;
-        task: { id: string; title: string; content: string };
+        task: { id: string; title: string; description: string };
       }>('http://localhost:3000/api/todo', task)
       .subscribe(response => {
         task.id = response.task.id;
@@ -60,7 +60,7 @@ export class BoardService {
    * Get a single todo task from server.
    */
   getTodoTask(id: string) {
-    return this.http.get<{ _id: string; title: string; content: string }>(
+    return this.http.get<{ _id: string; title: string; description: string }>(
       `http://localhost:3000/api/todo/${id}`
     );
   }
@@ -78,7 +78,7 @@ export class BoardService {
             return {
               id: task._id,
               title: task.title,
-              content: task.content,
+              description: task.description,
               creator: task.creator
             };
           });
@@ -94,8 +94,8 @@ export class BoardService {
   /**
    * Update todo task.
    */
-  updateTodoTask(id: string, title: string, content: string) {
-    const task: Task = { id, title, content };
+  updateTodoTask(id: string, title: string, description: string) {
+    const task: Task = { id, title, description };
     this.http
       .put<{ message: string; task: Task }>(
         `http://localhost:3000/api/todo/${id}`,
@@ -123,12 +123,12 @@ export class BoardService {
   /**
    * Add doing task.
    */
-  addDoingTask(id: string, title: string, content: string) {
-    const task: Task = { id, title, content };
+  addDoingTask(id: string, title: string, description: string) {
+    const task: Task = { id, title, description };
     this.http
       .post<{
         message: string;
-        task: { id: string; title: string; content: string };
+        task: { id: string; title: string; description: string };
       }>('http://localhost:3000/api/doing', task)
       .subscribe(response => {
         task.id = response.task.id;
@@ -141,7 +141,7 @@ export class BoardService {
    * Get a single doing task from server.
    */
   getDoingTask(id: string) {
-    return this.http.get<{ _id: string; title: string; content: string }>(
+    return this.http.get<{ _id: string; title: string; description: string }>(
       `http://localhost:3000/api/doing/${id}`
     );
   }
@@ -159,7 +159,7 @@ export class BoardService {
             return {
               id: task._id,
               title: task.title,
-              content: task.content
+              description: task.description
             };
           });
         })
@@ -174,8 +174,8 @@ export class BoardService {
   /**
    * Update doing task.
    */
-  updateDoingTask(id: string, title: string, content: string) {
-    const task: Task = { id, title, content };
+  updateDoingTask(id: string, title: string, description: string) {
+    const task: Task = { id, title, description };
     this.http
       .put<{ message: string; task: Task }>(
         `http://localhost:3000/api/doing/${id}`,
@@ -203,12 +203,12 @@ export class BoardService {
   /**
    * Add done task.
    */
-  addDoneTask(id: string, title: string, content: string) {
-    const task: Task = { id, title, content };
+  addDoneTask(id: string, title: string, description: string) {
+    const task: Task = { id, title, description };
     this.http
       .post<{
         message: string;
-        task: { id: string; title: string; content: string };
+        task: { id: string; title: string; description: string };
       }>('http://localhost:3000/api/done', task)
       .subscribe(response => {
         task.id = response.task.id;
@@ -221,7 +221,7 @@ export class BoardService {
    * Get a single done task from server.
    */
   getDoneTask(id: string) {
-    return this.http.get<{ _id: string; title: string; content: string }>(
+    return this.http.get<{ _id: string; title: string; description: string }>(
       `http://localhost:3000/api/done/${id}`
     );
   }
@@ -239,7 +239,7 @@ export class BoardService {
             return {
               id: task._id,
               title: task.title,
-              content: task.content
+              description: task.description
             };
           });
         })
@@ -254,8 +254,8 @@ export class BoardService {
   /**
    * Update done task.
    */
-  updateDoneTask(id: string, title: string, content: string) {
-    const task: Task = { id, title, content };
+  updateDoneTask(id: string, title: string, description: string) {
+    const task: Task = { id, title, description };
     this.http
       .put<{ message: string; task: Task }>(
         `http://localhost:3000/api/done/${id}`,

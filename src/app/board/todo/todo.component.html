@@ -14,12 +14,12 @@
           {{ task.title | uppercaseFirstLetter }}
         </mat-expansion-panel-header>
 
-        {{ task.content | uppercaseFirstLetter }}
+        {{ task.description | uppercaseFirstLetter }}
         <mat-action-row>
           <button
             mat-button
             color="primary"
-            (click)="onPushToDoing(task.id, task.title, task.content)"
+            (click)="onPushToDoing(task.id, task.title, task.description)"
           >
             <mat-icon>done</mat-icon>
           </button>

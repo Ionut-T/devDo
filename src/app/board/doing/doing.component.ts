@@ -41,16 +41,16 @@ export class DoingComponent implements OnInit, OnDestroy {
   /**
    * Add task to done list
    */
-  onPushToDone(id: string, title: string, content: string) {
-    this.boardService.addDoneTask(id, title, content);
+  onPushToDone(id: string, title: string, description: string) {
+    this.boardService.addDoneTask(id, title, description);
     this.onDelete(id);
   }
 
   /**
    * Add task back to todo list
    */
-  onUndo(id: string, title: string, content: string) {
-    this.boardService.addTodoTask(title, content);
+  onUndo(id: string, title: string, description: string) {
+    this.boardService.addTodoTask(title, description);
     this.onDelete(id);
   }
 

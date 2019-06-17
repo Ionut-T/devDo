@@ -63,8 +63,8 @@ export class TodoComponent implements OnInit, OnDestroy {
   /**
    * Add task to doing list
    */
-  onPushToDoing(id: string, title: string, content: string) {
-    this.boardService.addDoingTask(id, title, content);
+  onPushToDoing(id: string, title: string, description: string) {
+    this.boardService.addDoingTask(id, title, description);
     this.onDelete(id);
   }
 

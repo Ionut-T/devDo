@@ -8,11 +8,11 @@
           {{ task.title | uppercaseFirstLetter }}
         </mat-expansion-panel-header>
 
-        {{ task.content | uppercaseFirstLetter }}
+        {{ task.description | uppercaseFirstLetter }}
         <mat-action-row>
           <button
             mat-button
-            (click)="onUndo(task.id, task.title, task.content)"
+            (click)="onUndo(task.id, task.title, task.description)"
           >
             <mat-icon>undo</mat-icon>
           </button>
