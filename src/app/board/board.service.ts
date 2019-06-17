@@ -19,28 +19,28 @@ export class BoardService {
   constructor(private http: HttpClient, private uiService: UIService) {}
 
   /**
-   * Listen to changes in todo list
+   * Listen to changes in todo list.
    */
   getTodoUpdateListener() {
     return this.todoUpdate.asObservable();
   }
 
   /**
-   * Listen to changes in doing list
+   * Listen to changes in doing list.
    */
   getDoingUpdateListener() {
     return this.doingUpdate.asObservable();
   }
 
   /**
-   * Listen to changes in done list
+   * Listen to changes in done list.
    */
   getDoneUpdateListener() {
     return this.doneUpdate.asObservable();
   }
 
   /**
-   * Create a new task
+   * Create a new task.
    */
   addTodoTask(title: string, content: string) {
     const task: Task = { id: null, title, content };
@@ -57,7 +57,7 @@ export class BoardService {
   }
 
   /**
-   * Get a single todo task from server
+   * Get a single todo task from server.
    */
   getTodoTask(id: string) {
     return this.http.get<{ _id: string; title: string; content: string }>(
@@ -66,7 +66,7 @@ export class BoardService {
   }
 
   /**
-   * Get todo tasks from server
+   * Get todo tasks from server.
    */
   getTodoTasks() {
     this.uiService.loadingStateChanged.next(true);
@@ -92,7 +92,7 @@ export class BoardService {
   }
 
   /**
-   * Update todo task
+   * Update todo task.
    */
   updateTodoTask(id: string, title: string, content: string) {
     const task: Task = { id, title, content };
@@ -111,7 +111,7 @@ export class BoardService {
   }
 
   /**
-   * Delete todo task from server
+   * Delete todo task from server.
    */
   deleteTodoTask(id: string) {
     this.http.delete(`http://localhost:3000/api/todo/${id}`).subscribe(() => {
@@ -121,7 +121,7 @@ export class BoardService {
   }
 
   /**
-   * Add doing task
+   * Add doing task.
    */
   addDoingTask(id: string, title: string, content: string) {
     const task: Task = { id, title, content };
@@ -138,7 +138,7 @@ export class BoardService {
   }
 
   /**
-   * Get a single doing task from server
+   * Get a single doing task from server.
    */
   getDoingTask(id: string) {
     return this.http.get<{ _id: string; title: string; content: string }>(
@@ -147,7 +147,7 @@ export class BoardService {
   }
 
   /**
-   * Get all tasks in progress from server
+   * Get all tasks in progress from server.
    */
   getDoingTasks() {
     this.uiService.loadingStateChanged.next(true);
@@ -172,7 +172,7 @@ export class BoardService {
   }
 
   /**
-   * Update doing task
+   * Update doing task.
    */
   updateDoingTask(id: string, title: string, content: string) {
     const task: Task = { id, title, content };
@@ -191,7 +191,7 @@ export class BoardService {
   }
 
   /**
-   * Delete doing task
+   * Delete doing task.
    */
   deleteDoingTask(id: string) {
     this.http.delete(`http://localhost:3000/api/doing/${id}`).subscribe(() => {
@@ -201,7 +201,7 @@ export class BoardService {
   }
 
   /**
-   * Add done task
+   * Add done task.
    */
   addDoneTask(id: string, title: string, content: string) {
     const task: Task = { id, title, content };
@@ -218,7 +218,7 @@ export class BoardService {
   }
 
   /**
-   * Get a single done task from server
+   * Get a single done task from server.
    */
   getDoneTask(id: string) {
     return this.http.get<{ _id: string; title: string; content: string }>(
@@ -227,7 +227,7 @@ export class BoardService {
   }
 
   /**
-   * Get all finished tasks from server
+   * Get all finished tasks from server.
    */
   getDoneTasks() {
     this.uiService.loadingStateChanged.next(true);
@@ -252,7 +252,7 @@ export class BoardService {
   }
 
   /**
-   * Update done task
+   * Update done task.
    */
   updateDoneTask(id: string, title: string, content: string) {
     const task: Task = { id, title, content };
@@ -271,7 +271,7 @@ export class BoardService {
   }
 
   /**
-   * Delete doing task
+   * Delete done task.
    */
   deleteDoneTask(id: string) {
     this.http.delete(`http://localhost:3000/api/done/${id}`).subscribe(() => {

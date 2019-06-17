@@ -49,12 +49,15 @@ export class AuthService {
   createUser(email: string, password: string) {
     this.uiService.loadingStateChanged.next(true);
     const authData: AuthData = { email, password };
-    this.http
-      .post('http://localhost:3000/api/user/signup', authData)
-      .subscribe(response => {
+    this.http.post('http://localhost:3000/api/user/signup', authData).subscribe(
+      response => {
         this.router.navigate(['/user/login']);
         this.uiService.loadingStateChanged.next(false);
-      });
+      },
+      error => {
+        this.uiService.loadingStateChanged.next(false);
+      }
+    );
   }
 
   /**
@@ -68,23 +71,34 @@ export class AuthService {
         'http://localhost:3000/api/user/login',
         authData
       )
-      .subscribe(response => {
-        const token = response.token;
-        if (token) {
-          const expiresInDuration = response.expiresIn;
-          this.setAuthTimer(expiresInDuration);
-          this.token = token;
-          this.isAuthenticated = true;
-          this.authStatusListener.next(true);
-          const now = new Date();
-          const expirationDate = new Date(
-            now.getTime() + expiresInDuration * 1000
-          );
-          this.saveAuthData(token, expirationDate);
-          this.router.navigate(['/board']);
-          this.uiService.loadingStateChanged.next(true);
+      .subscribe(
+        response => {
+          const token = response.token;
+          if (token) {
+            const expiresInDuration = response.expiresIn;
+            this.setAuthTimer(expiresInDuration);
+            this.token = token;
+            this.isAuthenticated = true;
+            this.authStatusListener.next(true);
+            const now = new Date();
+            const expirationDate = new Date(
+              now.getTime() + expiresInDuration * 1000
+            );
+            this.saveAuthData(token, expirationDate);
+            this.uiService.showSnackBar(
+              'Login Successful',
+              null,
+              3000,
+              'bottom'
+            );
+            this.uiService.loadingStateChanged.next(true);
+            this.router.navigate(['/board']);
+          }
+        },
+        error => {
+          this.uiService.loadingStateChanged.next(false);
         }
-      });
+      );
   }
 
   /**
@@ -114,6 +128,7 @@ export class AuthService {
     this.authStatusListener.next(false);
     clearTimeout(this.tokenTimer);
     this.clearAuthData();
+    this.uiService.showSnackBar('Logout Successful', null, 3000, 'bottom');
     this.router.navigate(['/']);
   }
 
@@ -135,7 +150,7 @@ export class AuthService {
   }
 
   /**
-   * Clear authentication data from local storage
+   * Clear authentication data from local storage.
    */
   private clearAuthData() {
     localStorage.removeItem('token');

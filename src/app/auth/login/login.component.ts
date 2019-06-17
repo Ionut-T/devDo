@@ -14,6 +14,7 @@ export class LoginComponent implements OnInit, OnDestroy {
   loginForm: FormGroup;
   isLoading = false;
   private loadingSubscription: Subscription;
+  private authStatusSubscription: Subscription;
 
   constructor(private authService: AuthService, private uiService: UIService) {}
 
@@ -21,6 +22,11 @@ export class LoginComponent implements OnInit, OnDestroy {
    * Create and validate the reactive login form.
    */
   ngOnInit() {
+    this.authStatusSubscription = this.authService
+      .getAuthStatusListener()
+      .subscribe(authStatus => {
+        this.isLoading = false;
+      });
     this.loginForm = new FormGroup({
       email: new FormControl(null, {
         validators: [Validators.required, Validators.email]
@@ -65,9 +71,16 @@ export class LoginComponent implements OnInit, OnDestroy {
     this.authService.login(this.form.email.value, this.form.password.value);
   }
 
+  /**
+   * Unsubscribe from subscriptions
+   */
   ngOnDestroy() {
     if (this.loadingSubscription) {
       this.loadingSubscription.unsubscribe();
+    }
+
+    if (this.authStatusSubscription) {
+      this.authStatusSubscription.unsubscribe();
     }
   }
 }

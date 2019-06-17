@@ -16,6 +16,7 @@ export class SignupComponent implements OnInit, OnDestroy {
   hideConfirmPassword = true;
   isLoading = false;
   private loadingSubscription: Subscription;
+  private authStatusSubscription: Subscription;
 
   constructor(
     private formBuilder: FormBuilder,
@@ -27,6 +28,11 @@ export class SignupComponent implements OnInit, OnDestroy {
    * Create and validate the reactive sign up form.
    */
   ngOnInit() {
+    this.authStatusSubscription = this.authService
+      .getAuthStatusListener()
+      .subscribe(authStatus => {
+        this.isLoading = false;
+      });
     this.signupForm = this.formBuilder.group(
       {
         email: ['', [Validators.required, Validators.email]],
@@ -95,9 +101,16 @@ export class SignupComponent implements OnInit, OnDestroy {
     );
   }
 
+  /**
+   * Unsubscribe from subscriptions
+   */
   ngOnDestroy() {
     if (this.loadingSubscription) {
       this.loadingSubscription.unsubscribe();
+    }
+
+    if (this.authStatusSubscription) {
+      this.authStatusSubscription.unsubscribe();
     }
   }
 }
