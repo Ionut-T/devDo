@@ -1,7 +1,7 @@
 import { Pipe, PipeTransform } from '@angular/core';
 
 /**
- * Transform first letter into uppercase
+ * Transform first letter into uppercase.
  */
 @Pipe({
   name: 'uppercaseFirstLetter'
