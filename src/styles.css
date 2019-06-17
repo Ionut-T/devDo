@@ -14,8 +14,12 @@ mat-expansion-panel:not(:last-child) {
   margin-bottom: 10px;
 }
 
+.mat-expansion-panel-body {
+  text-align: left;
+}
+
 .list {
-  min-width: 300px;
+  width: 300px;
 }
 
 .user-form {
