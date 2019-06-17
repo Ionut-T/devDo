@@ -3,6 +3,7 @@ import { HttpClient } from '@angular/common/http';
 import { AuthData } from './auth-data.model';
 import { BehaviorSubject } from 'rxjs';
 import { Router } from '@angular/router';
+import { UIService } from '../shared/ui.service';
 
 @Injectable({
   providedIn: 'root'
@@ -15,7 +16,11 @@ export class AuthService {
     this.isAuthenticated
   );
 
-  constructor(private http: HttpClient, private router: Router) {}
+  constructor(
+    private http: HttpClient,
+    private router: Router,
+    private uiService: UIService
+  ) {}
 
   /**
    * Get token.
@@ -42,11 +47,13 @@ export class AuthService {
    * Create user.
    */
   createUser(email: string, password: string) {
+    this.uiService.loadingStateChanged.next(true);
     const authData: AuthData = { email, password };
     this.http
       .post('http://localhost:3000/api/user/signup', authData)
       .subscribe(response => {
-        console.log(response);
+        this.router.navigate(['/user/login']);
+        this.uiService.loadingStateChanged.next(false);
       });
   }
 
@@ -54,6 +61,7 @@ export class AuthService {
    * Log in user.
    */
   login(email: string, password: string) {
+    this.uiService.loadingStateChanged.next(true);
     const authData: AuthData = { email, password };
     this.http
       .post<{ token: string; expiresIn: number }>(
@@ -72,9 +80,9 @@ export class AuthService {
           const expirationDate = new Date(
             now.getTime() + expiresInDuration * 1000
           );
-          console.log(expirationDate);
           this.saveAuthData(token, expirationDate);
           this.router.navigate(['/board']);
+          this.uiService.loadingStateChanged.next(true);
         }
       });
   }
@@ -113,7 +121,6 @@ export class AuthService {
    * Set authentication timer.
    */
   private setAuthTimer(duration: number) {
-    console.log(duration);
     this.tokenTimer = setTimeout(() => {
       this.logout();
     }, duration * 1000);

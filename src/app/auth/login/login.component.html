@@ -1,4 +1,10 @@
-<form class="user-form" [formGroup]="loginForm" (ngSubmit)="onSubmit()">
+<mat-spinner *ngIf="isLoading"></mat-spinner>
+<form
+  class="user-form"
+  [formGroup]="loginForm"
+  (ngSubmit)="onSubmit()"
+  *ngIf="!isLoading"
+>
   <mat-form-field class="user-form-field">
     <input
       matInput

@@ -2,6 +2,7 @@ import { Component, OnInit, OnDestroy } from '@angular/core';
 import { Task } from '../task.model';
 import { BoardService } from '../board.service';
 import { Subscription } from 'rxjs';
+import { UIService } from 'src/app/shared/ui.service';
 
 /**
  * Doing List Component
@@ -14,13 +15,21 @@ import { Subscription } from 'rxjs';
 export class DoingComponent implements OnInit, OnDestroy {
   doingTasks: Task[];
   private doingSubscription: Subscription;
+  isLoading = false;
+  private loadingSubscription: Subscription;
 
-  constructor(private boardService: BoardService) {}
+  constructor(
+    private boardService: BoardService,
+    private uiService: UIService
+  ) {}
 
   /**
    * Get doing tasks
    */
   ngOnInit() {
+    this.loadingSubscription = this.uiService.loadingStateChanged.subscribe(
+      isLoading => (this.isLoading = isLoading)
+    );
     this.boardService.getDoingTasks();
     this.doingSubscription = this.boardService
       .getDoingUpdateListener()
@@ -58,6 +67,10 @@ export class DoingComponent implements OnInit, OnDestroy {
   ngOnDestroy() {
     if (this.doingSubscription) {
       this.doingSubscription.unsubscribe();
+    }
+
+    if (this.loadingSubscription) {
+      this.loadingSubscription.unsubscribe();
     }
   }
 }

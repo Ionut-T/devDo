@@ -3,7 +3,7 @@ import { HttpClient } from '@angular/common/http';
 import { Task } from './task.model';
 import { BehaviorSubject } from 'rxjs';
 import { map } from 'rxjs/operators';
-import { AuthService } from '../auth/auth.service';
+import { UIService } from '../shared/ui.service';
 
 @Injectable({
   providedIn: 'root'
@@ -16,7 +16,7 @@ export class BoardService {
   private doingUpdate = new BehaviorSubject<Task[]>(this.doingTasks);
   private doneUpdate = new BehaviorSubject<Task[]>(this.doneTasks);
 
-  constructor(private http: HttpClient) {}
+  constructor(private http: HttpClient, private uiService: UIService) {}
 
   /**
    * Listen to changes in todo list
@@ -69,6 +69,7 @@ export class BoardService {
    * Get todo tasks from server
    */
   getTodoTasks() {
+    this.uiService.loadingStateChanged.next(true);
     this.http
       .get<{ message: string; tasks: any }>('http://localhost:3000/api/todo')
       .pipe(
@@ -85,6 +86,7 @@ export class BoardService {
       )
       .subscribe(response => {
         this.tasks = response;
+        this.uiService.loadingStateChanged.next(false);
         this.todoUpdate.next([...this.tasks]);
       });
   }
@@ -148,6 +150,7 @@ export class BoardService {
    * Get all tasks in progress from server
    */
   getDoingTasks() {
+    this.uiService.loadingStateChanged.next(true);
     this.http
       .get<{ message: string; tasks: any }>('http://localhost:3000/api/doing')
       .pipe(
@@ -163,6 +166,7 @@ export class BoardService {
       )
       .subscribe(response => {
         this.doingTasks = response;
+        this.uiService.loadingStateChanged.next(false);
         this.doingUpdate.next([...this.doingTasks]);
       });
   }
@@ -226,6 +230,7 @@ export class BoardService {
    * Get all finished tasks from server
    */
   getDoneTasks() {
+    this.uiService.loadingStateChanged.next(true);
     this.http
       .get<{ message: string; tasks: any }>('http://localhost:3000/api/done')
       .pipe(
@@ -241,6 +246,7 @@ export class BoardService {
       )
       .subscribe(data => {
         this.doneTasks = data;
+        this.uiService.loadingStateChanged.next(false);
         this.doneUpdate.next([...this.doneTasks]);
       });
   }

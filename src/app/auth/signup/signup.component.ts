@@ -1,21 +1,26 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 import { MustMatch } from './must-match.validator';
 import { AuthService } from '../auth.service';
+import { Subscription } from 'rxjs';
+import { UIService } from 'src/app/shared/ui.service';
 
 @Component({
   selector: 'app-signup',
   templateUrl: './signup.component.html',
   styleUrls: ['./signup.component.css']
 })
-export class SignupComponent implements OnInit {
+export class SignupComponent implements OnInit, OnDestroy {
   signupForm: FormGroup;
   hidePassword = true;
   hideConfirmPassword = true;
+  isLoading = false;
+  private loadingSubscription: Subscription;
 
   constructor(
     private formBuilder: FormBuilder,
-    private authService: AuthService
+    private authService: AuthService,
+    private uiService: UIService
   ) {}
 
   /**
@@ -81,9 +86,18 @@ export class SignupComponent implements OnInit {
    * Call create user
    */
   onSubmit() {
+    this.loadingSubscription = this.uiService.loadingStateChanged.subscribe(
+      isLoading => (this.isLoading = isLoading)
+    );
     this.authService.createUser(
       this.form.email.value,
       this.form.password.value
     );
+  }
+
+  ngOnDestroy() {
+    if (this.loadingSubscription) {
+      this.loadingSubscription.unsubscribe();
+    }
   }
 }
