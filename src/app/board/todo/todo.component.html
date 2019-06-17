@@ -11,10 +11,10 @@
     <mat-accordion multi="true" *ngIf="!isLoading">
       <mat-expansion-panel *ngFor="let task of tasks">
         <mat-expansion-panel-header>
-          {{ task.title }}
+          {{ task.title | uppercaseFirstLetter }}
         </mat-expansion-panel-header>
 
-        {{ task.content }}
+        {{ task.content | uppercaseFirstLetter }}
         <mat-action-row>
           <button
             mat-button
