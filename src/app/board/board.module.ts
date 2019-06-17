@@ -11,6 +11,7 @@ import { DoingComponent } from './doing/doing.component';
 import { DoneComponent } from './done/done.component';
 import { CreateTaskComponent } from './todo/create-task/create-task.component';
 import { EditTaskComponent } from './edit-task/edit-task.component';
+import { UppercaseFirstLetterPipe } from './uppercase-first-letter.pipe';
 
 @NgModule({
   declarations: [
@@ -19,7 +20,8 @@ import { EditTaskComponent } from './edit-task/edit-task.component';
     DoingComponent,
     DoneComponent,
     CreateTaskComponent,
-    EditTaskComponent
+    EditTaskComponent,
+    UppercaseFirstLetterPipe
   ],
   imports: [CommonModule, FormsModule, BoardRoutingModule, MaterialModule]
 })
