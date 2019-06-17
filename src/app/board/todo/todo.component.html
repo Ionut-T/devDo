@@ -2,7 +2,13 @@
 <div class="list">
   <div class="todo">
     <h1>To do</h1>
-    <button mat-icon-button color="accent" (click)="openCreate()">
+    <button
+      mat-icon-button
+      color="accent"
+      matTooltip="Create a new task"
+      matTooltipPosition="right"
+      (click)="openCreate()"
+    >
       <mat-icon>add</mat-icon>
     </button>
   </div>
@@ -19,6 +25,7 @@
           <button
             mat-button
             color="primary"
+            matTooltip="Mark task as doing"
             (click)="onPushToDoing(task.id, task.title, task.description)"
           >
             <mat-icon>done</mat-icon>
@@ -26,11 +33,17 @@
           <a
             mat-button
             color="accent"
+            matTooltip="Edit task"
             [routerLink]="['/board/todo/edit', task.id]"
           >
             <mat-icon>edit</mat-icon>
           </a>
-          <button mat-button color="warn" (click)="onDelete(task.id)">
+          <button
+            mat-button
+            color="warn"
+            matTooltip="Delete task"
+            (click)="onDelete(task.id)"
+          >
             <mat-icon>delete</mat-icon>
           </button>
         </mat-action-row>

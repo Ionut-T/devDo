@@ -12,6 +12,7 @@
         <mat-action-row>
           <button
             mat-button
+            matTooltip="Move task back in todo list"
             (click)="onUndo(task.id, task.title, task.description)"
           >
             <mat-icon>undo</mat-icon>
@@ -19,11 +20,17 @@
           <a
             mat-button
             color="accent"
+            matTooltip="Edit task"
             [routerLink]="['/board/done/edit', task.id]"
           >
             <mat-icon>edit</mat-icon>
           </a>
-          <button mat-button color="warn" (click)="onDelete(task.id)">
+          <button
+            mat-button
+            color="warn"
+            matTooltip="Delete task"
+            (click)="onDelete(task.id)"
+          >
             <mat-icon>delete</mat-icon>
           </button>
         </mat-action-row>
