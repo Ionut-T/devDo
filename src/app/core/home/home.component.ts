@@ -1,5 +1,7 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
 import { Router } from '@angular/router';
+import { Subscription } from 'rxjs';
+import { AuthService } from 'src/app/auth/auth.service';
 
 /**
  * Home page component
@@ -9,10 +11,19 @@ import { Router } from '@angular/router';
   templateUrl: './home.component.html',
   styleUrls: ['./home.component.css']
 })
-export class HomeComponent implements OnInit {
-  constructor(private router: Router) {}
+export class HomeComponent implements OnInit, OnDestroy {
+  isAuth = false;
+  private authListenerSubscription: Subscription;
 
-  ngOnInit() {}
+  constructor(private router: Router, private authService: AuthService) {}
+
+  ngOnInit() {
+    this.authListenerSubscription = this.authService
+      .getAuthStatusListener()
+      .subscribe(isAuth => {
+        this.isAuth = isAuth;
+      });
+  }
 
   /**
    * Redirect user to sign up page
@@ -22,9 +33,11 @@ export class HomeComponent implements OnInit {
   }
 
   /**
-   * Redirect user to log in page
+   * Unsubscribe from subscriptions
    */
-  onLogIn() {
-    this.router.navigate(['/user/login']);
+  ngOnDestroy() {
+    if (this.authListenerSubscription) {
+      this.authListenerSubscription.unsubscribe();
+    }
   }
 }
