@@ -89,7 +89,7 @@ export class AuthService {
             );
             this.saveAuthData(token, expirationDate);
             this.uiService.showSnackBar(
-              'Login Successful',
+              'Logged in successfully!',
               null,
               3000,
               'bottom'
@@ -131,7 +131,12 @@ export class AuthService {
     this.authStatusListener.next(false);
     clearTimeout(this.tokenTimer);
     this.clearAuthData();
-    this.uiService.showSnackBar('Logout Successful', null, 3000, 'bottom');
+    this.uiService.showSnackBar(
+      'Logged out successfully!',
+      null,
+      3000,
+      'bottom'
+    );
     this.router.navigate(['/']);
   }
 
