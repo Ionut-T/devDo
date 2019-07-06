@@ -35,6 +35,7 @@ export class SignupComponent implements OnInit, OnDestroy {
       });
     this.signupForm = this.formBuilder.group(
       {
+        username: ['', [Validators.required, Validators.minLength(3)]],
         email: ['', [Validators.required, Validators.email]],
         password: ['', [Validators.required, Validators.minLength(6)]],
         confirmPassword: ['', Validators.required]
@@ -50,6 +51,18 @@ export class SignupComponent implements OnInit, OnDestroy {
    */
   get form() {
     return this.signupForm.controls;
+  }
+
+  /**
+   * Handle sign up form errors -> email field.
+   */
+  usernameErrorHandler() {
+    if (this.form.username.hasError('required')) {
+      return 'You must enter a valid username';
+    } else if (this.form.username.hasError('minlength')) {
+      return 'Username must have minimum 3 characters';
+    }
+    return null;
   }
 
   /**
@@ -89,20 +102,22 @@ export class SignupComponent implements OnInit, OnDestroy {
   }
 
   /**
-   * Call create user
+   * Signup user
    */
   onSubmit() {
     this.loadingSubscription = this.uiService.loadingStateChanged.subscribe(
       isLoading => (this.isLoading = isLoading)
     );
-    this.authService.createUser(
+    this.authService.signup(
+      this.form.username.value,
       this.form.email.value,
-      this.form.password.value
+      this.form.password.value,
+      this.form.confirmPassword.value
     );
   }
 
   /**
-   * Unsubscribe from subscriptions
+   * Unsubscribe from subscriptions.
    */
   ngOnDestroy() {
     if (this.loadingSubscription) {

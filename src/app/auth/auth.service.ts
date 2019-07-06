@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { AuthData } from './auth-data.model';
+import { User } from './user.model';
 import { BehaviorSubject } from 'rxjs';
 import { Router } from '@angular/router';
 import { UIService } from '../shared/ui.service';
@@ -9,7 +9,7 @@ import { environment } from '../../environments/environment';
 /**
  * API URL
  */
-const BACKEND_URL = environment.apiUrl + '/user/';
+const API_URL = environment.apiUrl + '/user/';
 
 @Injectable({
   providedIn: 'root'
@@ -52,10 +52,10 @@ export class AuthService {
   /**
    * Create user.
    */
-  createUser(email: string, password: string) {
+  signup(username: string, email: string, password: string, confirmPassword: string) {
     this.uiService.loadingStateChanged.next(true);
-    const authData: AuthData = { email, password };
-    this.http.post(`${BACKEND_URL}signup`, authData).subscribe(
+    const authData: User = { username, email, password, confirmPassword };
+    this.http.post(`${API_URL}signup`, authData).subscribe(
       response => {
         this.router.navigate(['/user/login']);
         this.uiService.loadingStateChanged.next(false);
@@ -71,12 +71,9 @@ export class AuthService {
    */
   login(email: string, password: string) {
     this.uiService.loadingStateChanged.next(true);
-    const authData: AuthData = { email, password };
+    const authData: User = { email, password };
     this.http
-      .post<{ token: string; expiresIn: number }>(
-        `${BACKEND_URL}login`,
-        authData
-      )
+      .post<{ token: string; expiresIn: number }>(`${API_URL}login`, authData)
       .subscribe(
         response => {
           const token = response.token;
