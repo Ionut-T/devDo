@@ -6,6 +6,9 @@ import { Router } from '@angular/router';
 import { UIService } from '../shared/ui.service';
 import { environment } from '../../environments/environment';
 
+/**
+ * API URL
+ */
 const BACKEND_URL = environment.apiUrl + '/user/';
 
 @Injectable({
@@ -105,7 +108,7 @@ export class AuthService {
   }
 
   /**
-   * Autouser authentication.
+   * Auto user authentication.
    */
   autoAuthUser() {
     const authInformation = this.getAuthData();

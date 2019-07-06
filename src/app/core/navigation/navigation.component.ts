@@ -25,6 +25,9 @@ export class NavigationComponent implements OnInit, OnDestroy {
     private authService: AuthService
   ) {}
 
+  /**
+   * Get authentication status
+   */
   ngOnInit() {
     this.isAuth = this.authService.getIsAuth();
     this.authListenerSubscription = this.authService
@@ -34,11 +37,17 @@ export class NavigationComponent implements OnInit, OnDestroy {
       });
   }
 
+  /**
+   * Log out user
+   */
   onLogout() {
     this.authService.logout();
     this.drawer.close();
   }
 
+  /**
+   * Unsubscribe from subscription
+   */
   ngOnDestroy() {
     if (this.authListenerSubscription) {
       this.authListenerSubscription.unsubscribe();

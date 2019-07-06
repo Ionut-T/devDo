@@ -6,6 +6,9 @@ import { map } from 'rxjs/operators';
 import { UIService } from '../shared/ui.service';
 import { environment } from '../../environments/environment';
 
+/**
+ * API URL
+ */
 const BACKEND_URL = environment.apiUrl;
 
 @Injectable({
