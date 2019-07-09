@@ -35,20 +35,20 @@ export class DoneComponent implements OnInit, OnDestroy {
       });
   }
 
-  /**
-   * Add task back to doing list
-   */
-  onUndo(id: string, title: string, description: string) {
-    this.boardService.addDoingTask(id, title, description);
-    this.onDelete(id);
-  }
+  // /**
+  //  * Add task back to doing list
+  //  */
+  // onUndo(id: string, title: string, description: string) {
+  //   this.boardService.addDoingTask(id, title, description);
+  //   this.onDelete(id);
+  // }
 
-  /**
-   * Delete doing task
-   */
-  onDelete(id: string) {
-    this.boardService.deleteDoneTask(id);
-  }
+  // /**
+  //  * Delete doing task
+  //  */
+  // onDelete(id: string) {
+  //   this.boardService.deleteDoneTask(id);
+  // }
 
   /**
    * Unsubscribe from subscriptions
@@ -57,9 +57,8 @@ export class DoneComponent implements OnInit, OnDestroy {
     if (this.doneSubscription) {
       this.doneSubscription.unsubscribe();
     }
-
-    if (this.loadingSubscription) {
-      this.loadingSubscription.unsubscribe();
-    }
+    // if (this.loadingSubscription) {
+    //   this.loadingSubscription.unsubscribe();
+    // }
   }
 }

@@ -52,7 +52,12 @@ export class AuthService {
   /**
    * Create user.
    */
-  signup(username: string, email: string, password: string, confirmPassword: string) {
+  signup(
+    username: string,
+    email: string,
+    password: string,
+    confirmPassword: string
+  ) {
     this.uiService.loadingStateChanged.next(true);
     const authData: User = { username, email, password, confirmPassword };
     this.http.post(`${API_URL}signup`, authData).subscribe(

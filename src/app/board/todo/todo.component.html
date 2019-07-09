@@ -15,18 +15,18 @@
   <div class="content">
     <mat-spinner *ngIf="isLoading"></mat-spinner>
     <mat-accordion multi="true" *ngIf="!isLoading">
-      <mat-expansion-panel *ngFor="let task of tasks">
+      <mat-expansion-panel *ngFor="let task of tasks$ | async">
         <mat-expansion-panel-header>
           {{ task.title | uppercaseFirstLetter }}
         </mat-expansion-panel-header>
-
         {{ task.description | uppercaseFirstLetter }}
+
         <mat-action-row>
           <button
             mat-button
             color="primary"
             matTooltip="Mark task as doing"
-            (click)="onPushToDoing(task.id, task.title, task.description)"
+            (click)="onPushToDoing(task.id)"
           >
             <mat-icon>done</mat-icon>
           </button>

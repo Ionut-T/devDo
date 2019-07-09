@@ -42,24 +42,24 @@ export class DoingComponent implements OnInit, OnDestroy {
    * Add task to done list
    */
   onPushToDone(id: string, title: string, description: string) {
-    this.boardService.addDoneTask(id, title, description);
-    this.onDelete(id);
+    this.boardService.changeTaskStatus(id);
+    // this.onDelete(id);
   }
 
   /**
    * Add task back to todo list
    */
-  onUndo(id: string, title: string, description: string) {
-    this.boardService.addTodoTask(title, description);
-    this.onDelete(id);
-  }
+  // onUndo(id: string, title: string, description: string) {
+  //   this.boardService.createTask(title, description);
+  //   this.onDelete(id);
+  // }
 
   /**
    * Delete doing task
    */
-  onDelete(id: string) {
-    this.boardService.deleteDoingTask(id);
-  }
+  // onDelete(id: string) {
+  //   this.boardService.deleteDoingTask(id);
+  // }
 
   /**
    * Unsubscribe from subscriptions
@@ -69,8 +69,8 @@ export class DoingComponent implements OnInit, OnDestroy {
       this.doingSubscription.unsubscribe();
     }
 
-    if (this.loadingSubscription) {
-      this.loadingSubscription.unsubscribe();
-    }
+    // if (this.loadingSubscription) {
+    //   this.loadingSubscription.unsubscribe();
+    // }
   }
 }
