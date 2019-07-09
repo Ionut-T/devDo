@@ -95,9 +95,10 @@ export class SignupComponent implements OnInit, OnDestroy {
     this.loadingSubscription = this.uiService.loadingStateChanged.subscribe(
       isLoading => (this.isLoading = isLoading)
     );
-    this.authService.createUser(
+    this.authService.signup(
       this.form.email.value,
-      this.form.password.value
+      this.form.password.value,
+      this.form.confirmPassword.value
     );
   }
 

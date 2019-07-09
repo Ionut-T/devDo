@@ -52,9 +52,9 @@ export class AuthService {
   /**
    * Create user.
    */
-  createUser(email: string, password: string) {
+  signup(email: string, password: string, confirmPassword: string) {
     this.uiService.loadingStateChanged.next(true);
-    const authData: AuthData = { email, password };
+    const authData: AuthData = { email, password, confirmPassword };
     this.http.post(`${BACKEND_URL}signup`, authData).subscribe(
       response => {
         this.router.navigate(['/user/login']);
