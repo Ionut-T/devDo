@@ -1,3 +1,6 @@
+import { HEROKU_URL } from 'credential';
+
 export const environment = {
-  production: true
+  production: true,
+  apiUrl: HEROKU_URL
 };
