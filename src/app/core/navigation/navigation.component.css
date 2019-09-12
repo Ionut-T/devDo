@@ -12,10 +12,6 @@
   z-index: 1;
 }
 
-.main-navigation > .mat-list-item {
-  color: #fff;
-}
-
 .main-navigation {
   display: flex;
   align-self: baseline;
@@ -28,8 +24,4 @@
 a {
   text-decoration: none;
   color: #fff;
-}
-
-.mat-nav-list a.active {
-  color: #febf6e;
 }

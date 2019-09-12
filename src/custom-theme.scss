@@ -18,7 +18,7 @@ $devdo-accent: mat-palette($mat-lime);
 $devdo-warn: mat-palette($mat-red);
 
 // Create the theme object (a Sass map containing all of the palettes).
-$devdo-theme: mat-light-theme($devdo-primary, $devdo-accent, $devdo-warn);
+$devdo-theme: mat-dark-theme($devdo-primary, $devdo-accent, $devdo-warn);
 
 // Include theme styles for core and each component used in your app.
 // Alternatively, you can import and @include the theme mixins for each component
