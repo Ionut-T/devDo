@@ -1,17 +1,19 @@
 <div class="home">
-  <div class="home__cta">
-    <p>
-      devDo helps you to keep track of your project progress and never miss a
-      deadline.
-    </p>
-    <button
-      mat-raised-button
-      class="mat-elevation-z24"
-      color="primary"
-      (click)="onSignUp()"
-      *ngIf="!isAuth"
-    >
-      Sign Up!
-    </button>
+  <div class="overlay">
+    <div class="home__cta">
+      <p>
+        devDo helps you to keep track of your project progress and never miss a
+        deadline.
+      </p>
+      <button
+        mat-raised-button
+        class="mat-elevation-z24"
+        color="primary"
+        (click)="onSignUp()"
+        *ngIf="!isAuth"
+      >
+        Sign Up!
+      </button>
+    </div>
   </div>
 </div>
