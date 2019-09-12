@@ -13,6 +13,7 @@ import { MatSidenav } from '@angular/material/sidenav';
 export class NavigationComponent implements OnInit, OnDestroy {
   isOpened = false;
   isAuth = false;
+  isDarkTheme = false;
   private authListenerSubscription: Subscription;
   @ViewChild('drawer', { static: false }) drawer: MatSidenav;
 
@@ -35,6 +36,13 @@ export class NavigationComponent implements OnInit, OnDestroy {
       .subscribe(isAuth => {
         this.isAuth = isAuth;
       });
+  }
+
+  /**
+   * Change theme.
+   */
+  toggleTheme() {
+    this.isDarkTheme = !this.isDarkTheme;
   }
 
   /**

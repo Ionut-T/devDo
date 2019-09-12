@@ -1,4 +1,7 @@
-<mat-sidenav-container class="sidenav-container">
+<mat-sidenav-container
+  class="sidenav-container mat-app-background"
+  [ngClass]="{ 'dark-theme': isDarkTheme }"
+>
   <mat-sidenav
     #drawer
     class="sidenav"
@@ -83,6 +86,7 @@
           Log Out
         </a>
       </mat-nav-list>
+      <mat-slide-toggle matTooltip='Change theme' (change)="toggleTheme()"></mat-slide-toggle>
     </mat-toolbar>
 
     <ng-content></ng-content>
