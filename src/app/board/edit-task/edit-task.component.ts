@@ -1,8 +1,10 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
 import { Task } from '../task.model';
 import { NgForm } from '@angular/forms';
-import { BoardService } from '../board.service';
 import { ActivatedRoute, ParamMap, Router } from '@angular/router';
+import { TaskService } from '../task.service';
+import { Subject } from 'rxjs';
+import { takeUntil } from 'rxjs/operators';
 
 /**
  * Component for editing tasks
@@ -12,26 +14,23 @@ import { ActivatedRoute, ParamMap, Router } from '@angular/router';
   templateUrl: './edit-task.component.html',
   styleUrls: ['./edit-task.component.css']
 })
-export class EditTaskComponent implements OnInit {
+export class EditTaskComponent implements OnInit, OnDestroy {
   task: Task;
   private taskId: string;
   private target = 'todo' || 'doing' || 'done';
+  private destroy$ = new Subject<void>();
 
-  constructor(
-    private boardService: BoardService,
-    private route: ActivatedRoute,
-    private router: Router
-  ) {}
+  constructor(private taskService: TaskService, private route: ActivatedRoute, private router: Router) {}
 
   /**
    * Fetch task content
    */
   ngOnInit() {
-    this.route.paramMap.subscribe((paramMap: ParamMap) => {
+    this.route.paramMap.pipe(takeUntil(this.destroy$)).subscribe((paramMap: ParamMap) => {
       if (paramMap.has('todoId')) {
         this.target = 'todo';
         this.taskId = paramMap.get('todoId');
-        this.boardService.getTodoTask(this.taskId).subscribe(responseData => {
+        this.taskService.getTask(this.taskId).subscribe(responseData => {
           this.task = {
             id: responseData.task._id,
             title: responseData.task.title,
@@ -39,27 +38,6 @@ export class EditTaskComponent implements OnInit {
           };
         });
       }
-      //  else if (paramMap.has('doingId')) {
-      //   this.target = 'doing';
-      //   this.taskId = paramMap.get('doingId');
-      //   this.boardService.getDoingTask(this.taskId).subscribe(responseData => {
-      //     this.task = {
-      //       id: responseData._id,
-      //       title: responseData.title,
-      //       description: responseData.description
-      //     };
-      //   });
-      // } else {
-      //   this.target = 'done';
-      //   this.taskId = paramMap.get('doneId');
-      //   this.boardService.getDoneTask(this.taskId).subscribe(responseData => {
-      //     this.task = {
-      //       id: responseData._id,
-      //       title: responseData.title,
-      //       description: responseData.description
-      //     };
-      //   });
-      // }
     });
   }
 
@@ -71,26 +49,7 @@ export class EditTaskComponent implements OnInit {
       return;
     }
 
-    if (this.target === 'todo') {
-      this.boardService.updateTodoTask(
-        this.taskId,
-        form.value.title,
-        form.value.description
-      );
-    }
-    // else if (this.target === 'doing') {
-    //   this.boardService.updateDoingTask(
-    //     this.taskId,
-    //     form.value.title,
-    //     form.value.description
-    //   );
-    // } else {
-    //   this.boardService.updateDoneTask(
-    //     this.taskId,
-    //     form.value.title,
-    //     form.value.description
-    //   );
-    // }
+    this.taskService.updateTask(this.taskId, form.value.title, form.value.description);
 
     this.onClose();
   }
@@ -100,5 +59,10 @@ export class EditTaskComponent implements OnInit {
    */
   onClose() {
     this.router.navigate(['/board']);
+  }
+
+  ngOnDestroy() {
+    this.destroy$.next();
+    this.destroy$.unsubscribe();
   }
 }
