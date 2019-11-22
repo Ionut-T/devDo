@@ -8,9 +8,7 @@ const routes: Routes = [
     path: '',
     component: BoardComponent
   },
-  { path: 'todo/edit/:todoId', component: EditTaskComponent },
-  { path: 'doing/edit/:doingId', component: EditTaskComponent },
-  { path: 'done/edit/:doneId', component: EditTaskComponent }
+  { path: 'tasks/edit/:todoId', component: EditTaskComponent }
 ];
 
 @NgModule({

@@ -1,6 +1,6 @@
 import { Component, OnInit, Output, EventEmitter } from '@angular/core';
-import { BoardService } from '../../board.service';
 import { NgForm } from '@angular/forms';
+import { TaskService } from '../../task.service';
 
 /**
  * Dynamic component for creating new tasks
@@ -13,7 +13,7 @@ import { NgForm } from '@angular/forms';
 export class CreateTaskComponent implements OnInit {
   @Output() close = new EventEmitter<void>();
 
-  constructor(private boardService: BoardService) {}
+  constructor(private taskService: TaskService) {}
 
   ngOnInit() {}
 
@@ -25,7 +25,7 @@ export class CreateTaskComponent implements OnInit {
       return;
     }
 
-    this.boardService.createTask(form.value.title, form.value.description);
+    this.taskService.createTask(form.value.title, form.value.description);
     form.resetForm();
     this.onClose();
   }
