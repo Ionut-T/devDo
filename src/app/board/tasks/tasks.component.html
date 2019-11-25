@@ -17,33 +17,18 @@
     <mat-accordion multi="true" *ngIf="!isLoading">
       <mat-expansion-panel *ngFor="let task of tasks$ | async">
         <mat-expansion-panel-header>
-          {{ task.title | uppercaseFirstLetter }}
+          {{ task?.title | uppercaseFirstLetter }}
         </mat-expansion-panel-header>
-        {{ task.description | uppercaseFirstLetter }}
+        {{ task?.description | uppercaseFirstLetter }}
 
         <mat-action-row>
-          <button
-            mat-button
-            color="primary"
-            matTooltip="Mark task as doing"
-            (click)="onPushToDoing(task.id)"
-          >
+          <button mat-button color="primary" matTooltip="Mark task as doing" (click)="onPushToDoing(task.id)">
             <mat-icon>done</mat-icon>
           </button>
-          <a
-            mat-button
-            color="accent"
-            matTooltip="Edit task"
-            [routerLink]="['/board/todo/edit', task.id]"
-          >
+          <a mat-button color="accent" matTooltip="Edit task" [routerLink]="['/board/tasks/edit', task.id]">
             <mat-icon>edit</mat-icon>
           </a>
-          <button
-            mat-button
-            color="warn"
-            matTooltip="Delete task"
-            (click)="onDelete(task.id)"
-          >
+          <button mat-button color="warn" matTooltip="Delete task" (click)="onDelete(task.id)">
             <mat-icon>delete</mat-icon>
           </button>
         </mat-action-row>

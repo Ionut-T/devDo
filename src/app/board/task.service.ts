@@ -1,71 +1,60 @@
 import { Injectable } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
-import { Task } from './task.model';
-import { BehaviorSubject } from 'rxjs';
-import { map } from 'rxjs/operators';
+import { HttpClient, HttpResponse } from '@angular/common/http';
+import { ITask } from './task.model';
+import { BehaviorSubject, Observable } from 'rxjs';
 import { UIService } from '../shared/ui.service';
 import { environment } from '../../environments/environment';
 
-/**
- * API URL
- */
-const API_URL = environment.apiUrl + '/tasks';
+type TaskResponseType = HttpResponse<{ task: ITask }>;
+type TaskArrayResponseType = HttpResponse<{ tasks: ITask[] }>;
 
 @Injectable({
   providedIn: 'root'
 })
 export class TaskService {
+  private readonly URL = environment.apiUrl + '/tasks';
+  private taskState = new BehaviorSubject<ITask>(null);
+  taskListener$ = this.taskState.asObservable();
+
   constructor(private http: HttpClient, private uiService: UIService) {}
 
   /**
    * Create a new task.
    */
-  createTask(title: string, description: string) {
-    const task: Task = { id: null, title, description };
-    return this.http.post<{
-      message: string;
-      data: { task: { id: string; title: string; description: string } };
-    }>(`${API_URL}`, task);
+  createTask(task: ITask): Observable<TaskResponseType> {
+    return this.http.post<{ task: ITask }>(`${this.URL}`, task, { observe: 'response' });
   }
 
   /**
    * Get a single task from server.
    */
   getTask(id: string) {
-    return this.http.get<{
-      task: { _id: string; title: string; description: string; status: string };
-    }>(`${API_URL}/${id}`);
+    return this.http.get<{ _id: string; title: string; description: string; status: string }>(`${this.URL}/${id}`);
   }
 
-  getTasks() {
+  getTasks(): Observable<TaskArrayResponseType> {
     this.uiService.loadingStateChanged.next(true);
-    return this.http.get<{ message: string; data: { tasks: any } }>(`${API_URL}/todo`).pipe(
-      map(taskData => {
-        return taskData.data.tasks.map(task => {
-          return {
-            id: task._id,
-            title: task.title,
-            description: task.description,
-            status: task.status,
-            creator: task.creator
-          };
-        });
-      })
-    );
+    return this.http.get<{ tasks: ITask[] }>(this.URL, { observe: 'response' });
   }
 
   /**
    * Update task.
    */
-  updateTask(id: string, title: string, description: string) {
-    const task: Task = { id, title, description };
-    return this.http.put<{ task: Task }>(`${API_URL}/${id}`, task);
+  updateTask(id: string, task: Partial<ITask>): Observable<TaskResponseType> {
+    return this.http.put<{ task: ITask }>(`${this.URL}/${id}`, task, { observe: 'response' });
   }
 
   /**
    * Delete task from server.
    */
-  deleteTodoTask(id: string) {
-    return this.http.delete(`${API_URL}/${id}`);
+  deleteTask(id: string): Observable<HttpResponse<null>> {
+    return this.http.delete<null>(`${this.URL}/${id}`, { observe: 'response' });
+  }
+
+  /**
+   * Update tasks list.
+   */
+  updateTaskList(newTask: ITask) {
+    this.taskState.next(newTask);
   }
 }

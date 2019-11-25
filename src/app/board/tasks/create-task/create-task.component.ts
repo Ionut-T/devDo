@@ -1,4 +1,4 @@
-import { Component, OnInit, Output, EventEmitter } from '@angular/core';
+import { Component, Output, EventEmitter } from '@angular/core';
 import { NgForm } from '@angular/forms';
 import { TaskService } from '../../task.service';
 
@@ -10,28 +10,29 @@ import { TaskService } from '../../task.service';
   templateUrl: './create-task.component.html',
   styleUrls: ['./create-task.component.css']
 })
-export class CreateTaskComponent implements OnInit {
+export class CreateTaskComponent {
   @Output() close = new EventEmitter<void>();
 
   constructor(private taskService: TaskService) {}
 
-  ngOnInit() {}
-
   /**
-   * Create new task
+   * Create new task.
    */
   onSave(form: NgForm) {
     if (form.invalid) {
       return;
     }
 
-    this.taskService.createTask(form.value.title, form.value.description);
+    this.taskService
+      .createTask({ id: null, title: form.value.title, description: form.value.description })
+      .subscribe(res => this.taskService.updateTaskList(res.body.task));
+
     form.resetForm();
     this.onClose();
   }
 
   /**
-   * Close modal
+   * Close modal.
    */
   onClose() {
     this.close.emit();

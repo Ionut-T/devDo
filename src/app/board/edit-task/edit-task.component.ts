@@ -1,7 +1,7 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
-import { Task } from '../task.model';
 import { NgForm } from '@angular/forms';
 import { ActivatedRoute, ParamMap, Router } from '@angular/router';
+import { ITask } from '../task.model';
 import { TaskService } from '../task.service';
 import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
@@ -15,52 +15,52 @@ import { takeUntil } from 'rxjs/operators';
   styleUrls: ['./edit-task.component.css']
 })
 export class EditTaskComponent implements OnInit, OnDestroy {
-  task: Task;
+  task: ITask;
   private taskId: string;
-  private target = 'todo' || 'doing' || 'done';
   private destroy$ = new Subject<void>();
 
   constructor(private taskService: TaskService, private route: ActivatedRoute, private router: Router) {}
 
   /**
-   * Fetch task content
+   * Fetch task content.
    */
   ngOnInit() {
     this.route.paramMap.pipe(takeUntil(this.destroy$)).subscribe((paramMap: ParamMap) => {
-      if (paramMap.has('todoId')) {
-        this.target = 'todo';
-        this.taskId = paramMap.get('todoId');
-        this.taskService.getTask(this.taskId).subscribe(responseData => {
-          this.task = {
-            id: responseData.task._id,
-            title: responseData.task.title,
-            description: responseData.task.description
-          };
-        });
+      if (paramMap.has('taskId')) {
+        this.taskId = paramMap.get('taskId');
       }
+    });
+
+    this.taskService.getTask(this.taskId).subscribe(task => {
+      this.task = { id: task._id, title: task.title, description: task.description };
     });
   }
 
   /**
-   * Save edited task
+   * Save edited task.
    */
   onSave(form: NgForm) {
     if (form.invalid) {
       return;
     }
 
-    this.taskService.updateTask(this.taskId, form.value.title, form.value.description);
+    this.taskService
+      .updateTask(this.taskId, { title: form.value.title, description: form.value.description })
+      .subscribe();
 
     this.onClose();
   }
 
   /**
-   * Return to board
+   * Return to board.
    */
   onClose() {
     this.router.navigate(['/board']);
   }
 
+  /**
+   * Unsubscribe from observables.
+   */
   ngOnDestroy() {
     this.destroy$.next();
     this.destroy$.unsubscribe();
