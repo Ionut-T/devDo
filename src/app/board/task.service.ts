@@ -29,7 +29,7 @@ export class TaskService {
    * Get a single task from server.
    */
   getTask(id: string) {
-    return this.http.get<{ _id: string; title: string; description: string; status: string }>(`${this.URL}/${id}`);
+    return this.http.get<{ _id: string; title: string; description: string; status: 'todo' | 'doing' | 'done' }>(`${this.URL}/${id}`);
   }
 
   getTasks(): Observable<TaskArrayResponseType> {

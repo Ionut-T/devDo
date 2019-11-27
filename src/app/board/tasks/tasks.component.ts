@@ -17,6 +17,7 @@ export class TasksComponent implements OnInit, OnDestroy {
   isOpen = false;
   isLoading = false;
   tasks$: Observable<ITask[]>;
+  private task: ITask;
   private tasks: ITask[] = [];
   private tasksListener = new BehaviorSubject<ITask[]>(this.tasks);
   private destroy$ = new Subject<void>();
@@ -89,9 +90,37 @@ export class TasksComponent implements OnInit, OnDestroy {
   /**
    * Add task to doing list.
    */
-  onPushToDoing(id: string) {
-    // this.taskService.changeTaskStatus(id);
-    // this.onDelete(id);
+  onChangeStatus(id: string) {
+    this.taskService
+      .getTask(id)
+      .pipe(
+        map(res => {
+          return {
+            id: res._id,
+            title: res.title,
+            description: res.description,
+            status: res.status
+          };
+        })
+      )
+      .subscribe(res => (this.task = res));
+    
+    console.log('TCL: TasksComponent -> onPushToDoing -> task', this.task);
+
+    if (!this.task) {
+      return;
+    }
+
+    let status: 'todo' | 'doing' | 'done';
+
+    if (this.task.status.includes('todo')) {
+      status = 'doing';
+    } else if (this.task.status.includes('doing')) {
+      status = 'done';
+    }
+
+    console.log('TCL: TasksComponent -> onPushToDoing -> status', status);
+    this.taskService.updateTask(id, { status }).subscribe();
   }
 
   /**

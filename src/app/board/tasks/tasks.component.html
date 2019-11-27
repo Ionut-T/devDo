@@ -22,7 +22,7 @@
         {{ task?.description | uppercaseFirstLetter }}
 
         <mat-action-row>
-          <button mat-button color="primary" matTooltip="Mark task as doing" (click)="onPushToDoing(task.id)">
+          <button mat-button color="primary" matTooltip="Mark task as doing" (click)="onChangeStatus(task.id)">
             <mat-icon>done</mat-icon>
           </button>
           <a mat-button color="accent" matTooltip="Edit task" [routerLink]="['/board/tasks/edit', task.id]">
