@@ -1,8 +1,8 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { NgForm } from '@angular/forms';
 import { ActivatedRoute, ParamMap, Router } from '@angular/router';
-import { ITask } from '../task.model';
-import { TaskService } from '../task.service';
+import { ITask } from '../../task.model';
+import { TaskService } from '../../task.service';
 import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
 
