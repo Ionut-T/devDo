@@ -1,38 +1,45 @@
 <app-create-task *ngIf="isOpen" (close)="closeCreate()"></app-create-task>
-<div class="list">
-  <div class="todo">
-    <h1>To do</h1>
-    <button
-      mat-icon-button
-      color="accent"
-      matTooltip="Create a new task"
-      matTooltipPosition="right"
-      (click)="openCreate()"
-    >
-      <mat-icon>add</mat-icon>
-    </button>
+<div class="action">
+  <button mat-mini-fab color="primary" matTooltip="Create a new task" matTooltipPosition="right" (click)="openCreate()">
+    <mat-icon>add</mat-icon>
+  </button>
+</div>
+<div class="tasks-container">
+  <div class="list">
+    <div class="content">
+      <mat-spinner *ngIf="isLoading"></mat-spinner>
+      <app-tasks-card-list
+        title="To Do"
+        tooltip="Mark task as doing"
+        [tasks]="todoTasks$ | async"
+        (delete)="reloadTasks()"
+        (changeStatus)="reloadTasks()"
+      ></app-tasks-card-list>
+    </div>
   </div>
-  <div class="content">
-    <mat-spinner *ngIf="isLoading"></mat-spinner>
-    <mat-accordion multi="true" *ngIf="!isLoading">
-      <mat-expansion-panel *ngFor="let task of tasks$ | async">
-        <mat-expansion-panel-header>
-          {{ task?.title | uppercaseFirstLetter }}
-        </mat-expansion-panel-header>
-        {{ task?.description | uppercaseFirstLetter }}
-
-        <mat-action-row>
-          <button mat-button color="primary" matTooltip="Mark task as doing" (click)="onChangeStatus(task.id)">
-            <mat-icon>done</mat-icon>
-          </button>
-          <a mat-button color="accent" matTooltip="Edit task" [routerLink]="['/board/tasks/edit', task.id]">
-            <mat-icon>edit</mat-icon>
-          </a>
-          <button mat-button color="warn" matTooltip="Delete task" (click)="onDelete(task.id)">
-            <mat-icon>delete</mat-icon>
-          </button>
-        </mat-action-row>
-      </mat-expansion-panel>
-    </mat-accordion>
+  <mat-divider [vertical]="true"></mat-divider>
+  <div class="list">
+    <div class="content">
+      <mat-spinner *ngIf="isLoading"></mat-spinner>
+      <app-tasks-card-list
+        title="Doing"
+        tooltip="Mark task as done"
+        [tasks]="doingTasks$ | async"
+        (delete)="reloadTasks()"
+        (changeStatus)="reloadTasks()"
+      ></app-tasks-card-list>
+    </div>
+  </div>
+  <mat-divider [vertical]="true"></mat-divider>
+  <div class="list">
+    <div class="content">
+      <mat-spinner *ngIf="isLoading"></mat-spinner>
+      <app-tasks-card-list
+        title="Done"
+        [tasks]="doneTasks$ | async"
+        (delete)="reloadTasks()"
+        (changeStatus)="reloadTasks()"
+      ></app-tasks-card-list>
+    </div>
   </div>
 </div>

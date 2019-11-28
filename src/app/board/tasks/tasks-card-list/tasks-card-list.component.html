@@ -1,0 +1,28 @@
+<h1 class="mat-h1">{{ title }}</h1>
+<mat-accordion multi="true">
+  <mat-expansion-panel *ngFor="let task of tasks">
+    <mat-expansion-panel-header>
+      {{ task.title | uppercaseFirstLetter }}
+    </mat-expansion-panel-header>
+    {{ task.description | uppercaseFirstLetter }}
+
+    <mat-action-row>
+      <button
+        mat-button
+        color="primary"
+        [matTooltip]="tooltip"
+        (click)="onChangeStatus(task.id)"
+        *ngIf="task.status !== 'done'"
+      >
+        <mat-icon *ngIf="task.status === 'todo'">done</mat-icon>
+        <mat-icon *ngIf="task.status === 'doing'">done_all</mat-icon>
+      </button>
+      <a mat-button color="accent" matTooltip="Edit task" [routerLink]="['/board/tasks/edit', task.id]">
+        <mat-icon>edit</mat-icon>
+      </a>
+      <button mat-button color="warn" matTooltip="Delete task" (click)="onDelete(task.id)">
+        <mat-icon>delete</mat-icon>
+      </button>
+    </mat-action-row>
+  </mat-expansion-panel>
+</mat-accordion>

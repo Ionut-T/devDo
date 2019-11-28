@@ -3,7 +3,7 @@ import { ITask } from '../task.model';
 import { TaskService } from '../task.service';
 import { BehaviorSubject, Observable, Subject, Subscription } from 'rxjs';
 import { UIService } from 'src/app/shared/ui.service';
-import { takeUntil, finalize, map, switchMap, share, tap, startWith, shareReplay } from 'rxjs/operators';
+import { takeUntil, map, switchMap, shareReplay } from 'rxjs/operators';
 
 /**
  * Tasks List Component
@@ -17,7 +17,10 @@ export class TasksComponent implements OnInit, OnDestroy {
   isOpen = false;
   isLoading = false;
   tasks$: Observable<ITask[]>;
-  private task: ITask;
+  todoTasks$: Observable<ITask[]>;
+  doingTasks$: Observable<ITask[]>;
+  doneTasks$: Observable<ITask[]>;
+
   private tasks: ITask[] = [];
   private tasksListener = new BehaviorSubject<ITask[]>(this.tasks);
   private destroy$ = new Subject<void>();
@@ -29,10 +32,16 @@ export class TasksComponent implements OnInit, OnDestroy {
     //   .pipe(takeUntil(this.destroy$))
     //   .subscribe(isLoading => (this.isLoading = isLoading));
 
+    // this.tasks$ = this.getTasks();
+
     this.tasks$ = this.tasksListener.asObservable().pipe(
       switchMap(() => this.getTasks()),
       shareReplay()
     );
+
+    this.todoTasks$ = this.tasks$.pipe(map(tasks => tasks.filter(task => task.status.includes('todo'))));
+    this.doingTasks$ = this.tasks$.pipe(map(tasks => tasks.filter(task => task.status.includes('doing'))));
+    this.doneTasks$ = this.tasks$.pipe(map(tasks => tasks.filter(task => task.status.includes('done'))));
 
     this.getLastTask();
   }
@@ -81,46 +90,10 @@ export class TasksComponent implements OnInit, OnDestroy {
   }
 
   /**
-   * Delete todo task.
+   * Reload tasks.
    */
-  onDelete(id: string) {
-    this.taskService.deleteTask(id).subscribe(() => this.tasksListener.next([...this.tasks]));
-  }
-
-  /**
-   * Add task to doing list.
-   */
-  onChangeStatus(id: string) {
-    this.taskService
-      .getTask(id)
-      .pipe(
-        map(res => {
-          return {
-            id: res._id,
-            title: res.title,
-            description: res.description,
-            status: res.status
-          };
-        })
-      )
-      .subscribe(res => (this.task = res));
-    
-    console.log('TCL: TasksComponent -> onPushToDoing -> task', this.task);
-
-    if (!this.task) {
-      return;
-    }
-
-    let status: 'todo' | 'doing' | 'done';
-
-    if (this.task.status.includes('todo')) {
-      status = 'doing';
-    } else if (this.task.status.includes('doing')) {
-      status = 'done';
-    }
-
-    console.log('TCL: TasksComponent -> onPushToDoing -> status', status);
-    this.taskService.updateTask(id, { status }).subscribe();
+  reloadTasks() {
+    this.tasksListener.next([...this.tasks]);
   }
 
   /**

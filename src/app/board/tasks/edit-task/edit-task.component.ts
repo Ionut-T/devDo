@@ -31,8 +31,8 @@ export class EditTaskComponent implements OnInit, OnDestroy {
       }
     });
 
-    this.taskService.getTask(this.taskId).subscribe(task => {
-      this.task = { id: task._id, title: task.title, description: task.description };
+    this.taskService.getMappedTask(this.taskId).subscribe(task => {
+      this.task = { id: task.id, title: task.title, description: task.description };
     });
   }
 
