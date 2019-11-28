@@ -10,7 +10,7 @@
       <mat-spinner *ngIf="isLoading"></mat-spinner>
       <app-tasks-card-list
         title="To Do"
-        tooltip="Mark task as doing"
+        forwardTooltip="Mark task as 'doing'"
         [tasks]="todoTasks$ | async"
         (delete)="reloadTasks()"
         (changeStatus)="reloadTasks()"
@@ -23,7 +23,8 @@
       <mat-spinner *ngIf="isLoading"></mat-spinner>
       <app-tasks-card-list
         title="Doing"
-        tooltip="Mark task as done"
+        forwardTooltip="Mark task as 'done'"
+        backTooltip="Mark task as 'to do'"
         [tasks]="doingTasks$ | async"
         (delete)="reloadTasks()"
         (changeStatus)="reloadTasks()"
@@ -36,6 +37,7 @@
       <mat-spinner *ngIf="isLoading"></mat-spinner>
       <app-tasks-card-list
         title="Done"
+        backTooltip="Mark task as 'doing'"
         [tasks]="doneTasks$ | async"
         (delete)="reloadTasks()"
         (changeStatus)="reloadTasks()"
