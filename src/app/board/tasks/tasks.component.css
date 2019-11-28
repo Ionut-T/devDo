@@ -8,6 +8,10 @@
   text-align: center;
 }
 
+.list {
+  width: 300px;
+}
+
 .action {
   display: flex;
   margin: 20px;

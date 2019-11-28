@@ -4,7 +4,10 @@
     <mat-expansion-panel-header>
       {{ task.title | uppercaseFirstLetter }}
     </mat-expansion-panel-header>
-    {{ task.description | uppercaseFirstLetter }}
+
+    <mat-panel-description>
+      {{ task.description | uppercaseFirstLetter }}
+    </mat-panel-description>
 
     <mat-action-row>
       <button mat-button [matTooltip]="backTooltip" (click)="onBackward(task.id)" *ngIf="task.status !== 'todo'">
