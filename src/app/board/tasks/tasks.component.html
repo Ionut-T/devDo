@@ -7,41 +7,44 @@
 <div class="tasks-container">
   <div class="list">
     <div class="content">
-      <mat-spinner *ngIf="isLoading"></mat-spinner>
       <app-tasks-card-list
         title="To Do"
         forwardTooltip="Mark task as 'doing'"
+        [isLoading]="isLoading"
         [tasks]="todoTasks$ | async"
         (delete)="reloadTasks()"
         (changeStatus)="reloadTasks()"
-      ></app-tasks-card-list>
+      >
+      </app-tasks-card-list>
     </div>
   </div>
   <mat-divider [vertical]="true"></mat-divider>
   <div class="list">
     <div class="content">
-      <mat-spinner *ngIf="isLoading"></mat-spinner>
       <app-tasks-card-list
         title="Doing"
         forwardTooltip="Mark task as 'done'"
         backTooltip="Mark task as 'to do'"
+        [isLoading]="isLoading"
         [tasks]="doingTasks$ | async"
         (delete)="reloadTasks()"
         (changeStatus)="reloadTasks()"
-      ></app-tasks-card-list>
+      >
+      </app-tasks-card-list>
     </div>
   </div>
   <mat-divider [vertical]="true"></mat-divider>
   <div class="list">
     <div class="content">
-      <mat-spinner *ngIf="isLoading"></mat-spinner>
       <app-tasks-card-list
         title="Done"
         backTooltip="Mark task as 'doing'"
+        [isLoading]="isLoading"
         [tasks]="doneTasks$ | async"
         (delete)="reloadTasks()"
         (changeStatus)="reloadTasks()"
-      ></app-tasks-card-list>
+      >
+      </app-tasks-card-list>
     </div>
   </div>
 </div>

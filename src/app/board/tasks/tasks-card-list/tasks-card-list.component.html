@@ -1,5 +1,5 @@
 <h1 class="mat-h1">{{ title }}</h1>
-<mat-accordion multi="true">
+<mat-accordion multi="true" *ngIf="!isLoading">
   <mat-expansion-panel *ngFor="let task of tasks">
     <mat-expansion-panel-header>
       {{ task.title | uppercaseFirstLetter }}
@@ -33,3 +33,4 @@
     </mat-action-row>
   </mat-expansion-panel>
 </mat-accordion>
+<mat-spinner *ngIf="isLoading"></mat-spinner>

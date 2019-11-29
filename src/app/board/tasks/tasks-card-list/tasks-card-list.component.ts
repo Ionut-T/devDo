@@ -13,6 +13,7 @@ export class TasksCardListComponent {
   @Input() title: string;
   @Input() forwardTooltip: string;
   @Input() backTooltip: string;
+  @Input() isLoading: boolean;
   @Output() delete = new EventEmitter<void>();
   @Output() changeStatus = new EventEmitter<void>();
   private forward = false;

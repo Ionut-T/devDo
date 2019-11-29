@@ -3,7 +3,7 @@ import { ITask } from '../task.model';
 import { TaskService } from '../task.service';
 import { BehaviorSubject, Observable, Subject, Subscription } from 'rxjs';
 import { UIService } from 'src/app/shared/ui.service';
-import { takeUntil, map, switchMap, shareReplay } from 'rxjs/operators';
+import { takeUntil, map, switchMap, shareReplay, finalize } from 'rxjs/operators';
 
 /**
  * Tasks List Component
@@ -28,11 +28,7 @@ export class TasksComponent implements OnInit, OnDestroy {
   constructor(private taskService: TaskService, private uiService: UIService) {}
 
   ngOnInit() {
-    // this.uiService.loadingStateChanged
-    //   .pipe(takeUntil(this.destroy$))
-    //   .subscribe(isLoading => (this.isLoading = isLoading));
-
-    // this.tasks$ = this.getTasks();
+    this.isLoading = true;
 
     this.tasks$ = this.tasksListener.asObservable().pipe(
       switchMap(() => this.getTasks()),
@@ -51,6 +47,7 @@ export class TasksComponent implements OnInit, OnDestroy {
    */
   private getTasks(): Observable<ITask[]> {
     return this.taskService.getTasks().pipe(
+      finalize(() => (this.isLoading = false)),
       map(res => {
         return res.body.tasks.map((task: any) => {
           return {
@@ -93,6 +90,7 @@ export class TasksComponent implements OnInit, OnDestroy {
    * Reload tasks.
    */
   reloadTasks() {
+    this.uiService.loadingStateChanged.next(false);
     this.tasksListener.next([...this.tasks]);
   }
 
