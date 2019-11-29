@@ -1,6 +1,6 @@
 <div class="backdrop" (click)="onClose()"></div>
-<div class="container">
-  <form class="form-edit" (submit)="onSave(editForm)" #editForm="ngForm">
+<div class="modal">
+  <form class="modal__form" (submit)="onSave(editForm)" #editForm="ngForm">
     <mat-form-field>
       <input
         matInput
@@ -28,7 +28,7 @@
         description field must not be empty
       </mat-error>
     </mat-form-field>
-    <div class="form-edit__actions">
+    <div class="modal__actions">
       <button
         type="submit"
         mat-button

@@ -1,6 +1,6 @@
 <div class="backdrop" (click)="onClose()"></div>
-<div class="container">
-  <form class="form-create" (submit)="onSave(createForm)" #createForm="ngForm">
+<div class="modal">
+  <form class="modal__form" (submit)="onSave(createForm)" #createForm="ngForm">
     <mat-form-field>
       <input matInput placeholder="title" ngModel name="title" required #title="ngModel" />
       <mat-error *ngIf="title.invalid">
@@ -21,7 +21,7 @@
         Description field must not be empty
       </mat-error>
     </mat-form-field>
-    <div class="form-create__actions">
+    <div class="modal__actions">
       <button type="submit" mat-button color="accent" [disabled]="createForm.invalid">
         SAVE
       </button>

@@ -18,21 +18,15 @@ export class SignupComponent implements OnInit, OnDestroy {
   private loadingSubscription: Subscription;
   private authStatusSubscription: Subscription;
 
-  constructor(
-    private formBuilder: FormBuilder,
-    private authService: AuthService,
-    private uiService: UIService
-  ) {}
+  constructor(private formBuilder: FormBuilder, private authService: AuthService, private uiService: UIService) {}
 
   /**
    * Create and validate the reactive sign up form.
    */
   ngOnInit() {
-    this.authStatusSubscription = this.authService
-      .getAuthStatusListener()
-      .subscribe(authStatus => {
-        this.isLoading = false;
-      });
+    this.authStatusSubscription = this.authService.getAuthStatusListener().subscribe(authStatus => {
+      this.isLoading = false;
+    });
     this.signupForm = this.formBuilder.group(
       {
         username: ['', [Validators.required, Validators.minLength(3)]],
@@ -105,9 +99,7 @@ export class SignupComponent implements OnInit, OnDestroy {
    * Signup user
    */
   onSubmit() {
-    this.loadingSubscription = this.uiService.loadingStateChanged.subscribe(
-      isLoading => (this.isLoading = isLoading)
-    );
+    this.loadingSubscription = this.uiService.loadingStateChanged.subscribe(isLoading => (this.isLoading = isLoading));
     this.authService.signup(
       this.form.username.value,
       this.form.email.value,
