@@ -8,6 +8,9 @@ import { Pipe, PipeTransform } from '@angular/core';
 })
 export class UppercaseFirstLetterPipe implements PipeTransform {
   transform(value: any): any {
+    if (!value) {
+      return;
+    }
     return value.charAt(0).toUpperCase() + value.slice(1);
   }
 }

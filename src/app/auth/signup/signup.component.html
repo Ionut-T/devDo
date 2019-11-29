@@ -8,6 +8,16 @@
   <mat-form-field class="user-form-field">
     <input
       matInput
+      type="text"
+      placeholder="Enter a username"
+      formControlName="username"
+    />
+    <mat-error *ngIf="form.username.invalid">{{ usernameErrorHandler() }}</mat-error>
+  </mat-form-field>
+
+  <mat-form-field class="user-form-field">
+    <input
+      matInput
       type="email"
       placeholder="Enter your email"
       formControlName="email"
