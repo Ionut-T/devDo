@@ -1,4 +1,4 @@
-import { Component, Input, Output, EventEmitter } from '@angular/core';
+import { Component, Input } from '@angular/core';
 import { ITask } from '../../task.model';
 import { TaskService } from '../../task.service';
 import { UIService } from '../../../shared/ui.service';
@@ -14,8 +14,6 @@ export class TasksCardListComponent {
   @Input() forwardTooltip: string;
   @Input() backTooltip: string;
   @Input() isLoading: boolean;
-  @Output() delete = new EventEmitter<void>();
-  @Output() changeStatus = new EventEmitter<void>();
   private forward = false;
   private backward = false;
 
@@ -26,8 +24,7 @@ export class TasksCardListComponent {
    * @param id -> task id.
    */
   onDelete(id: string) {
-    this.taskService.deleteTask(id).subscribe();
-    this.delete.emit();
+    this.taskService.deleteTask(id).subscribe(() => this.taskService.reloadTasks([...this.tasks]));
   }
 
   /**
@@ -69,8 +66,7 @@ export class TasksCardListComponent {
         status = task.status.includes('done') ? 'doing' : 'todo';
       }
 
-      this.taskService.updateTask(id, { status }).subscribe();
-      return this.changeStatus.emit();
+      this.taskService.updateTask(id, { status }).subscribe(res => this.taskService.updateTasksList(res.body.task));
     } catch (error) {
       this.uiService.showSnackBar('Something went wrong! Try again later.', null, 5000, 'top');
     }

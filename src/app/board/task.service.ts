@@ -14,8 +14,10 @@ type TaskArrayResponseType = HttpResponse<{ tasks: ITask[] }>;
 })
 export class TaskService {
   private readonly URL = environment.apiUrl + '/tasks';
-  private taskState = new BehaviorSubject<ITask>(null);
-  taskListener$ = this.taskState.asObservable();
+  private taskListener = new BehaviorSubject<ITask>(null);
+  taskListener$ = this.taskListener.asObservable();
+  private tasksListListener = new BehaviorSubject<ITask[]>(null);
+  tasksListListener$ = this.tasksListListener.asObservable();
 
   constructor(private http: HttpClient, private uiService: UIService) {}
 
@@ -86,9 +88,17 @@ export class TaskService {
 
   /**
    * Update tasks list.
-   * @param newTask -> created task.
+   * @param task -> created task.
    */
-  updateTaskList(newTask: ITask) {
-    this.taskState.next(newTask);
+  updateTasksList(task: ITask) {
+    this.taskListener.next(task);
+  }
+
+  /**
+   * Reload tasks.
+   * @param tasks -> tasks list.
+   */
+  reloadTasks(tasks: ITask[]) {
+    this.tasksListListener.next(tasks);
   }
 }

@@ -25,7 +25,7 @@ export class CreateTaskComponent {
 
     this.taskService
       .createTask({ id: null, title: form.value.title, description: form.value.description })
-      .subscribe(res => this.taskService.updateTaskList(res.body.task));
+      .subscribe(res => this.taskService.updateTasksList(res.body.task));
 
     form.resetForm();
     this.onClose();

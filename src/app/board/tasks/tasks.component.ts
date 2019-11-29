@@ -1,8 +1,7 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { ITask } from '../task.model';
 import { TaskService } from '../task.service';
-import { BehaviorSubject, Observable, Subject, Subscription } from 'rxjs';
-import { UIService } from 'src/app/shared/ui.service';
+import { Observable, Subject, Subscription } from 'rxjs';
 import { takeUntil, map, switchMap, shareReplay, finalize } from 'rxjs/operators';
 
 /**
@@ -20,17 +19,15 @@ export class TasksComponent implements OnInit, OnDestroy {
   todoTasks$: Observable<ITask[]>;
   doingTasks$: Observable<ITask[]>;
   doneTasks$: Observable<ITask[]>;
-
   private tasks: ITask[] = [];
-  private tasksListener = new BehaviorSubject<ITask[]>(this.tasks);
   private destroy$ = new Subject<void>();
 
-  constructor(private taskService: TaskService, private uiService: UIService) {}
+  constructor(private taskService: TaskService) {}
 
   ngOnInit() {
     this.isLoading = true;
 
-    this.tasks$ = this.tasksListener.asObservable().pipe(
+    this.tasks$ = this.taskService.tasksListListener$.pipe(
       switchMap(() => this.getTasks()),
       shareReplay()
     );
@@ -39,7 +36,7 @@ export class TasksComponent implements OnInit, OnDestroy {
     this.doingTasks$ = this.tasks$.pipe(map(tasks => tasks.filter(task => task.status.includes('doing'))));
     this.doneTasks$ = this.tasks$.pipe(map(tasks => tasks.filter(task => task.status.includes('done'))));
 
-    this.getLastTask();
+    this.getUpdatedTasksList();
   }
 
   /**
@@ -65,10 +62,10 @@ export class TasksComponent implements OnInit, OnDestroy {
   /**
    * Get new task.
    */
-  private getLastTask(): Subscription {
-    return this.taskService.taskListener$.pipe(takeUntil(this.destroy$)).subscribe((newTask: ITask) => {
-      this.tasks.push(newTask);
-      this.tasksListener.next([...this.tasks]);
+  private getUpdatedTasksList(): Subscription {
+    return this.taskService.taskListener$.pipe(takeUntil(this.destroy$)).subscribe((task: ITask) => {
+      this.tasks.push(task);
+      this.taskService.reloadTasks([...this.tasks]);
     });
   }
 
@@ -84,14 +81,6 @@ export class TasksComponent implements OnInit, OnDestroy {
    */
   closeCreate() {
     this.isOpen = false;
-  }
-
-  /**
-   * Reload tasks.
-   */
-  reloadTasks() {
-    this.uiService.loadingStateChanged.next(false);
-    this.tasksListener.next([...this.tasks]);
   }
 
   /**

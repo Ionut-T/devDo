@@ -12,8 +12,6 @@
         forwardTooltip="Mark task as 'doing'"
         [isLoading]="isLoading"
         [tasks]="todoTasks$ | async"
-        (delete)="reloadTasks()"
-        (changeStatus)="reloadTasks()"
       >
       </app-tasks-card-list>
     </div>
@@ -27,8 +25,6 @@
         backTooltip="Mark task as 'to do'"
         [isLoading]="isLoading"
         [tasks]="doingTasks$ | async"
-        (delete)="reloadTasks()"
-        (changeStatus)="reloadTasks()"
       >
       </app-tasks-card-list>
     </div>
@@ -41,8 +37,6 @@
         backTooltip="Mark task as 'doing'"
         [isLoading]="isLoading"
         [tasks]="doneTasks$ | async"
-        (delete)="reloadTasks()"
-        (changeStatus)="reloadTasks()"
       >
       </app-tasks-card-list>
     </div>
