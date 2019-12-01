@@ -59,7 +59,7 @@ mat-spinner {
 }
 
 /* Modal styles. */
-.modal {
+.modal.mat-card {
   position: fixed;
   top: 50%;
   left: 50%;

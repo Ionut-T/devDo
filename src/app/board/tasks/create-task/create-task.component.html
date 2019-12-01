@@ -1,5 +1,5 @@
 <div class="backdrop" (click)="onClose()"></div>
-<div class="modal">
+<mat-card class="modal">
   <form class="modal__form" (submit)="onSave(createForm)" #createForm="ngForm">
     <mat-form-field>
       <input matInput placeholder="title" ngModel name="title" required #title="ngModel" />
@@ -30,4 +30,4 @@
       </button>
     </div>
   </form>
-</div>
+</mat-card>
