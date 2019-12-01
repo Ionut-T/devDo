@@ -11,9 +11,17 @@ import { CreateTaskComponent } from './tasks/create-task/create-task.component';
 import { EditTaskComponent } from './tasks/edit-task/edit-task.component';
 import { UppercaseFirstLetterPipe } from './uppercase-first-letter.pipe';
 import { TasksCardListComponent } from './tasks/tasks-card-list/tasks-card-list.component';
+import { DialogModule } from '../components/dialog/dialog.module';
 
 @NgModule({
-  declarations: [BoardComponent, TasksComponent, CreateTaskComponent, EditTaskComponent, UppercaseFirstLetterPipe, TasksCardListComponent],
-  imports: [CommonModule, FormsModule, ReactiveFormsModule, BoardRoutingModule, MaterialModule]
+  declarations: [
+    BoardComponent,
+    TasksComponent,
+    CreateTaskComponent,
+    EditTaskComponent,
+    UppercaseFirstLetterPipe,
+    TasksCardListComponent
+  ],
+  imports: [CommonModule, FormsModule, ReactiveFormsModule, BoardRoutingModule, MaterialModule, DialogModule]
 })
 export class BoardModule {}
