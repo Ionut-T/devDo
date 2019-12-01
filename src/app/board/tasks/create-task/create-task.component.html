@@ -1,15 +1,8 @@
 <div class="backdrop" (click)="onClose()"></div>
-<div class="modal">
-  <form class="modal__form" (submit)="onSave(editForm)" #editForm="ngForm">
+<mat-card class="modal">
+  <form class="modal__form" (submit)="onSave(createForm)" #createForm="ngForm">
     <mat-form-field>
-      <input
-        matInput
-        placeholder="title"
-        [ngModel]="task?.title"
-        name="title"
-        required
-        #title="ngModel"
-      />
+      <input matInput placeholder="title" ngModel name="title" required #title="ngModel" />
       <mat-error *ngIf="title.invalid">
         Title field must not be empty
       </mat-error>
@@ -19,22 +12,17 @@
         matInput
         placeholder="description"
         rows="5"
-        [ngModel]="task?.description"
+        ngModel
         name="description"
         required
         #description="ngModel"
       ></textarea>
       <mat-error *ngIf="description.invalid">
-        description field must not be empty
+        Description field must not be empty
       </mat-error>
     </mat-form-field>
     <div class="modal__actions">
-      <button
-        type="submit"
-        mat-button
-        color="accent"
-        [disabled]="editForm.invalid"
-      >
+      <button type="submit" mat-button color="accent" [disabled]="createForm.invalid">
         SAVE
       </button>
       <button type="button" mat-button color="warn" (click)="onClose()">
@@ -42,4 +30,4 @@
       </button>
     </div>
   </form>
-</div>
+</mat-card>

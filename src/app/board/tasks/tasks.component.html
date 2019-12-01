@@ -1,0 +1,44 @@
+<app-create-task *ngIf="isOpen" (close)="closeCreate()"></app-create-task>
+<div class="action">
+  <button mat-mini-fab color="primary" matTooltip="Create a new task" matTooltipPosition="right" (click)="openCreate()">
+    <mat-icon>add</mat-icon>
+  </button>
+</div>
+<div class="tasks-container">
+  <div class="list">
+    <div class="content">
+      <app-tasks-card-list
+        title="To Do"
+        forwardTooltip="Mark task as 'doing'"
+        [isLoading]="isLoading"
+        [tasks]="todoTasks$ | async"
+      >
+      </app-tasks-card-list>
+    </div>
+  </div>
+  <mat-divider [vertical]="true"></mat-divider>
+  <div class="list">
+    <div class="content">
+      <app-tasks-card-list
+        title="Doing"
+        forwardTooltip="Mark task as 'done'"
+        backTooltip="Mark task as 'to do'"
+        [isLoading]="isLoading"
+        [tasks]="doingTasks$ | async"
+      >
+      </app-tasks-card-list>
+    </div>
+  </div>
+  <mat-divider [vertical]="true"></mat-divider>
+  <div class="list">
+    <div class="content">
+      <app-tasks-card-list
+        title="Done"
+        backTooltip="Mark task as 'doing'"
+        [isLoading]="isLoading"
+        [tasks]="doneTasks$ | async"
+      >
+      </app-tasks-card-list>
+    </div>
+  </div>
+</div>

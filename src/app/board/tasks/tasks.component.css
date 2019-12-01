@@ -1,0 +1,32 @@
+.tasks-container {
+  display: flex;
+  width: 90%;
+  height: 80%;
+  margin: 0 auto;
+  flex-wrap: wrap;
+  justify-content: space-around;
+  text-align: center;
+}
+
+.list {
+  width: 300px;
+}
+
+.action {
+  display: flex;
+  margin: 20px;
+}
+
+.action .mat-mini-fab {
+  margin-left: auto;
+}
+
+@media only screen and (max-width: 1035px) {
+  mat-divider {
+    display: none;
+  }
+
+  app-tasks-card-list:not(:last-child) {
+    margin-bottom: 10px;
+  }
+}
