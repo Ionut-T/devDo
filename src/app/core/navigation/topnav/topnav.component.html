@@ -1,0 +1,28 @@
+<mat-toolbar color="primary" class="mat-elevation-z8">
+  <button
+    type="button"
+    aria-label="Toggle sidenav"
+    mat-icon-button
+    (click)="onToggleSidenav()"
+    *ngIf="isHandset$ | async"
+  >
+    <mat-icon aria-label="Side nav toggle icon">menu</mat-icon>
+  </button>
+  <span><a mat-button class="app-title" routerLink="">devDo</a></span>
+  <div class="spacer"></div>
+  <mat-nav-list class="main-navigation" *ngIf="!(isHandset$ | async)">
+    <a mat-list-item routerLink="/board" routerLinkActive="active" *ngIf="isLoggedIn$ | async">
+      My Board
+    </a>
+    <a mat-list-item routerLink="/user/signup" routerLinkActive="active" *ngIf="!(isLoggedIn$ | async)">
+      Sign Up
+    </a>
+    <a mat-list-item routerLink="/user/login" routerLinkActive="active" *ngIf="!(isLoggedIn$ | async)">
+      Log In
+    </a>
+    <a mat-list-item *ngIf="isLoggedIn$ | async" (click)="onLogout()">
+      Log Out
+    </a>
+  </mat-nav-list>
+  <mat-slide-toggle matTooltip="Change theme" (change)="onToggleTheme()"></mat-slide-toggle>
+</mat-toolbar>
