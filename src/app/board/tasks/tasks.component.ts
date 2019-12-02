@@ -1,9 +1,9 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { Observable, Subject, Subscription } from 'rxjs';
-import { takeUntil, map, switchMap, shareReplay, finalize } from 'rxjs/operators';
+import { takeUntil, map, switchMap, finalize, share } from 'rxjs/operators';
 import { TaskHttpService } from './task-http.service';
-import { ITask } from './task.model';
 import { TaskStateService } from './task-state.service';
+import { ITask } from './task.model';
 
 /**
  * Tasks List Component
@@ -29,8 +29,8 @@ export class TasksComponent implements OnInit, OnDestroy {
     this.isLoading = true;
 
     this.tasks$ = this.taskStateService.tasksListListener$.pipe(
-      switchMap(() => this.getTasks()),
-      shareReplay()
+      switchMap(() => this.getAllTasks()),
+      share()
     );
 
     this.todoTasks$ = this.tasks$.pipe(map(tasks => tasks.filter(task => task.status.includes('todo'))));
@@ -43,7 +43,7 @@ export class TasksComponent implements OnInit, OnDestroy {
   /**
    * Get tasks.
    */
-  private getTasks(): Observable<ITask[]> {
+  private getAllTasks(): Observable<ITask[]> {
     return this.taskHttpService.getTasks().pipe(
       finalize(() => (this.isLoading = false)),
       map(res => {
@@ -66,7 +66,7 @@ export class TasksComponent implements OnInit, OnDestroy {
   private getUpdatedTasksList(): Subscription {
     return this.taskStateService.taskListener$
       .pipe(takeUntil(this.destroy$))
-      .subscribe((task: ITask) => this.taskStateService.reloadTasks([...this.tasks]));
+      .subscribe(() => this.taskStateService.reloadTasks([...this.tasks]));
   }
 
   /**
