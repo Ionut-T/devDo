@@ -2,7 +2,8 @@ import { Component, OnInit, OnDestroy, Output, EventEmitter } from '@angular/cor
 import { FormGroup, FormControl, Validators, AbstractControl } from '@angular/forms';
 import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
-import { TaskService } from '../../task.service';
+import { TaskHttpService } from '../task-http.service';
+import { TaskStateService } from '../task-state.service';
 
 /**
  * Dynamic component for creating new tasks
@@ -20,7 +21,7 @@ export class CreateTaskComponent implements OnInit, OnDestroy {
   private taskId: string;
   private destroy$ = new Subject<void>();
 
-  constructor(private taskService: TaskService) {}
+  constructor(private taskHttpService: TaskHttpService, private taskStateService: TaskStateService) {}
 
   /**
    * Initialize task form.
@@ -35,12 +36,12 @@ export class CreateTaskComponent implements OnInit, OnDestroy {
       })
     });
 
-    this.taskService.taskIdListener$.pipe(takeUntil(this.destroy$)).subscribe(id => (this.taskId = id));
+    this.taskStateService.taskIdListener$.pipe(takeUntil(this.destroy$)).subscribe(id => (this.taskId = id));
 
     if (this.taskId) {
       this.mode = 'edit';
       this.modalTitle = 'Edit Task';
-      this.taskService
+      this.taskStateService
         .getMappedTask(this.taskId)
         .subscribe(task => this.taskForm.setValue({ title: task.title, description: task.description }));
     } else {
@@ -94,13 +95,13 @@ export class CreateTaskComponent implements OnInit, OnDestroy {
    */
   onSave() {
     if (this.mode === 'create') {
-      this.taskService
+      this.taskHttpService
         .createTask({ id: null, title: this.title.value, description: this.description.value })
-        .subscribe(res => this.taskService.updateTasksList(res.body.task));
+        .subscribe(res => this.taskStateService.updateTasksList(res.body.task));
     } else if (this.mode === 'edit') {
-      this.taskService
+      this.taskHttpService
         .updateTask(this.taskId, { title: this.title.value, description: this.description.value })
-        .subscribe(res => this.taskService.updateTasksList(res.body.task));
+        .subscribe(res => this.taskStateService.updateTasksList(res.body.task));
     }
 
     this.taskForm.reset();
@@ -114,10 +115,13 @@ export class CreateTaskComponent implements OnInit, OnDestroy {
     this.close.emit();
   }
 
+  /**
+   * Unsubscribe from observables.
+   * Set task id null.
+   */
   ngOnDestroy() {
     this.destroy$.next();
     this.destroy$.unsubscribe();
-
-    this.taskService.getTaskId(null);
+    this.taskStateService.getTaskId(null);
   }
 }

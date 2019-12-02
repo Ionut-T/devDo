@@ -1,11 +1,12 @@
 import { Component, Input, OnDestroy, Output, EventEmitter } from '@angular/core';
-import { ITask } from '../../task.model';
-import { TaskService } from '../../task.service';
-import { UIService } from '../../../shared/ui.service';
 import { MatDialog } from '@angular/material/dialog';
-import { DialogComponent } from 'src/app/components/dialog/dialog.component';
 import { takeUntil } from 'rxjs/operators';
 import { Subject } from 'rxjs';
+import { ITask } from '../task.model';
+import { UIService } from '../../../shared/ui.service';
+import { DialogComponent } from 'src/app/components/dialog/dialog.component';
+import { TaskHttpService } from '../task-http.service';
+import { TaskStateService } from '../task-state.service';
 
 @Component({
   selector: 'app-tasks-card-list',
@@ -23,10 +24,15 @@ export class TasksCardListComponent implements OnDestroy {
   private backward = false;
   private destroy$ = new Subject<void>();
 
-  constructor(private taskService: TaskService, private uiService: UIService, private dialog: MatDialog) {}
+  constructor(
+    private taskHttpService: TaskHttpService,
+    private taskStateService: TaskStateService,
+    private uiService: UIService,
+    private dialog: MatDialog
+  ) {}
 
   onEdit(id: string) {
-    this.taskService.getTaskId(id);
+    this.taskStateService.getTaskId(id);
     this.edit.emit();
   }
 
@@ -50,7 +56,7 @@ export class TasksCardListComponent implements OnDestroy {
   }
 
   private deleteTask(id: string) {
-    this.taskService.deleteTask(id).subscribe(() => this.taskService.reloadTasks([...this.tasks]));
+    this.taskHttpService.deleteTask(id).subscribe(() => this.taskStateService.reloadTasks([...this.tasks]));
   }
 
   /**
@@ -80,7 +86,7 @@ export class TasksCardListComponent implements OnDestroy {
    */
   private async onChangeStatus(id: string): Promise<void> {
     try {
-      const task = await this.taskService.getMappedTask(id).toPromise();
+      const task = await this.taskStateService.getMappedTask(id).toPromise();
 
       let status: 'todo' | 'doing' | 'done';
 
@@ -92,7 +98,9 @@ export class TasksCardListComponent implements OnDestroy {
         status = task.status.includes('done') ? 'doing' : 'todo';
       }
 
-      this.taskService.updateTask(id, { status }).subscribe(res => this.taskService.updateTasksList(res.body.task));
+      this.taskHttpService
+        .updateTask(id, { status })
+        .subscribe(res => this.taskStateService.updateTasksList(res.body.task));
     } catch (error) {
       this.uiService.showSnackBar('Something went wrong! Try again later.', null, 5000, 'top');
     }

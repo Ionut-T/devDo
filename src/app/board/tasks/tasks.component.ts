@@ -1,8 +1,9 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
-import { ITask } from '../task.model';
-import { TaskService } from '../task.service';
 import { Observable, Subject, Subscription } from 'rxjs';
 import { takeUntil, map, switchMap, shareReplay, finalize } from 'rxjs/operators';
+import { TaskHttpService } from './task-http.service';
+import { ITask } from './task.model';
+import { TaskStateService } from './task-state.service';
 
 /**
  * Tasks List Component
@@ -22,12 +23,12 @@ export class TasksComponent implements OnInit, OnDestroy {
   private tasks: ITask[] = [];
   private destroy$ = new Subject<void>();
 
-  constructor(private taskService: TaskService) {}
+  constructor(private taskHttpService: TaskHttpService, private taskStateService: TaskStateService) {}
 
   ngOnInit() {
     this.isLoading = true;
 
-    this.tasks$ = this.taskService.tasksListListener$.pipe(
+    this.tasks$ = this.taskStateService.tasksListListener$.pipe(
       switchMap(() => this.getTasks()),
       shareReplay()
     );
@@ -43,7 +44,7 @@ export class TasksComponent implements OnInit, OnDestroy {
    * Get tasks.
    */
   private getTasks(): Observable<ITask[]> {
-    return this.taskService.getTasks().pipe(
+    return this.taskHttpService.getTasks().pipe(
       finalize(() => (this.isLoading = false)),
       map(res => {
         return res.body.tasks.map((task: any) => {
@@ -63,10 +64,9 @@ export class TasksComponent implements OnInit, OnDestroy {
    * Get new task.
    */
   private getUpdatedTasksList(): Subscription {
-    return this.taskService.taskListener$.pipe(takeUntil(this.destroy$)).subscribe((task: ITask) => {
-      this.tasks.push(task);
-      this.taskService.reloadTasks([...this.tasks]);
-    });
+    return this.taskStateService.taskListener$
+      .pipe(takeUntil(this.destroy$))
+      .subscribe((task: ITask) => this.taskStateService.reloadTasks([...this.tasks]));
   }
 
   /**
