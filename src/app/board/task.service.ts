@@ -18,6 +18,8 @@ export class TaskService {
   taskListener$ = this.taskListener.asObservable();
   private tasksListListener = new BehaviorSubject<ITask[]>(null);
   tasksListListener$ = this.tasksListListener.asObservable();
+  private taskIdListener = new BehaviorSubject<string>(null);
+  taskIdListener$ = this.taskIdListener.asObservable();
 
   constructor(private http: HttpClient, private uiService: UIService) {}
 
@@ -100,5 +102,13 @@ export class TaskService {
    */
   reloadTasks(tasks: ITask[]) {
     this.tasksListListener.next(tasks);
+  }
+
+  /**
+   * Get task id.
+   * @param id -> task id.
+   */
+  getTaskId(id: string) {
+    this.taskIdListener.next(id);
   }
 }

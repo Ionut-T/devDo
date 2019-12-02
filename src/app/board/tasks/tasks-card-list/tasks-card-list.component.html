@@ -24,9 +24,10 @@
         <mat-icon *ngIf="task.status === 'doing'">done_all</mat-icon>
       </button>
 
-      <a mat-button color="accent" matTooltip="Edit task" [routerLink]="['/board/tasks/edit', task.id]">
+      <button mat-button color="accent" matTooltip="Edit task" (click)="onEdit(task.id)">
         <mat-icon>edit</mat-icon>
-      </a>
+      </button>
+
       <button mat-button color="warn" matTooltip="Delete task" (click)="onDelete(task.id)">
         <mat-icon>delete</mat-icon>
       </button>

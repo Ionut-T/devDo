@@ -1,4 +1,4 @@
-import { Component, Input, OnDestroy } from '@angular/core';
+import { Component, Input, OnDestroy, Output, EventEmitter } from '@angular/core';
 import { ITask } from '../../task.model';
 import { TaskService } from '../../task.service';
 import { UIService } from '../../../shared/ui.service';
@@ -18,11 +18,17 @@ export class TasksCardListComponent implements OnDestroy {
   @Input() forwardTooltip: string;
   @Input() backTooltip: string;
   @Input() isLoading: boolean;
+  @Output() edit = new EventEmitter<void>();
   private forward = false;
   private backward = false;
   private destroy$ = new Subject<void>();
 
   constructor(private taskService: TaskService, private uiService: UIService, private dialog: MatDialog) {}
+
+  onEdit(id: string) {
+    this.taskService.getTaskId(id);
+    this.edit.emit();
+  }
 
   /**
    * Delete task.

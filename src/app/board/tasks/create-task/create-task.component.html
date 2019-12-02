@@ -1,33 +1,20 @@
 <div class="backdrop" (click)="onClose()"></div>
 <mat-card class="modal">
-  <form class="modal__form" (submit)="onSave(createForm)" #createForm="ngForm">
-    <mat-form-field>
-      <input matInput placeholder="title" ngModel name="title" required #title="ngModel" />
-      <mat-error *ngIf="title.invalid">
-        Title field must not be empty
-      </mat-error>
-    </mat-form-field>
-    <mat-form-field>
-      <textarea
-        matInput
-        placeholder="description"
-        rows="5"
-        ngModel
-        name="description"
-        required
-        #description="ngModel"
-      ></textarea>
-      <mat-error *ngIf="description.invalid">
-        Description field must not be empty
-      </mat-error>
-    </mat-form-field>
-    <div class="modal__actions">
-      <button type="submit" mat-button color="accent" [disabled]="createForm.invalid">
-        SAVE
-      </button>
-      <button type="button" mat-button color="warn" (click)="onClose()">
-        CANCEL
-      </button>
-    </div>
-  </form>
+  <mat-card-subtitle>{{ modalTitle }}</mat-card-subtitle>
+  <mat-card-content>
+    <form class="modal__form" [formGroup]="taskForm" (ngSubmit)="onSave()">
+      <mat-form-field>
+        <input matInput placeholder="title" formControlName="title" />
+        <mat-error *ngIf="title.invalid"> {{ getTitleErrors() }} </mat-error>
+      </mat-form-field>
+      <mat-form-field>
+        <textarea matInput placeholder="description" rows="5" formControlName="description"></textarea>
+        <mat-error *ngIf="description.invalid"> {{ getDescriptionErrors() }} </mat-error>
+      </mat-form-field>
+      <div class="modal__actions">
+        <button type="submit" mat-button color="primary" [disabled]="taskForm.invalid">SAVE</button>
+        <button type="button" mat-button color="warn" (click)="onClose()">CANCEL</button>
+      </div>
+    </form>
+  </mat-card-content>
 </mat-card>
