@@ -1,0 +1,45 @@
+<mat-sidenav-container class="sidenav-container mat-app-background" [ngClass]="{ 'dark-theme': isDarkTheme }">
+  <mat-sidenav
+    #drawer
+    class="sidenav"
+    fixedInViewport="true"
+    [attr.role]="(isHandset$ | async) ? 'dialog' : 'navigation'"
+    mode="over"
+  >
+    <mat-toolbar color="primary" class="mat-elevation-z2">Menu</mat-toolbar>
+    <mat-nav-list>
+      <a
+        mat-list-item
+        routerLink="/board"
+        routerLinkActive="active"
+        *ngIf="isLoggedIn$ | async"
+        (click)="drawer.close()"
+      >
+        My Board
+      </a>
+      <a
+        mat-list-item
+        routerLink="/user/signup"
+        routerLinkActive="active"
+        *ngIf="!(isLoggedIn$ | async)"
+        (click)="drawer.close()"
+      >
+        Sign Up
+      </a>
+      <a
+        mat-list-item
+        routerLink="/user/login"
+        routerLinkActive="active"
+        *ngIf="!(isLoggedIn$ | async)"
+        (click)="drawer.close()"
+      >
+        Log In
+      </a>
+      <a mat-list-item *ngIf="isLoggedIn$ | async" (click)="onLogout()">Log Out</a>
+    </mat-nav-list>
+  </mat-sidenav>
+  <mat-sidenav-content>
+    <app-topnav (toggleSidenav)="drawer.toggle()" (toggleTheme)="onToggleTheme()"></app-topnav>
+    <ng-content></ng-content>
+  </mat-sidenav-content>
+</mat-sidenav-container>
