@@ -70,17 +70,10 @@ export class TasksComponent implements OnInit, OnDestroy {
   }
 
   /**
-   * Open Create Component.
+   * Open/close modal.
    */
-  openCreate() {
-    this.isOpen = true;
-  }
-
-  /**
-   * Close Create Component.
-   */
-  closeCreate() {
-    this.isOpen = false;
+  toggleModal() {
+    this.isOpen = !this.isOpen;
   }
 
   /**
