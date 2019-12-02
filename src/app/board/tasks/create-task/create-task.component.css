@@ -1,3 +1,37 @@
+.backdrop {
+  position: fixed;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  width: 100vw;
+  background-color: rgba(0, 0, 0, 0.6);
+  z-index: 100;
+}
+
+/* Modal styles. */
+.modal.mat-card {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 300px;
+  text-align: center;
+  z-index: 200;
+  border-radius: 4px;
+}
+
+.modal__form {
+  display: flex;
+  flex-direction: column;
+  width: 90%;
+  margin: auto;
+}
+
+.modal__actions {
+  display: flex;
+  justify-content: center;
+}
+
 mat-form-field {
   margin-bottom: 8px;
 }

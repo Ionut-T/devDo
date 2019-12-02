@@ -2,8 +2,8 @@ import { Injectable } from '@angular/core';
 import { HttpClient, HttpResponse } from '@angular/common/http';
 import { ITask } from './task.model';
 import { BehaviorSubject, Observable } from 'rxjs';
-import { UIService } from '../shared/ui.service';
-import { environment } from '../../environments/environment';
+import { UIService } from '../../shared/ui.service';
+import { environment } from '../../../environments/environment';
 import { map } from 'rxjs/operators';
 
 type TaskResponseType = HttpResponse<{ task: ITask }>;
@@ -12,12 +12,8 @@ type TaskArrayResponseType = HttpResponse<{ tasks: ITask[] }>;
 @Injectable({
   providedIn: 'root'
 })
-export class TaskService {
+export class TaskHttpService {
   private readonly URL = environment.apiUrl + '/tasks';
-  private taskListener = new BehaviorSubject<ITask>(null);
-  taskListener$ = this.taskListener.asObservable();
-  private tasksListListener = new BehaviorSubject<ITask[]>(null);
-  tasksListListener$ = this.tasksListListener.asObservable();
 
   constructor(private http: HttpClient, private uiService: UIService) {}
 
@@ -60,45 +56,11 @@ export class TaskService {
   }
 
   /**
-   * Map task.
-   * @param id -> task id.
-   * @returns observable.
-   */
-  getMappedTask(id: string): Observable<ITask> {
-    return this.getTask(id).pipe(
-      map((res: any) => {
-        return {
-          id: res.body._id,
-          title: res.body.title,
-          description: res.body.description,
-          status: res.body.status
-        };
-      })
-    );
-  }
-
-  /**
    * Get a single task from server.
    * @param id -> task id.
    * @returns observable.
    */
-  private getTask(id: string): Observable<TaskResponseType> {
+  getTask(id: string): Observable<TaskResponseType> {
     return this.http.get<{ task: ITask }>(`${this.URL}/${id}`, { observe: 'response' });
-  }
-
-  /**
-   * Update tasks list.
-   * @param task -> created task.
-   */
-  updateTasksList(task: ITask) {
-    this.taskListener.next(task);
-  }
-
-  /**
-   * Reload tasks.
-   * @param tasks -> tasks list.
-   */
-  reloadTasks(tasks: ITask[]) {
-    this.tasksListListener.next(tasks);
   }
 }

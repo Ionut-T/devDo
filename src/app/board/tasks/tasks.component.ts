@@ -1,8 +1,9 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
-import { ITask } from '../task.model';
-import { TaskService } from '../task.service';
 import { Observable, Subject, Subscription } from 'rxjs';
-import { takeUntil, map, switchMap, shareReplay, finalize } from 'rxjs/operators';
+import { takeUntil, map, switchMap, finalize, share } from 'rxjs/operators';
+import { TaskHttpService } from './task-http.service';
+import { TaskStateService } from './task-state.service';
+import { ITask } from './task.model';
 
 /**
  * Tasks List Component
@@ -22,14 +23,14 @@ export class TasksComponent implements OnInit, OnDestroy {
   private tasks: ITask[] = [];
   private destroy$ = new Subject<void>();
 
-  constructor(private taskService: TaskService) {}
+  constructor(private taskHttpService: TaskHttpService, private taskStateService: TaskStateService) {}
 
   ngOnInit() {
     this.isLoading = true;
 
-    this.tasks$ = this.taskService.tasksListListener$.pipe(
-      switchMap(() => this.getTasks()),
-      shareReplay()
+    this.tasks$ = this.taskStateService.tasksListListener$.pipe(
+      switchMap(() => this.getAllTasks()),
+      share()
     );
 
     this.todoTasks$ = this.tasks$.pipe(map(tasks => tasks.filter(task => task.status.includes('todo'))));
@@ -42,8 +43,8 @@ export class TasksComponent implements OnInit, OnDestroy {
   /**
    * Get tasks.
    */
-  private getTasks(): Observable<ITask[]> {
-    return this.taskService.getTasks().pipe(
+  private getAllTasks(): Observable<ITask[]> {
+    return this.taskHttpService.getTasks().pipe(
       finalize(() => (this.isLoading = false)),
       map(res => {
         return res.body.tasks.map((task: any) => {
@@ -63,24 +64,16 @@ export class TasksComponent implements OnInit, OnDestroy {
    * Get new task.
    */
   private getUpdatedTasksList(): Subscription {
-    return this.taskService.taskListener$.pipe(takeUntil(this.destroy$)).subscribe((task: ITask) => {
-      this.tasks.push(task);
-      this.taskService.reloadTasks([...this.tasks]);
-    });
+    return this.taskStateService.taskListener$
+      .pipe(takeUntil(this.destroy$))
+      .subscribe(() => this.taskStateService.reloadTasks([...this.tasks]));
   }
 
   /**
-   * Open Create Component.
+   * Open/close modal.
    */
-  openCreate() {
-    this.isOpen = true;
-  }
-
-  /**
-   * Close Create Component.
-   */
-  closeCreate() {
-    this.isOpen = false;
+  toggleModal() {
+    this.isOpen = !this.isOpen;
   }
 
   /**
