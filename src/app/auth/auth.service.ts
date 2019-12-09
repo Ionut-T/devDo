@@ -79,9 +79,9 @@ export class AuthService {
   }
 
   /**
-   * Auto user authentication.
+   * Initialize authentication.
    */
-  autoAuthUser() {
+  initAuthentication() {
     const authInformation = this.getAuthData();
     if (!authInformation) {
       return;
