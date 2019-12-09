@@ -5,7 +5,7 @@ import { BehaviorSubject, Observable } from 'rxjs';
 import { Router } from '@angular/router';
 import { UIService } from '../shared/ui.service';
 import { environment } from '../../environments/environment';
-import { tap, map } from 'rxjs/operators';
+import { tap } from 'rxjs/operators';
 
 type TResponse = HttpResponse<{ user: IUser }>;
 
@@ -72,7 +72,7 @@ export class AuthService {
             const expirationDate = new Date(now.getTime() + expiresInDuration * 1000);
             this.saveAuthData(token, expirationDate);
             this.uiService.showSnackBar('Logged in successfully!', null, 3000, 'bottom');
-            this.router.navigate(['/board']);
+            this.router.navigateByUrl('/board');
           }
         })
       );
@@ -104,7 +104,7 @@ export class AuthService {
     clearTimeout(this.tokenTimer);
     this.clearAuthData();
     this.uiService.showSnackBar('Logged out successfully!', null, 3000, 'bottom');
-    this.router.navigate(['/']);
+    this.router.navigateByUrl('/');
   }
 
   /**
