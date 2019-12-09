@@ -1,9 +1,9 @@
-/**
- * Interface for defining the data-authentication model.
- */
-export interface User {
-  username?: string;
+export interface IUser {
+  id: string;
+  firstName: string;
+  lastName: string;
   email: string;
   password: string;
   confirmPassword?: string;
+  isVerified: boolean;
 }

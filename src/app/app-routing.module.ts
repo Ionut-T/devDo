@@ -12,7 +12,7 @@ const routes: Routes = [
     canLoad: [AuthGuard]
   },
   {
-    path: 'user',
+    path: 'authentication',
     loadChildren: () => import('./auth/auth.module').then(m => m.AuthModule)
   },
   { path: 'page-not-found', component: PageNotFoundComponent },
