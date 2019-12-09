@@ -19,7 +19,7 @@
       </a>
       <a
         mat-list-item
-        routerLink="/user/signup"
+        routerLink="/authentication/signup"
         routerLinkActive="active"
         *ngIf="!(isLoggedIn$ | async)"
         (click)="drawer.close()"
@@ -28,7 +28,7 @@
       </a>
       <a
         mat-list-item
-        routerLink="/user/login"
+        routerLink="/authentication/login"
         routerLinkActive="active"
         *ngIf="!(isLoggedIn$ | async)"
         (click)="drawer.close()"
