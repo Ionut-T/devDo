@@ -2,12 +2,8 @@ import { Component, OnInit } from '@angular/core';
 import { FormGroup, FormBuilder, Validators, AbstractControl } from '@angular/forms';
 import { MustMatch } from './must-match.validator';
 import { AuthService } from '../auth.service';
-import { Observable } from 'rxjs';
 import { UIService } from 'src/app/shared/ui.service';
-import { switchMap } from 'rxjs/operators';
 import { UserService } from '../user.service';
-import { HttpResponse } from '@angular/common/http';
-import { IUser } from '../user.model';
 import { Router } from '@angular/router';
 
 @Component({
@@ -24,7 +20,6 @@ export class SignupComponent implements OnInit {
     private fb: FormBuilder,
     private authService: AuthService,
     private uiService: UIService,
-    private userService: UserService,
     private router: Router
   ) {}
 
@@ -105,20 +100,21 @@ export class SignupComponent implements OnInit {
    */
   onSubmit() {
     this.authService
-      .signup(this.formCtrls.email.value, this.formCtrls.password.value, this.formCtrls.confirmPassword.value)
-      .pipe(switchMap(res => this.updateUser(res.body.user.id)))
-      .subscribe(() => this.router.navigateByUrl('authentication/login'));
-  }
-
-  /**
-   * Update user.
-   * @param id -> user id.
-   * @returns observable.
-   */
-  private updateUser(id: string): Observable<HttpResponse<Partial<IUser>>> {
-    return this.userService.update(id, {
-      firstName: this.formCtrls.firstName.value,
-      lastName: this.formCtrls.lastName.value
-    });
+      .signup(
+        this.formCtrls.firstName.value,
+        this.formCtrls.lastName.value,
+        this.formCtrls.email.value,
+        this.formCtrls.password.value,
+        this.formCtrls.confirmPassword.value
+      )
+      .subscribe(() => {
+        this.uiService.showSnackBar(
+          'A confirmation email is on its way to your inbox. Please confirm your email before login',
+          null,
+          5000,
+          'top'
+        );
+        this.router.navigateByUrl('authentication/login');
+      });
   }
 }
