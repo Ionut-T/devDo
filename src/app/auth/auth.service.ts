@@ -5,9 +5,9 @@ import { BehaviorSubject, Observable } from 'rxjs';
 import { Router } from '@angular/router';
 import { UIService } from '../shared/ui.service';
 import { environment } from '../../environments/environment';
-import { tap, map } from 'rxjs/operators';
+import { tap } from 'rxjs/operators';
 
-type TResponse = HttpResponse<{ user: IUser }>;
+type UserResponseType = HttpResponse<{ user: IUser }>;
 
 @Injectable({
   providedIn: 'root'
@@ -51,7 +51,7 @@ export class AuthService {
     email: string,
     password: string,
     confirmPassword: string
-  ): Observable<TResponse> {
+  ): Observable<UserResponseType> {
     return this.http.post<{ user: IUser }>(
       `${this.URL}/signup`,
       { firstName, lastName, email, password, confirmPassword },
@@ -158,10 +158,17 @@ export class AuthService {
   }
 
   /**
-   * Get email verify token.
+   * Get email verification token.
    * @params token -> expires in 30 min from creation.
    */
-  getEmailVerifyToken(token: string): Observable<{ token: { userId: string } }> {
+  getEmailVerificationToken(token: string): Observable<{ token: { userId: string } }> {
     return this.http.get<{ token: { userId: string } }>(`${this.URL}/${token}`);
+  }
+
+  /**
+   * Resend verification token.
+   */
+  resendVerificationToken(email: string): Observable<{ token: object }> {
+    return this.http.post<{ token: object }>(`${this.URL}/token`, { email });
   }
 }
