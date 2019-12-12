@@ -1,35 +1,36 @@
-import { Component, OnInit, OnDestroy } from '@angular/core';
-import { FormGroup, FormBuilder, Validators } from '@angular/forms';
+import { Component, OnInit } from '@angular/core';
+import { FormGroup, FormBuilder, Validators, AbstractControl } from '@angular/forms';
 import { MustMatch } from './must-match.validator';
 import { AuthService } from '../auth.service';
-import { Subscription } from 'rxjs';
 import { UIService } from 'src/app/shared/ui.service';
+import { Router } from '@angular/router';
+import { finalize } from 'rxjs/operators';
 
 @Component({
   selector: 'app-signup',
   templateUrl: './signup.component.html',
   styleUrls: ['./signup.component.css']
 })
-export class SignupComponent implements OnInit, OnDestroy {
+export class SignupComponent implements OnInit {
   signupForm: FormGroup;
   hidePassword = true;
   hideConfirmPassword = true;
   isLoading = false;
-  private loadingSubscription: Subscription;
-  private authStatusSubscription: Subscription;
 
-  constructor(private formBuilder: FormBuilder, private authService: AuthService, private uiService: UIService) {}
+  constructor(
+    private fb: FormBuilder,
+    private authService: AuthService,
+    private uiService: UIService,
+    private router: Router
+  ) {}
 
   /**
    * Create and validate the reactive sign up form.
    */
   ngOnInit() {
-    this.authStatusSubscription = this.authService.getAuthStatusListener().subscribe(authStatus => {
-      this.isLoading = false;
-    });
-    this.signupForm = this.formBuilder.group(
+    this.signupForm = this.fb.group(
       {
-        username: ['', [Validators.required, Validators.minLength(3)]],
+        firstName: ['', [Validators.required, Validators.minLength(2)]],
         email: ['', [Validators.required, Validators.email]],
         password: ['', [Validators.required, Validators.minLength(6)]],
         confirmPassword: ['', Validators.required]
@@ -43,18 +44,18 @@ export class SignupComponent implements OnInit, OnDestroy {
   /**
    *  Getter for easy access to form fields.
    */
-  get form() {
+  get formCtrls(): { [key: string]: AbstractControl } {
     return this.signupForm.controls;
   }
 
   /**
    * Handle sign up form errors -> email field.
    */
-  usernameErrorHandler() {
-    if (this.form.username.hasError('required')) {
-      return 'You must enter a valid username';
-    } else if (this.form.username.hasError('minlength')) {
-      return 'Username must have minimum 3 characters';
+  getFirstNameErrors() {
+    if (this.formCtrls.firstName.hasError('required')) {
+      return 'This field is required';
+    } else if (this.formCtrls.firstName.hasError('minlength')) {
+      return 'Username must have minimum 2 characters';
     }
     return null;
   }
@@ -62,11 +63,11 @@ export class SignupComponent implements OnInit, OnDestroy {
   /**
    * Handle sign up form errors -> email field.
    */
-  emailErrorHandler() {
-    if (this.form.email.hasError('required')) {
+  getEmailErrors() {
+    if (this.formCtrls.email.hasError('required')) {
       return 'You must enter a valid email';
-    } else if (this.form.email.hasError('email')) {
-      return 'This is not a valid email';
+    } else if (this.formCtrls.email.hasError('email')) {
+      return 'This.form is not a valid email';
     }
     return null;
   }
@@ -74,10 +75,10 @@ export class SignupComponent implements OnInit, OnDestroy {
   /**
    * Handle sign up form errors -> password field.
    */
-  passwordErrorHandler() {
-    if (this.form.password.hasError('required')) {
+  getPasswordErrors() {
+    if (this.formCtrls.password.hasError('required')) {
       return 'You must enter a password';
-    } else if (this.form.password.hasError('minlength')) {
+    } else if (this.formCtrls.password.hasError('minlength')) {
       return 'The password is too short. Please enter minimum 6 characters';
     }
     return null;
@@ -86,38 +87,36 @@ export class SignupComponent implements OnInit, OnDestroy {
   /**
    * Handle sign up form errors -> confirm-password field.
    */
-  confirmPasswordErrorHandler() {
-    if (this.form.confirmPassword.hasError('required')) {
+  getConfirmPasswordErrors() {
+    if (this.formCtrls.confirmPassword.hasError('required')) {
       return 'You must confirm your password';
-    } else if (this.form.confirmPassword.hasError('mustMatch')) {
+    } else if (this.formCtrls.confirmPassword.hasError('mustMatch')) {
       return 'Passwords do not match';
     }
     return null;
   }
 
   /**
-   * Signup user
+   * Signup user.
    */
   onSubmit() {
-    this.loadingSubscription = this.uiService.loadingStateChanged.subscribe(isLoading => (this.isLoading = isLoading));
-    this.authService.signup(
-      this.form.username.value,
-      this.form.email.value,
-      this.form.password.value,
-      this.form.confirmPassword.value
-    );
-  }
-
-  /**
-   * Unsubscribe from subscriptions.
-   */
-  ngOnDestroy() {
-    if (this.loadingSubscription) {
-      this.loadingSubscription.unsubscribe();
-    }
-
-    if (this.authStatusSubscription) {
-      this.authStatusSubscription.unsubscribe();
-    }
+    this.isLoading = true;
+    this.authService
+      .signup(
+        this.formCtrls.firstName.value,
+        this.formCtrls.email.value,
+        this.formCtrls.password.value,
+        this.formCtrls.confirmPassword.value
+      )
+      .pipe(finalize(() => (this.isLoading = false)))
+      .subscribe(() => {
+        this.uiService.showSnackBar(
+          'A confirmation email is on its way to your inbox. Please confirm your email before login',
+          null,
+          5000,
+          'top'
+        );
+        this.router.navigateByUrl('authentication/login');
+      });
   }
 }

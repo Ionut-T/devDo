@@ -1,34 +1,16 @@
 <mat-spinner *ngIf="isLoading"></mat-spinner>
-<form
-  class="user-form"
-  [formGroup]="signupForm"
-  (ngSubmit)="onSubmit()"
-  *ngIf="!isLoading"
->
+<form class="user-form" [formGroup]="signupForm" (ngSubmit)="onSubmit()" *ngIf="!isLoading">
   <mat-form-field class="user-form-field">
-    <input
-      matInput
-      type="text"
-      placeholder="Enter a username"
-      formControlName="username"
-    />
-    <mat-error *ngIf="form.username.invalid">{{ usernameErrorHandler() }}</mat-error>
+    <input matInput type="text" placeholder="First Name" formControlName="firstName" />
+    <mat-error *ngIf="formCtrls.firstName.invalid">{{ getFirstNameErrors() }}</mat-error>
   </mat-form-field>
 
   <mat-form-field class="user-form-field">
-    <input
-      matInput
-      type="email"
-      placeholder="Enter your email"
-      formControlName="email"
-    />
-    <mat-error *ngIf="form.email.invalid">{{ emailErrorHandler() }}</mat-error>
+    <input matInput type="email" placeholder="Enter your email" formControlName="email" />
+    <mat-error *ngIf="formCtrls.email.invalid">{{ getEmailErrors() }}</mat-error>
   </mat-form-field>
 
-  <mat-form-field
-    class="user-form-field"
-    hintLabel="Password must contain minim 6 characters"
-  >
+  <mat-form-field class="user-form-field" hintLabel="Password must contain minim 6 characters">
     <input
       matInput
       [type]="hidePassword ? 'password' : 'text'"
@@ -36,12 +18,10 @@
       formControlName="password"
     />
     <mat-icon matSuffix (click)="hidePassword = !hidePassword">
-      {{ hidePassword ? "visibility_off" : "visibility" }}
+      {{ hidePassword ? 'visibility_off' : 'visibility' }}
     </mat-icon>
-    <mat-hint align="end">{{ form.password.value?.length || 0 }}/6</mat-hint>
-    <mat-error *ngIf="form.password.invalid">
-      {{ passwordErrorHandler() }}
-    </mat-error>
+    <mat-hint align="end">{{ formCtrls.password.value?.length || 0 }}/6</mat-hint>
+    <mat-error *ngIf="formCtrls.password.invalid">{{ getPasswordErrors() }}</mat-error>
   </mat-form-field>
 
   <mat-form-field class="user-form-field">
@@ -52,18 +32,9 @@
       formControlName="confirmPassword"
     />
     <mat-icon matSuffix (click)="hideConfirmPassword = !hideConfirmPassword">
-      {{ hideConfirmPassword ? "visibility_off" : "visibility" }}
+      {{ hideConfirmPassword ? 'visibility_off' : 'visibility' }}
     </mat-icon>
-    <mat-error *ngIf="form.confirmPassword.invalid">
-      {{ confirmPasswordErrorHandler() }}
-    </mat-error>
+    <mat-error *ngIf="formCtrls.confirmPassword.invalid">{{ getConfirmPasswordErrors() }}</mat-error>
   </mat-form-field>
-  <button
-    mat-raised-button
-    type="submit"
-    color="primary"
-    [disabled]="signupForm.invalid"
-  >
-    Sign Up
-  </button>
+  <button mat-button type="submit" color="primary" [disabled]="signupForm.invalid">Sign Up</button>
 </form>

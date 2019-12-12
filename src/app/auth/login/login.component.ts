@@ -1,7 +1,6 @@
-import { Component, OnInit, OnDestroy } from '@angular/core';
-import { FormGroup, FormControl, Validators } from '@angular/forms';
+import { Component, OnInit } from '@angular/core';
+import { FormGroup, FormControl, Validators, AbstractControl } from '@angular/forms';
 import { AuthService } from '../auth.service';
-import { Subscription } from 'rxjs';
 import { UIService } from 'src/app/shared/ui.service';
 
 @Component({
@@ -9,12 +8,9 @@ import { UIService } from 'src/app/shared/ui.service';
   templateUrl: './login.component.html',
   styleUrls: ['./login.component.css']
 })
-export class LoginComponent implements OnInit, OnDestroy {
+export class LoginComponent implements OnInit {
   hidePassword = true;
   loginForm: FormGroup;
-  isLoading = false;
-  private loadingSubscription: Subscription;
-  private authStatusSubscription: Subscription;
 
   constructor(private authService: AuthService, private uiService: UIService) {}
 
@@ -22,11 +18,6 @@ export class LoginComponent implements OnInit, OnDestroy {
    * Create and validate the reactive login form.
    */
   ngOnInit() {
-    this.authStatusSubscription = this.authService
-      .getAuthStatusListener()
-      .subscribe(authStatus => {
-        this.isLoading = false;
-      });
     this.loginForm = new FormGroup({
       email: new FormControl(null, {
         validators: [Validators.required, Validators.email]
@@ -35,7 +26,10 @@ export class LoginComponent implements OnInit, OnDestroy {
     });
   }
 
-  get form() {
+  /**
+   *  Getter for easy access to form fields.
+   */
+  get formCtrls(): { [key: string]: AbstractControl } {
     return this.loginForm.controls;
   }
 
@@ -43,9 +37,9 @@ export class LoginComponent implements OnInit, OnDestroy {
    *  Handle log in form errors -> email.
    */
   emailErrorHandler() {
-    if (this.form.email.hasError('required')) {
+    if (this.formCtrls.email.hasError('required')) {
       return 'Please enter your email';
-    } else if (this.form.email.hasError('email')) {
+    } else if (this.formCtrls.email.hasError('email')) {
       return 'Please enter a valid email';
     }
     return null;
@@ -55,7 +49,7 @@ export class LoginComponent implements OnInit, OnDestroy {
    * Handle log in form errors -> password.
    */
   passwordErrorHandler() {
-    if (this.form.password.hasError('required')) {
+    if (this.formCtrls.password.hasError('required')) {
       return 'Please enter your password';
     }
     return null;
@@ -65,22 +59,6 @@ export class LoginComponent implements OnInit, OnDestroy {
    * Call log in user.
    */
   onSubmit() {
-    this.loadingSubscription = this.uiService.loadingStateChanged.subscribe(
-      isLoading => (this.isLoading = isLoading)
-    );
-    this.authService.login(this.form.email.value, this.form.password.value);
-  }
-
-  /**
-   * Unsubscribe from subscriptions
-   */
-  ngOnDestroy() {
-    if (this.loadingSubscription) {
-      this.loadingSubscription.unsubscribe();
-    }
-
-    if (this.authStatusSubscription) {
-      this.authStatusSubscription.unsubscribe();
-    }
+    this.authService.login(this.formCtrls.email.value, this.formCtrls.password.value).subscribe();
   }
 }

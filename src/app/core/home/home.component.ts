@@ -20,16 +20,14 @@ export class HomeComponent implements OnInit, OnDestroy {
   ngOnInit() {
     this.authListenerSubscription = this.authService
       .getAuthStatusListener()
-      .subscribe(isAuth => {
-        this.isAuth = isAuth;
-      });
+      .subscribe(isAuth => (this.isAuth = isAuth));
   }
 
   /**
    * Redirect user to sign up page
    */
   onSignUp() {
-    this.router.navigate(['/user/signup']);
+    this.router.navigateByUrl('/authentication/signup');
   }
 
   /**
