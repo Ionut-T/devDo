@@ -30,7 +30,6 @@ export class SignupComponent implements OnInit {
     this.signupForm = this.fb.group(
       {
         firstName: ['', [Validators.required, Validators.minLength(2)]],
-        lastName: ['', [Validators.required, Validators.minLength(2)]],
         email: ['', [Validators.required, Validators.email]],
         password: ['', [Validators.required, Validators.minLength(6)]],
         confirmPassword: ['', Validators.required]
@@ -47,13 +46,14 @@ export class SignupComponent implements OnInit {
   get formCtrls(): { [key: string]: AbstractControl } {
     return this.signupForm.controls;
   }
+
   /**
    * Handle sign up form errors -> email field.
    */
-  getNameErrors() {
-    if (this.formCtrls.firstName.hasError('required') || this.formCtrls.lastName.hasError('required')) {
+  getFirstNameErrors() {
+    if (this.formCtrls.firstName.hasError('required')) {
       return 'This field is required';
-    } else if (this.formCtrls.firstName.hasError('minlength') || this.formCtrls.lastName.hasError('minlength')) {
+    } else if (this.formCtrls.firstName.hasError('minlength')) {
       return 'Username must have minimum 2 characters';
     }
     return null;
@@ -102,7 +102,6 @@ export class SignupComponent implements OnInit {
     this.authService
       .signup(
         this.formCtrls.firstName.value,
-        this.formCtrls.lastName.value,
         this.formCtrls.email.value,
         this.formCtrls.password.value,
         this.formCtrls.confirmPassword.value

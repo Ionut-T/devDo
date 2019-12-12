@@ -45,16 +45,10 @@ export class AuthService {
   /**
    * Create user.
    */
-  signup(
-    firstName: string,
-    lastName: string,
-    email: string,
-    password: string,
-    confirmPassword: string
-  ): Observable<UserResponseType> {
+  signup(firstName: string, email: string, password: string, confirmPassword: string): Observable<UserResponseType> {
     return this.http.post<{ user: IUser }>(
       `${this.URL}/signup`,
-      { firstName, lastName, email, password, confirmPassword },
+      { firstName, email, password, confirmPassword },
       { observe: 'response' }
     );
   }
