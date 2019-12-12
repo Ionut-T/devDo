@@ -3,8 +3,8 @@ import { FormGroup, FormBuilder, Validators, AbstractControl } from '@angular/fo
 import { MustMatch } from './must-match.validator';
 import { AuthService } from '../auth.service';
 import { UIService } from 'src/app/shared/ui.service';
-import { UserService } from '../user.service';
 import { Router } from '@angular/router';
+import { finalize } from 'rxjs/operators';
 
 @Component({
   selector: 'app-signup',
@@ -15,6 +15,7 @@ export class SignupComponent implements OnInit {
   signupForm: FormGroup;
   hidePassword = true;
   hideConfirmPassword = true;
+  isLoading = false;
 
   constructor(
     private fb: FormBuilder,
@@ -99,6 +100,7 @@ export class SignupComponent implements OnInit {
    * Signup user.
    */
   onSubmit() {
+    this.isLoading = true;
     this.authService
       .signup(
         this.formCtrls.firstName.value,
@@ -106,6 +108,7 @@ export class SignupComponent implements OnInit {
         this.formCtrls.password.value,
         this.formCtrls.confirmPassword.value
       )
+      .pipe(finalize(() => (this.isLoading = false)))
       .subscribe(() => {
         this.uiService.showSnackBar(
           'A confirmation email is on its way to your inbox. Please confirm your email before login',

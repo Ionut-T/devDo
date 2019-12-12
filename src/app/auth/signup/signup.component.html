@@ -1,4 +1,5 @@
-<form class="user-form" [formGroup]="signupForm" (ngSubmit)="onSubmit()">
+<mat-spinner *ngIf="isLoading"></mat-spinner>
+<form class="user-form" [formGroup]="signupForm" (ngSubmit)="onSubmit()" *ngIf="!isLoading">
   <mat-form-field class="user-form-field">
     <input matInput type="text" placeholder="First Name" formControlName="firstName" />
     <mat-error *ngIf="formCtrls.firstName.invalid">{{ getFirstNameErrors() }}</mat-error>
