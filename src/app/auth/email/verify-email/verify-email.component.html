@@ -1,0 +1,4 @@
+<mat-card class="mat-elevation-z6">
+  <p *ngIf="!errorMessage">Your email has been verfied. You can now log in.</p>
+  <p *ngIf="errorMessage">{{ errorMessage }}</p>
+</mat-card>

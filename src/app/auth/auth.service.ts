@@ -5,7 +5,7 @@ import { BehaviorSubject, Observable } from 'rxjs';
 import { Router } from '@angular/router';
 import { UIService } from '../shared/ui.service';
 import { environment } from '../../environments/environment';
-import { tap } from 'rxjs/operators';
+import { tap, map } from 'rxjs/operators';
 
 type TResponse = HttpResponse<{ user: IUser }>;
 
@@ -45,10 +45,16 @@ export class AuthService {
   /**
    * Create user.
    */
-  signup(email: string, password: string, confirmPassword: string): Observable<TResponse> {
+  signup(
+    firstName: string,
+    lastName: string,
+    email: string,
+    password: string,
+    confirmPassword: string
+  ): Observable<TResponse> {
     return this.http.post<{ user: IUser }>(
       `${this.URL}/signup`,
-      { email, password, confirmPassword },
+      { firstName, lastName, email, password, confirmPassword },
       { observe: 'response' }
     );
   }
@@ -61,7 +67,6 @@ export class AuthService {
       .post<{ token: string; expiresIn: number }>(`${this.URL}/login`, { email, password }, { observe: 'response' })
       .pipe(
         tap(response => {
-          console.log('TCL: AuthService -> login -> response', response);
           const token = response.body.token;
           if (token) {
             const expiresInDuration = response.body.expiresIn;
@@ -150,5 +155,13 @@ export class AuthService {
   private isAuth(val: boolean) {
     this.isAuthenticated = val;
     this.authStatusListener.next(val);
+  }
+
+  /**
+   * Get email verify token.
+   * @params token -> expires in 30 min from creation.
+   */
+  getEmailVerifyToken(token: string): Observable<{ token: { userId: string } }> {
+    return this.http.get<{ token: { userId: string } }>(`${this.URL}/${token}`);
   }
 }
