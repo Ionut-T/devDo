@@ -1,0 +1,15 @@
+.mat-card {
+  min-width: 300px;
+  width: 50%;
+  margin: 50px auto;
+  text-align: center;
+}
+
+.email {
+  display: flex;
+  flex-direction: column;
+  min-width: 300px;
+  width: 50%;
+  margin: auto;
+  text-align: left;
+}

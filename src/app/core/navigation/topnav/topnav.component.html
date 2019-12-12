@@ -14,10 +14,10 @@
     <a mat-list-item routerLink="/board" routerLinkActive="active" *ngIf="isLoggedIn$ | async">
       My Board
     </a>
-    <a mat-list-item routerLink="/user/signup" routerLinkActive="active" *ngIf="!(isLoggedIn$ | async)">
+    <a mat-list-item routerLink="/authentication/signup" routerLinkActive="active" *ngIf="!(isLoggedIn$ | async)">
       Sign Up
     </a>
-    <a mat-list-item routerLink="/user/login" routerLinkActive="active" *ngIf="!(isLoggedIn$ | async)">
+    <a mat-list-item routerLink="/authentication/login" routerLinkActive="active" *ngIf="!(isLoggedIn$ | async)">
       Log In
     </a>
     <a mat-list-item *ngIf="isLoggedIn$ | async" (click)="onLogout()">
