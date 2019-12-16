@@ -12,7 +12,7 @@ h1 {
   font-weight: 400;
 }
 
-mat-expansion-panel:not(:last-child) {
+.mat-expansion-panel:not(:last-child) {
   margin-bottom: 10px;
 }
 
@@ -25,30 +25,30 @@ mat-expansion-panel:not(:last-child) {
 }
 
 /* Form styles.*/
-.user-form {
+.form {
   display: flex;
   flex-direction: column;
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
+  margin: auto;
 }
 
-.user-form-field {
-  width: 400px;
-  margin-bottom: 20px;
+.user-form {
+  min-width: 300px;
+  width: 40%;
+  margin: 50px auto;
+}
+
+.modal__form {
+  width: 90%;
+}
+
+.mat-form-field {
+  margin-bottom: 8px;
 }
 
 .mat-icon {
   cursor: pointer;
 }
 
-mat-spinner {
+.mat-spinner {
   margin: 50px auto;
-}
-
-@media only screen and (max-width: 600px) {
-  .user-form-field {
-    width: 300px;
-  }
 }

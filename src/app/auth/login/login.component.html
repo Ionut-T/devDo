@@ -1,12 +1,12 @@
-<form class="user-form" [formGroup]="loginForm" (ngSubmit)="onSubmit()">
-  <mat-form-field class="user-form-field">
+<form class="form user-form" [formGroup]="loginForm" (ngSubmit)="onSubmit()">
+  <mat-form-field>
     <input matInput type="email" placeholder="Enter your email" formControlName="email" />
     <mat-error *ngIf="formCtrls.email.invalid">
       {{ emailErrorHandler() }}
     </mat-error>
   </mat-form-field>
 
-  <mat-form-field class="user-form-field">
+  <mat-form-field>
     <input
       matInput
       [type]="hidePassword ? 'password' : 'text'"
