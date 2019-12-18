@@ -173,4 +173,11 @@ export class AuthService {
   forgotPassword(email: string): Observable<{ token: object }> {
     return this.http.post<{ token: object }>(`${this.URL}/reset-password`, { email });
   }
+
+  /**
+   * Reset account's password.
+   */
+  resetPassword(token: string, password: string, confirmPassword: string): Observable<{ message: string }> {
+    return this.http.patch<{ message: string }>(`${this.URL}/reset-password/${token}`, { password, confirmPassword });
+  }
 }
