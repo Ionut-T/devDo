@@ -47,7 +47,7 @@ export class VerifyEmailComponent implements OnInit {
   }
 
   /**
-   * Handle sign up form errors -> email field.
+   * Handle email errors.
    */
   getEmailErrors(): string {
     if (this.email.hasError('required')) {

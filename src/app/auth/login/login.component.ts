@@ -11,6 +11,7 @@ import { UIService } from 'src/app/shared/ui.service';
 export class LoginComponent implements OnInit {
   hidePassword = true;
   loginForm: FormGroup;
+  isForgotPassword = false;
 
   constructor(private authService: AuthService, private uiService: UIService) {}
 
@@ -60,5 +61,9 @@ export class LoginComponent implements OnInit {
    */
   onSubmit() {
     this.authService.login(this.formCtrls.email.value, this.formCtrls.password.value).subscribe();
+  }
+
+  onForgotPassword() {
+    this.isForgotPassword = true;
   }
 }
