@@ -156,13 +156,28 @@ export class AuthService {
    * @params token -> expires in 30 min from creation.
    */
   getEmailVerificationToken(token: string): Observable<{ token: { userId: string } }> {
-    return this.http.get<{ token: { userId: string } }>(`${this.URL}/${token}`);
+    return this.http.get<{ token: { userId: string } }>(`${this.URL}/verify-email/${token}`);
   }
 
   /**
    * Resend verification token.
    */
   resendVerificationToken(email: string): Observable<{ token: object }> {
-    return this.http.post<{ token: object }>(`${this.URL}/token`, { email });
+    return this.http.post<{ token: object }>(`${this.URL}/verify-email/token`, { email });
+  }
+
+  /**
+   * Send reset password link.
+   * @params email -> user's email.
+   */
+  forgotPassword(email: string): Observable<{ token: object }> {
+    return this.http.post<{ token: object }>(`${this.URL}/reset-password`, { email });
+  }
+
+  /**
+   * Reset account's password.
+   */
+  resetPassword(token: string, password: string, confirmPassword: string): Observable<{ message: string }> {
+    return this.http.patch<{ message: string }>(`${this.URL}/reset-password/${token}`, { password, confirmPassword });
   }
 }
