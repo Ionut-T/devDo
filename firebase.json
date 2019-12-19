@@ -1,11 +1,8 @@
 {
   "hosting": {
+    "site": "devdo-project",
     "public": "dist/devdo",
-    "ignore": [
-      "firebase.json",
-      "**/.*",
-      "**/node_modules/**"
-    ],
+    "ignore": ["firebase.json", "**/.*", "**/node_modules/**"],
     "rewrites": [
       {
         "source": "**",
