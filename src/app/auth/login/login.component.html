@@ -1,12 +1,13 @@
-<form class="user-form" [formGroup]="loginForm" (ngSubmit)="onSubmit()">
-  <mat-form-field class="user-form-field">
+<app-forgot-password *ngIf="isForgotPassword" (close)="isForgotPassword = false"></app-forgot-password>
+<form class="form user-form" [formGroup]="loginForm" (ngSubmit)="onSubmit()">
+  <mat-form-field>
     <input matInput type="email" placeholder="Enter your email" formControlName="email" />
     <mat-error *ngIf="formCtrls.email.invalid">
       {{ emailErrorHandler() }}
     </mat-error>
   </mat-form-field>
 
-  <mat-form-field class="user-form-field">
+  <mat-form-field>
     <input
       matInput
       [type]="hidePassword ? 'password' : 'text'"
@@ -21,4 +22,5 @@
     </mat-error>
   </mat-form-field>
   <button mat-button type="submit" color="primary" [disabled]="loginForm.invalid">Log In</button>
+  <button mat-button type="button" color="warn" (click)="onForgotPassword()">Forgot Password?</button>
 </form>
