@@ -1,27 +1,6 @@
-import { trigger, animate, transition, style, query, group } from '@angular/animations';
+import { AnimationTriggerMetadata, trigger, animate, transition, style, query, group } from '@angular/animations';
 
-// export const routerAnimation = trigger('routerAnimation', [
-//   transition('* <=> *', [
-//     // style({ position: 'relative' }),
-//     query(
-//       ':enter, :leave',
-//       [
-//         style({
-//           position: 'absolute',
-//           top: 0,
-//           left: 0,
-//           width: '100%'
-//         })
-//       ],
-//       { optional: true }
-//     ),
-//     query(':enter', [style({ left: '-100%' })], { optional: true }),
-//     query(':leave', [style({ opacity: 1 }), animate('0.3s', style({ left: '100%' }))], { optional: true })
-//     // query(':enter', [style({ opacity: 0 }), animate('0.3s', style({ opacity: 1 }))], { optional: true })
-//   ])
-// ]);
-
-export const routerAnimation = trigger('routerAnimation', [
+export const routerAnimation: AnimationTriggerMetadata = trigger('routerAnimation', [
   transition('* => isLeft', slideTo('left')),
   transition('* => isRight', slideTo('right')),
   transition('isRight => *', slideTo('left')),
@@ -48,10 +27,5 @@ function slideTo(direction: string) {
       query(':leave', [animate('600ms ease', style({ [direction]: '100%' }))], optional),
       query(':enter', [animate('600ms ease', style({ [direction]: '0%' }))])
     ])
-    // Normalize the page style... Might not be necessary
-
-    // Required only if you have child animations on the page
-    // query(':leave', animateChild()),
-    // query(':enter', animateChild()),
   ];
 }
