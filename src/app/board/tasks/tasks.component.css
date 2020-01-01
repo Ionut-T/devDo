@@ -1,8 +1,8 @@
 .tasks-container {
   display: flex;
   width: 90%;
-  height: 80%;
-  margin: 0 auto;
+  min-height: calc(100vh - 15rem);
+  margin: 0 auto 2rem;
   flex-wrap: wrap;
   justify-content: space-around;
   text-align: center;
