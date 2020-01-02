@@ -15,7 +15,7 @@ function slideTo(direction: string) {
       [
         style({
           position: 'absolute',
-          top: '64px',
+          top: document.body.clientWidth <= 599 ? '56px' : '64px',
           [direction]: 0,
           width: '100%'
         })
