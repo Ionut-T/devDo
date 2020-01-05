@@ -1,8 +1,8 @@
 .tasks-container {
   display: flex;
   width: 90%;
-  height: 80%;
-  margin: 0 auto;
+  min-height: calc(100vh - 250px);
+  margin: 0 auto 20px;
   flex-wrap: wrap;
   justify-content: space-around;
   text-align: center;
@@ -21,8 +21,13 @@
   margin-left: auto;
 }
 
-@media only screen and (max-width: 1035px) {
-  mat-divider {
+@media only screen and (max-width: 1003px) {
+  .tasks-container {
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .mat-divider {
     display: none;
   }
 

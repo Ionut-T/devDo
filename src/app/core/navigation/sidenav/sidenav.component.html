@@ -40,6 +40,9 @@
   </mat-sidenav>
   <mat-sidenav-content>
     <app-topnav (toggleSidenav)="drawer.toggle()" (toggleTheme)="onToggleTheme()"></app-topnav>
-    <ng-content></ng-content>
+    <div class="content">
+      <ng-content></ng-content>
+    </div>
+    <app-footer></app-footer>
   </mat-sidenav-content>
 </mat-sidenav-container>

@@ -1,0 +1,13 @@
+:host {
+  position: relative;
+}
+
+.mat-toolbar {
+  display: flex;
+  justify-content: flex-end;
+}
+
+.footer__link {
+  color: currentColor;
+  text-decoration: none;
+}
