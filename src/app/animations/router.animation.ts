@@ -1,31 +1,48 @@
 import { AnimationTriggerMetadata, trigger, animate, transition, style, query, group } from '@angular/animations';
 
-export const routerAnimation: AnimationTriggerMetadata = trigger('routerAnimation', [
-  transition('* => isLeft', slideTo('left')),
-  transition('* => isRight', slideTo('right')),
-  transition('isRight => *', slideTo('left')),
-  transition('isLeft => *', slideTo('right'))
-]);
+const slideToTheRight = [
+  query(
+    ':enter, :leave',
+    [
+      style({
+        position: 'absolute',
+        top: document.body.clientWidth <= 599 ? '56px' : '64px',
+        right: 0,
+        width: '100%'
+      })
+    ],
+    { optional: true }
+  ),
+  query(':enter', [style({ right: '-100%' })]),
+  group([
+    query(':leave', [animate('.6s ease', style({ right: '100%' }))], { optional: true }),
+    query(':enter', [animate('.6s ease', style({ right: '0%' }))])
+  ])
+];
 
-function slideTo(direction: string) {
-  const optional = { optional: true };
-  return [
-    query(
-      ':enter, :leave',
-      [
-        style({
-          position: 'absolute',
-          top: document.body.clientWidth <= 599 ? '56px' : '64px',
-          [direction]: 0,
-          width: '100%'
-        })
-      ],
-      optional
-    ),
-    query(':enter', [style({ [direction]: '-100%' })]),
-    group([
-      query(':leave', [animate('600ms ease', style({ [direction]: '100%' }))], optional),
-      query(':enter', [animate('600ms ease', style({ [direction]: '0%' }))])
-    ])
-  ];
-}
+const slideToTheLeft = [
+  query(
+    ':enter, :leave',
+    [
+      style({
+        position: 'absolute',
+        top: document.body.clientWidth <= 599 ? '56px' : '64px',
+        left: 0,
+        width: '100%'
+      })
+    ],
+    { optional: true }
+  ),
+  query(':enter', [style({ left: '-100%' })]),
+  group([
+    query(':leave', [animate('.6s ease', style({ left: '100%' }))], { optional: true }),
+    query(':enter', [animate('.6s ease', style({ left: '0%' }))])
+  ])
+];
+
+export const routerAnimation: AnimationTriggerMetadata = trigger('routerAnimation', [
+  transition('* => isLeft', slideToTheLeft),
+  transition('* => isRight', slideToTheRight),
+  transition('isRight => *', slideToTheLeft),
+  transition('isLeft => *', slideToTheRight)
+]);
