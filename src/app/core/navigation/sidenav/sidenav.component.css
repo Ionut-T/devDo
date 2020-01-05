@@ -5,3 +5,13 @@
 .sidenav {
   width: 200px;
 }
+
+.mat-sidenav-content {
+  display: flex;
+  flex-direction: column;
+}
+
+.content {
+  flex: 1 1 0;
+  /* margin: 50px auto; */
+}

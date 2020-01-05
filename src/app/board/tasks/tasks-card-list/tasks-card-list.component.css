@@ -1,3 +1,9 @@
-mat-expansion-panel:not(:last-child) {
+.mat-expansion-panel:not(:last-child) {
   margin-bottom: 10px;
+}
+
+@media only screen and (max-width: 1003px) {
+  .mat-h1 {
+    margin-top: 20px;
+  }
 }

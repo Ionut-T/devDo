@@ -5,7 +5,7 @@ import { AuthGuard } from './auth/auth.guard';
 import { PageNotFoundComponent } from './core/page-not-found/page-not-found.component';
 
 const routes: Routes = [
-  { path: '', component: HomeComponent },
+  { path: '', component: HomeComponent, data: { animation: 'isLeft' } },
   {
     path: 'board',
     loadChildren: () => import('./board/board.module').then(m => m.BoardModule),
