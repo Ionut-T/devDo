@@ -7,23 +7,29 @@ import { MaterialModule } from '../material.module';
 import { DialogModule } from '../components/dialog/dialog.module';
 import { ModalModule } from '../components/modal/modal.module';
 
-import { BoardRoutingModule } from './board-routing.module';
-import { BoardComponent } from './board.component';
+import { ProjectsRoutingModule } from './projects-routing.module';
+import { ProjectsComponent } from './projects.component';
 import { TasksComponent } from './tasks/tasks.component';
 import { CreateTaskComponent } from './tasks/create-task/create-task.component';
 import { UppercaseFirstLetterPipe } from './uppercase-first-letter.pipe';
 import { TasksCardListComponent } from './tasks/tasks-card-list/tasks-card-list.component';
 
 @NgModule({
-  declarations: [BoardComponent, TasksComponent, CreateTaskComponent, UppercaseFirstLetterPipe, TasksCardListComponent],
+  declarations: [
+    ProjectsComponent,
+    TasksComponent,
+    CreateTaskComponent,
+    UppercaseFirstLetterPipe,
+    TasksCardListComponent
+  ],
   imports: [
     CommonModule,
     FormsModule,
     ReactiveFormsModule,
-    BoardRoutingModule,
+    ProjectsRoutingModule,
     MaterialModule,
     DialogModule,
     ModalModule
   ]
 })
-export class BoardModule {}
+export class ProjectsModule {}

@@ -5,10 +5,10 @@ import { Component, OnInit } from '@angular/core';
  */
 @Component({
   selector: 'app-board',
-  templateUrl: './board.component.html',
-  styleUrls: ['./board.component.css']
+  templateUrl: './projects.component.html',
+  styleUrls: ['./projects.component.css']
 })
-export class BoardComponent implements OnInit {
+export class ProjectsComponent implements OnInit {
   constructor() {}
 
   ngOnInit() {}
