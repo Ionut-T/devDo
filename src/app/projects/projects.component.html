@@ -1,1 +1,12 @@
-<app-tasks></app-tasks>
+<app-create-project *ngIf="isOpen" (close)="isOpen = false"></app-create-project>
+<div class="action">
+  <button
+    mat-mini-fab
+    color="primary"
+    matTooltip="Create new project"
+    matTooltipPosition="right"
+    (click)="isOpen = true"
+  >
+    <mat-icon>add</mat-icon>
+  </button>
+</div>

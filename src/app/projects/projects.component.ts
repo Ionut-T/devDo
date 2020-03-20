@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { ProjectHttpService } from './project-http.service';
 
 /**
  * Board Component
@@ -9,7 +10,11 @@ import { Component, OnInit } from '@angular/core';
   styleUrls: ['./projects.component.css']
 })
 export class ProjectsComponent implements OnInit {
-  constructor() {}
+  isOpen = false;
 
-  ngOnInit() {}
+  constructor(private projectHttpService: ProjectHttpService) {}
+
+  ngOnInit() {
+    this.projectHttpService.getProjects().subscribe(console.log);
+  }
 }

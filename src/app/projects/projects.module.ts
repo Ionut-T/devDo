@@ -12,6 +12,7 @@ import { ProjectsComponent } from './projects.component';
 import { TasksComponent } from './tasks/tasks.component';
 import { CreateTaskComponent } from './tasks/create-task/create-task.component';
 import { UppercaseFirstLetterPipe } from './uppercase-first-letter.pipe';
+import { CreateProjectComponent } from './create-project/create-project.component';
 import { TasksCardListComponent } from './tasks/tasks-card-list/tasks-card-list.component';
 
 @NgModule({
@@ -20,6 +21,7 @@ import { TasksCardListComponent } from './tasks/tasks-card-list/tasks-card-list.
     TasksComponent,
     CreateTaskComponent,
     UppercaseFirstLetterPipe,
+    CreateProjectComponent,
     TasksCardListComponent
   ],
   imports: [
