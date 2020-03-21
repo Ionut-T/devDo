@@ -1,20 +1,24 @@
 import { Component, OnInit } from '@angular/core';
 import { ProjectHttpService } from './project-http.service';
+import { Observable } from 'rxjs';
+import { IProject } from './project.model';
+import { map } from 'rxjs/operators';
 
 /**
  * Board Component
  */
 @Component({
-  selector: 'app-board',
+  selector: 'app-projects',
   templateUrl: './projects.component.html',
   styleUrls: ['./projects.component.css']
 })
 export class ProjectsComponent implements OnInit {
   isOpen = false;
+  projects$: Observable<IProject[]>;
 
   constructor(private projectHttpService: ProjectHttpService) {}
 
   ngOnInit() {
-    this.projectHttpService.getProjects().subscribe(console.log);
+    this.projects$ = this.projectHttpService.getProjects().pipe(map(response => response.body.projects));
   }
 }
