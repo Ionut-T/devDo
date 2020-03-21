@@ -1,19 +1,19 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpResponse } from '@angular/common/http';
 import { ITask } from './task.model';
-import { BehaviorSubject, Observable } from 'rxjs';
+import { Observable } from 'rxjs';
 import { UIService } from '../../shared/ui.service';
 import { environment } from '../../../environments/environment';
-import { map } from 'rxjs/operators';
+import { IProject } from '../project.model';
 
 type TaskResponseType = HttpResponse<{ task: ITask }>;
-type TaskArrayResponseType = HttpResponse<{ tasks: ITask[] }>;
+type TaskArrayResponseType = HttpResponse<{ tasks: ITask[]; project: IProject }>;
 
 @Injectable({
   providedIn: 'root'
 })
 export class TaskHttpService {
-  private readonly URL = environment.apiUrl + '/tasks';
+  private readonly URL = environment.apiUrl + '/projects';
 
   constructor(private http: HttpClient, private uiService: UIService) {}
 
@@ -31,9 +31,12 @@ export class TaskHttpService {
    * @param task -> created task.
    * @returns observable.
    */
-  getTasks(): Observable<TaskArrayResponseType> {
+  getTasks(projectUrl: string): Observable<TaskArrayResponseType> {
     this.uiService.loadingStateChanged.next(true);
-    return this.http.get<{ tasks: ITask[] }>(this.URL, { observe: 'response' });
+
+    return this.http.get<{ tasks: ITask[]; project: IProject }>(`${this.URL}/${projectUrl}/tasks`, {
+      observe: 'response'
+    });
   }
 
   /**

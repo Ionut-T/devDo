@@ -4,4 +4,5 @@ export interface IProject {
   description: string;
   creator?: string;
   createdAt?: Date;
+  url?: string;
 }

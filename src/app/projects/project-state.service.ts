@@ -31,6 +31,24 @@ export class ProjectStateService {
   }
 
   /**
+   * Get mapped project by id.
+   * @param id -> project id.
+   * @returns observable.
+   */
+  getMappedProjects(): Observable<IProject[]> {
+    return this.projectHttpService.getProjects().pipe(
+      map(res =>
+        res.body.projects.map((project: any) => ({
+          id: project._id,
+          name: project.name,
+          description: project.description,
+          url: project.url
+        }))
+      )
+    );
+  }
+
+  /**
    * Get project id.
    * @param id -> project id.
    */

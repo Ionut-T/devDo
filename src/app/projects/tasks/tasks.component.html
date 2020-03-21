@@ -1,5 +1,7 @@
 <app-create-task *ngIf="isOpen" (close)="toggleModal()"></app-create-task>
-<div class="action">
+<div class="header">
+  <div class="spacer"></div>
+  <h3 class="project-name mat-h3">Project: {{ project?.name | titlecase }}</h3>
   <button mat-mini-fab color="primary" matTooltip="Create new task" matTooltipPosition="right" (click)="toggleModal()">
     <mat-icon>add</mat-icon>
   </button>

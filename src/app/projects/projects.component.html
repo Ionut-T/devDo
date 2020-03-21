@@ -14,8 +14,8 @@
 <div class="container">
   <mat-card *ngFor="let project of projects$ | async" class="mat-elevation-z8">
     <mat-card-header>
-      <span>{{ project.name | uppercaseFirstLetter }}</span>
-      <button mat-button color="primary" matTooltip="View project">
+      <span>{{ project.name | titlecase }}</span>
+      <button mat-button color="primary" matTooltip="View project" (click)="onViewProject(project.url)">
         <mat-icon>view_list</mat-icon>
       </button>
       <button mat-icon-button [matMenuTriggerFor]="menu" aria-label="Example icon-button with a menu">
