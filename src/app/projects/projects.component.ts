@@ -1,10 +1,13 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
 import { ProjectHttpService } from './project-http.service';
-import { Observable } from 'rxjs';
+import { Observable, Subject } from 'rxjs';
 import { IProject } from './project.model';
-import { map } from 'rxjs/operators';
+import { takeUntil } from 'rxjs/operators';
 import { Router } from '@angular/router';
 import { ProjectStateService } from './project-state.service';
+import { UIService } from '../shared/ui.service';
+import { MatDialog } from '@angular/material/dialog';
+import { DialogComponent } from '../components/dialog/dialog.component';
 
 /**
  * Board Component
@@ -14,11 +17,18 @@ import { ProjectStateService } from './project-state.service';
   templateUrl: './projects.component.html',
   styleUrls: ['./projects.component.css']
 })
-export class ProjectsComponent implements OnInit {
+export class ProjectsComponent implements OnInit, OnDestroy {
   isOpen = false;
   projects$: Observable<IProject[]>;
+  private destroy$ = new Subject<null>();
 
-  constructor(private projectStateService: ProjectStateService, private router: Router) {}
+  constructor(
+    private projectHttpService: ProjectHttpService,
+    private projectStateService: ProjectStateService,
+    private router: Router,
+    private dialog: MatDialog,
+    private uiService: UIService
+  ) {}
 
   ngOnInit() {
     this.projects$ = this.projectStateService.getMappedProjects();
@@ -30,5 +40,44 @@ export class ProjectsComponent implements OnInit {
    */
   onViewProject(url: string) {
     this.router.navigateByUrl(`projects/${url}`);
+  }
+
+  /**
+   * Delete project upon confirmation.
+   * @param id -> project id.
+   * @param name -> project name.
+   */
+  onDelete(name: string, id: string) {
+    const dialogRef = this.dialog.open(DialogComponent, {
+      data: {
+        title: `Delete Project "${name.toUpperCase()}"`,
+        content: 'Are you sure you want to delete this project?'
+      }
+    });
+
+    dialogRef
+      .afterClosed()
+      .pipe(takeUntil(this.destroy$))
+      .subscribe(result => {
+        if (result) {
+          this.deleteProject(id);
+        }
+      });
+  }
+
+  /**
+   * Delete project method.
+   * @param id -> project id.
+   */
+  deleteProject(id: string) {
+    this.projectHttpService.deleteProject(id).subscribe();
+  }
+
+  /**
+   * Unsubscribe from observables.
+   */
+  ngOnDestroy() {
+    this.destroy$.next();
+    this.destroy$.unsubscribe();
   }
 }

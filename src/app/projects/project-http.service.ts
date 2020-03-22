@@ -38,4 +38,13 @@ export class ProjectHttpService {
   getProject(id: string): Observable<ProjectResponseType> {
     return this.http.get<IProject>(`${this.URL}/${id}`, { observe: 'response' });
   }
+
+  /**
+   * Delete project.
+   * @param id -> project id.
+   * @returns observable.
+   */
+  deleteProject(id: string): Observable<HttpResponse<null>> {
+    return this.http.delete<null>(`${this.URL}/${id}`, { observe: 'response' });
+  }
 }

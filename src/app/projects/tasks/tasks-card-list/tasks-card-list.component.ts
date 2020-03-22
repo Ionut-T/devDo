@@ -37,7 +37,7 @@ export class TasksCardListComponent implements OnDestroy {
   }
 
   /**
-   * Delete task.
+   * Delete task upon confirmation.
    * @param id -> task id.
    */
   onDelete(id: string) {
@@ -55,6 +55,10 @@ export class TasksCardListComponent implements OnDestroy {
       });
   }
 
+  /**
+   * Delete task method.
+   * @param id -> task id.
+   */
   private deleteTask(id: string) {
     this.taskHttpService.deleteTask(id).subscribe(() => this.taskStateService.reloadTasks([...this.tasks]));
   }
