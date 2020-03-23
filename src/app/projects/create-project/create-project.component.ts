@@ -1,8 +1,8 @@
 import { Component, OnInit, Output, EventEmitter } from '@angular/core';
 import { FormGroup, FormControl, Validators, AbstractControl } from '@angular/forms';
 import { ProjectHttpService } from '../project-http.service';
-import { Subject } from 'rxjs';
-import { takeUntil } from 'rxjs/operators';
+import { Subject, pipe } from 'rxjs';
+import { takeUntil, tap } from 'rxjs/operators';
 import { ProjectStateService } from '../project-state.service';
 
 @Component({
@@ -91,7 +91,12 @@ export class CreateProjectComponent implements OnInit {
         .createProject({ id: null, name: this.name.value, description: this.description.value })
         .subscribe(console.log);
     } else if (this.mode === 'edit') {
-      //
+      this.projectHttpService
+        .updateProject(this.projectId, {
+          name: this.name.value,
+          description: this.description.value
+        })
+        .subscribe(console.log);
     }
     this.onClose();
   }

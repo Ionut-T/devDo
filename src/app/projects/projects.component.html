@@ -1,4 +1,4 @@
-<app-create-project *ngIf="isOpen" (close)="isOpen = false"></app-create-project>
+<app-create-project *ngIf="isOpen" (close)="closeModal()"></app-create-project>
 <div class="action">
   <button
     mat-mini-fab
@@ -22,7 +22,7 @@
         <mat-icon>more_vert</mat-icon>
       </button>
       <mat-menu #menu="matMenu">
-        <button mat-menu-item>
+        <button mat-menu-item (click)="onEdit(project.id)">
           <mat-icon color="accent">edit</mat-icon>
           <span>Edit</span>
         </button>

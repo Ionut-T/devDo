@@ -40,6 +40,16 @@ export class ProjectHttpService {
   }
 
   /**
+   * Update project.
+   * @param id -> project id.
+   * @param project -> Partial project.
+   * @returns observable.
+   */
+  updateProject(id: string, project: Partial<IProject>): Observable<ProjectResponseType> {
+    return this.http.put<IProject>(`${this.URL}/${id}`, project, { observe: 'response' });
+  }
+
+  /**
    * Delete project.
    * @param id -> project id.
    * @returns observable.

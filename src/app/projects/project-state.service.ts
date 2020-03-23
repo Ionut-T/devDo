@@ -20,13 +20,11 @@ export class ProjectStateService {
    */
   getMappedProject(id: string): Observable<IProject> {
     return this.projectHttpService.getProject(id).pipe(
-      map((res: any) => {
-        return {
-          id: res.body._id,
-          name: res.body.name,
-          description: res.body.description
-        };
-      })
+      map((res: any) => ({
+        id: res.body.project._id,
+        name: res.body.project.name,
+        description: res.body.project.description
+      }))
     );
   }
 

@@ -43,6 +43,14 @@ export class ProjectsComponent implements OnInit, OnDestroy {
   }
 
   /**
+   * Retrieve project id and open modal.
+   */
+  onEdit(id: string) {
+    this.isOpen = true;
+    this.projectStateService.getProjectId(id);
+  }
+
+  /**
    * Delete project upon confirmation.
    * @param id -> project id.
    * @param name -> project name.
@@ -71,6 +79,14 @@ export class ProjectsComponent implements OnInit, OnDestroy {
    */
   deleteProject(id: string) {
     this.projectHttpService.deleteProject(id).subscribe();
+  }
+
+  /**
+   * Close modal.
+   */
+  closeModal() {
+    this.isOpen = false;
+    this.projectStateService.getProjectId(null);
   }
 
   /**
