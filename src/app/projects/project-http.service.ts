@@ -5,7 +5,7 @@ import { IProject } from './project.model';
 import { Observable, BehaviorSubject } from 'rxjs';
 import { map } from 'rxjs/operators';
 
-type ProjectResponseType = HttpResponse<IProject>;
+type ProjectResponseType = HttpResponse<{ project: IProject }>;
 type ProjectArrayResponseType = HttpResponse<{ projects: IProject[] }>;
 
 @Injectable({
@@ -19,8 +19,8 @@ export class ProjectHttpService {
   /**
    * Create project.
    */
-  createProject(project: Partial<IProject>): Observable<ProjectResponseType> {
-    return this.http.post<IProject>(this.URL, project, { observe: 'response' });
+  createProject(project: IProject): Observable<ProjectResponseType> {
+    return this.http.post<{ project: IProject }>(this.URL, project, { observe: 'response' });
   }
 
   /**
@@ -36,7 +36,7 @@ export class ProjectHttpService {
    * @returns observable.
    */
   getProject(id: string): Observable<ProjectResponseType> {
-    return this.http.get<IProject>(`${this.URL}/${id}`, { observe: 'response' });
+    return this.http.get<{ project: IProject }>(`${this.URL}/${id}`, { observe: 'response' });
   }
 
   /**
@@ -46,7 +46,7 @@ export class ProjectHttpService {
    * @returns observable.
    */
   updateProject(id: string, project: Partial<IProject>): Observable<ProjectResponseType> {
-    return this.http.put<IProject>(`${this.URL}/${id}`, project, { observe: 'response' });
+    return this.http.put<{ project: IProject }>(`${this.URL}/${id}`, project, { observe: 'response' });
   }
 
   /**

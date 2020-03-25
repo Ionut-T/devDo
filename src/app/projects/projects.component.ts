@@ -1,8 +1,8 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { ProjectHttpService } from './project-http.service';
-import { Observable, Subject } from 'rxjs';
+import { Observable, Subject, BehaviorSubject } from 'rxjs';
 import { IProject } from './project.model';
-import { takeUntil } from 'rxjs/operators';
+import { takeUntil, switchMap, map, filter, tap, mergeMap, concatMap } from 'rxjs/operators';
 import { Router } from '@angular/router';
 import { ProjectStateService } from './project-state.service';
 import { UIService } from '../shared/ui.service';
@@ -22,6 +22,9 @@ export class ProjectsComponent implements OnInit, OnDestroy {
   projects$: Observable<IProject[]>;
   private destroy$ = new Subject<null>();
 
+  projects: IProject[] = [];
+  deletedId: string;
+
   constructor(
     private projectHttpService: ProjectHttpService,
     private projectStateService: ProjectStateService,
@@ -31,7 +34,9 @@ export class ProjectsComponent implements OnInit, OnDestroy {
   ) {}
 
   ngOnInit() {
-    this.projects$ = this.projectStateService.getMappedProjects();
+    this.projects$ = this.projectStateService.projectListener$.pipe(
+      switchMap(() => this.projectStateService.getMappedProjects())
+    );
   }
 
   /**
@@ -78,7 +83,7 @@ export class ProjectsComponent implements OnInit, OnDestroy {
    * @param id -> project id.
    */
   deleteProject(id: string) {
-    this.projectHttpService.deleteProject(id).subscribe();
+    this.projectHttpService.deleteProject(id).subscribe(() => this.projectStateService.projectListener(null));
   }
 
   /**

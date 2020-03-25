@@ -8,8 +8,10 @@ import { IProject } from './project.model';
   providedIn: 'root'
 })
 export class ProjectStateService {
-  private projectListener = new BehaviorSubject<string>(null);
-  projectListener$ = this.projectListener.asObservable();
+  private projectSubject = new BehaviorSubject<IProject | null>(null);
+  projectListener$ = this.projectSubject.asObservable();
+  private projectIdListener = new BehaviorSubject<string>(null);
+  projectIdListener$ = this.projectIdListener.asObservable();
 
   constructor(private projectHttpService: ProjectHttpService) {}
 
@@ -51,6 +53,10 @@ export class ProjectStateService {
    * @param id -> project id.
    */
   getProjectId(id: string) {
-    this.projectListener.next(id);
+    this.projectIdListener.next(id);
+  }
+
+  projectListener(project: IProject | null) {
+    this.projectSubject.next(project);
   }
 }

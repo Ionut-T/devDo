@@ -1,5 +1,5 @@
 export interface IProject {
-  id: null;
+  id: string;
   name: string;
   description: string;
   creator?: string;

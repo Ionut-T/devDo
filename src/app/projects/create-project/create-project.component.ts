@@ -1,8 +1,8 @@
 import { Component, OnInit, Output, EventEmitter } from '@angular/core';
 import { FormGroup, FormControl, Validators, AbstractControl } from '@angular/forms';
 import { ProjectHttpService } from '../project-http.service';
-import { Subject, pipe } from 'rxjs';
-import { takeUntil, tap } from 'rxjs/operators';
+import { Subject } from 'rxjs';
+import { takeUntil } from 'rxjs/operators';
 import { ProjectStateService } from '../project-state.service';
 
 @Component({
@@ -30,7 +30,7 @@ export class CreateProjectComponent implements OnInit {
       })
     });
 
-    this.projectStateService.projectListener$.pipe(takeUntil(this.destroy$)).subscribe(id => (this.projectId = id));
+    this.projectStateService.projectIdListener$.pipe(takeUntil(this.destroy$)).subscribe(id => (this.projectId = id));
 
     if (this.projectId) {
       this.mode = 'edit';
@@ -84,20 +84,23 @@ export class CreateProjectComponent implements OnInit {
     }
   }
 
+  /**
+   * Create or update project.
+   */
   onSave() {
-    console.log('CreateProjectComponent -> onSave -> this.mode', this.mode);
     if (this.mode === 'create') {
       this.projectHttpService
         .createProject({ id: null, name: this.name.value, description: this.description.value })
-        .subscribe(console.log);
+        .subscribe(res => this.projectStateService.projectListener(res.body.project));
     } else if (this.mode === 'edit') {
       this.projectHttpService
         .updateProject(this.projectId, {
           name: this.name.value,
           description: this.description.value
         })
-        .subscribe(console.log);
+        .subscribe(res => this.projectStateService.projectListener(res.body.project));
     }
+
     this.onClose();
   }
 
