@@ -21,8 +21,9 @@ body {
   margin: 50px auto;
 }
 
-.modal__form {
-  width: 90%;
+.modal__form,
+.modal__form > * {
+  width: 100%;
 }
 
 .mat-form-field {
