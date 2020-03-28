@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { HttpClient, HttpResponse } from '@angular/common/http';
+import { HttpClient, HttpResponse, HttpParams } from '@angular/common/http';
 import { ITask } from './task.model';
 import { Observable } from 'rxjs';
 import { UIService } from '../../shared/ui.service';
@@ -22,8 +22,11 @@ export class TaskHttpService {
    * @param task -> created task
    * @returns observable.
    */
-  createTask(task: ITask): Observable<TaskResponseType> {
-    return this.http.post<{ task: ITask }>(`${this.URL}`, task, { observe: 'response' });
+  public createTask(projectUrl: string, projectId: string, task: ITask): Observable<TaskResponseType> {
+    return this.http.post<{ task: ITask }>(`${this.URL}/${projectUrl}/tasks`, task, {
+      observe: 'response',
+      params: new HttpParams().set('projectId', projectId)
+    });
   }
 
   /**
@@ -31,7 +34,7 @@ export class TaskHttpService {
    * @param task -> created task.
    * @returns observable.
    */
-  getTasks(projectUrl: string): Observable<TaskArrayResponseType> {
+  public getTasks(projectUrl: string): Observable<TaskArrayResponseType> {
     this.uiService.loadingStateChanged.next(true);
 
     return this.http.get<{ tasks: ITask[]; project: IProject }>(`${this.URL}/${projectUrl}/tasks`, {
@@ -45,8 +48,8 @@ export class TaskHttpService {
    * @param task -> Partial task.
    * @returns observable.
    */
-  updateTask(id: string, task: Partial<ITask>): Observable<TaskResponseType> {
-    return this.http.put<{ task: ITask }>(`${this.URL}/${id}`, task, { observe: 'response' });
+  public updateTask(projectUrl: string, id: string, task: Partial<ITask>): Observable<TaskResponseType> {
+    return this.http.put<{ task: ITask }>(`${this.URL}/${projectUrl}/tasks/${id}`, task, { observe: 'response' });
   }
 
   /**
@@ -54,8 +57,8 @@ export class TaskHttpService {
    * @param id -> task id.
    * @returns observable.
    */
-  deleteTask(id: string): Observable<HttpResponse<null>> {
-    return this.http.delete<null>(`${this.URL}/${id}`, { observe: 'response' });
+  public deleteTask(projectUrl: string, id: string): Observable<HttpResponse<null>> {
+    return this.http.delete<null>(`${this.URL}/${projectUrl}/tasks/${id}`, { observe: 'response' });
   }
 
   /**
@@ -63,7 +66,7 @@ export class TaskHttpService {
    * @param id -> task id.
    * @returns observable.
    */
-  getTask(id: string): Observable<TaskResponseType> {
-    return this.http.get<{ task: ITask }>(`${this.URL}/${id}`, { observe: 'response' });
+  public getTask(projectUrl: string, id: string): Observable<TaskResponseType> {
+    return this.http.get<{ task: ITask }>(`${this.URL}/${projectUrl}/tasks/${id}`, { observe: 'response' });
   }
 }

@@ -1,19 +1,19 @@
 import { Injectable } from '@angular/core';
 import { BehaviorSubject, Observable } from 'rxjs';
-import { map } from 'rxjs/operators';
+import { map, tap } from 'rxjs/operators';
 import { TaskHttpService } from './task-http.service';
 import { ITask } from './task.model';
+import { IProject } from '../project.model';
 
 @Injectable({
   providedIn: 'root'
 })
 export class TaskStateService {
-  private taskListener = new BehaviorSubject<ITask>(null);
-  taskListener$ = this.taskListener.asObservable();
-  private tasksListListener = new BehaviorSubject<ITask[]>(null);
-  tasksListListener$ = this.tasksListListener.asObservable();
+  private taskChanged = new BehaviorSubject<ITask | null>(null);
+  public taskOnChange$ = this.taskChanged.asObservable();
   private taskIdListener = new BehaviorSubject<string>(null);
-  taskIdListener$ = this.taskIdListener.asObservable();
+  public taskIdListener$ = this.taskIdListener.asObservable();
+  public project: IProject;
 
   constructor(private taskHttpService: TaskHttpService) {}
 
@@ -22,8 +22,8 @@ export class TaskStateService {
    * @param id -> task id.
    * @returns observable.
    */
-  getMappedTask(id: string): Observable<ITask> {
-    return this.taskHttpService.getTask(id).pipe(
+  public getMappedTask(projectUrl: string, id: string): Observable<ITask> {
+    return this.taskHttpService.getTask(projectUrl, id).pipe(
       map((res: any) => {
         return {
           id: res.body._id,
@@ -35,27 +35,34 @@ export class TaskStateService {
     );
   }
 
+  public getMappedTasks(projectUrl: string): Observable<ITask[]> {
+    return this.taskHttpService.getTasks(projectUrl).pipe(
+      tap(res => (this.project = res.body.project)),
+      map(res =>
+        res.body.tasks.map((task: any) => ({
+          id: task._id,
+          title: task.title,
+          description: task.description,
+          status: task.status,
+          creator: task.creator
+        }))
+      )
+    );
+  }
+
   /**
    * Update tasks list.
    * @param task -> created task.
    */
-  updateTasksList(task: ITask) {
-    this.taskListener.next(task);
-  }
-
-  /**
-   * Reload tasks.
-   * @param tasks -> tasks list.
-   */
-  reloadTasks(tasks: ITask[]) {
-    this.tasksListListener.next(tasks);
+  public taskChange(task: ITask): void {
+    this.taskChanged.next(task);
   }
 
   /**
    * Get task id.
    * @param id -> task id.
    */
-  getTaskId(id: string) {
+  public getTaskId(id: string): void {
     this.taskIdListener.next(id);
   }
 }

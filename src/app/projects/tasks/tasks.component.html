@@ -15,11 +15,16 @@
         [isLoading]="isLoading"
         [tasks]="todoTasks$ | async"
         (edit)="toggleModal()"
+        (forward)="onForward($event)"
+        (backward)="onBackward($event)"
+        (delete)="onDelete($event)"
       >
       </app-tasks-card-list>
     </div>
   </div>
+
   <mat-divider [vertical]="true"></mat-divider>
+
   <div class="list">
     <div class="content">
       <app-tasks-card-list
@@ -29,11 +34,16 @@
         [isLoading]="isLoading"
         [tasks]="doingTasks$ | async"
         (edit)="toggleModal()"
+        (forward)="onForward($event)"
+        (backward)="onBackward($event)"
+        (delete)="onDelete($event)"
       >
       </app-tasks-card-list>
     </div>
   </div>
+
   <mat-divider [vertical]="true"></mat-divider>
+
   <div class="list">
     <div class="content">
       <app-tasks-card-list
@@ -42,6 +52,9 @@
         [isLoading]="isLoading"
         [tasks]="doneTasks$ | async"
         (edit)="toggleModal()"
+        (forward)="onForward($event)"
+        (backward)="onBackward($event)"
+        (delete)="onDelete($event)"
       >
       </app-tasks-card-list>
     </div>

@@ -1,14 +1,16 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
-import { Observable, Subject, Subscription } from 'rxjs';
+import { Observable, Subject } from 'rxjs';
 import { takeUntil, map, switchMap, finalize, share, tap } from 'rxjs/operators';
 import { TaskHttpService } from './task-http.service';
 import { TaskStateService } from './task-state.service';
 import { ITask } from './task.model';
 import { ActivatedRoute } from '@angular/router';
 import { IProject } from '../project.model';
+import { MatDialog } from '@angular/material/dialog';
+import { DialogComponent } from 'src/app/components/dialog/dialog.component';
 
 /**
- * Tasks List Component
+ * Tasks List Component.
  */
 @Component({
   selector: 'app-tasks',
@@ -16,79 +18,129 @@ import { IProject } from '../project.model';
   styleUrls: ['./tasks.component.css']
 })
 export class TasksComponent implements OnInit, OnDestroy {
-  isOpen = false;
-  isLoading = false;
-  project: IProject;
-  todoTasks$: Observable<ITask[]>;
-  doingTasks$: Observable<ITask[]>;
-  doneTasks$: Observable<ITask[]>;
-  private tasks: ITask[] = [];
+  public isOpen = false;
+  public isLoading = false;
+  public project: IProject;
+  public tasks$: Observable<ITask[]>;
+  public todoTasks$: Observable<ITask[]>;
+  public doingTasks$: Observable<ITask[]>;
+  public doneTasks$: Observable<ITask[]>;
+  private forward = false;
+  private backward = false;
   private destroy$ = new Subject<void>();
 
   constructor(
     private taskHttpService: TaskHttpService,
     private taskStateService: TaskStateService,
-    private route: ActivatedRoute
+    private route: ActivatedRoute,
+    private dialog: MatDialog
   ) {}
 
-  ngOnInit() {
+  ngOnInit(): void {
     this.isLoading = true;
 
-    const tasks$ = this.taskStateService.tasksListListener$.pipe(
-      switchMap(() => this.tasks$),
+    this.tasks$ = this.route.paramMap.pipe(
+      map(paramMap => paramMap.get('projectUrl')),
+      switchMap(projectUrl =>
+        this.taskStateService.taskOnChange$.pipe(
+          switchMap(() =>
+            this.taskStateService.getMappedTasks(projectUrl).pipe(
+              finalize(() => (this.isLoading = false)),
+              tap(() => (this.project = this.taskStateService.project))
+            )
+          )
+        )
+      ),
       share()
     );
 
-    this.todoTasks$ = tasks$.pipe(map(tasks => tasks.filter(task => task.status.includes('todo'))));
-    this.doingTasks$ = tasks$.pipe(map(tasks => tasks.filter(task => task.status.includes('doing'))));
-    this.doneTasks$ = tasks$.pipe(map(tasks => tasks.filter(task => task.status.includes('done'))));
-
-    this.getUpdatedTasksList();
+    this.todoTasks$ = this.tasks$.pipe(map(tasks => tasks.filter(task => task.status.includes('todo'))));
+    this.doingTasks$ = this.tasks$.pipe(map(tasks => tasks.filter(task => task.status.includes('doing'))));
+    this.doneTasks$ = this.tasks$.pipe(map(tasks => tasks.filter(task => task.status.includes('done'))));
   }
 
   /**
-   * Get tasks.
+   * Change status on forward.
+   * @param id -> task id.
    */
-  private get tasks$(): Observable<ITask[]> {
-    return this.route.paramMap.pipe(
-      switchMap(paramMap =>
-        this.taskHttpService.getTasks(paramMap.get('projectUrl')).pipe(
-          finalize(() => (this.isLoading = false)),
-          tap(res => (this.project = res.body.project)),
-          map(res =>
-            res.body.tasks.map((task: any) => ({
-              id: task._id,
-              title: task.title,
-              description: task.description,
-              status: task.status,
-              creator: task.creator
-            }))
-          )
-        )
+  public onForward(id: string): void {
+    this.backward = false;
+    this.forward = true;
+    this.onChangeStatus(id);
+  }
+
+  /**
+   * Change status on backward.
+   * @param id -> task id.
+   */
+  public onBackward(id: string): void {
+    this.forward = false;
+    this.backward = true;
+    this.onChangeStatus(id);
+  }
+
+  /**
+   * Change status.
+   * @param id -> task id.
+   */
+  private onChangeStatus(id: string): void {
+    this.taskStateService
+      .getMappedTask(this.taskStateService.project.url, id)
+      .pipe(
+        switchMap(task => {
+          let status: 'todo' | 'doing' | 'done';
+          if (this.forward) {
+            status = task.status.includes('todo') ? 'doing' : 'done';
+          }
+          if (this.backward) {
+            status = task.status.includes('done') ? 'doing' : 'todo';
+          }
+          return this.taskHttpService.updateTask(this.taskStateService.project.url, id, { status });
+        })
       )
-    );
+      .subscribe(res => this.taskStateService.taskChange(res.body.task));
   }
 
   /**
-   * Get new task.
+   * Delete task upon confirmation.
+   * @param id -> task id.
    */
-  private getUpdatedTasksList(): Subscription {
-    return this.taskStateService.taskListener$
+  public onDelete(id: string): void {
+    const dialogRef = this.dialog.open(DialogComponent, {
+      data: { title: 'Delete Task', content: 'Are you sure you want to delete this task?' }
+    });
+
+    dialogRef
+      .afterClosed()
       .pipe(takeUntil(this.destroy$))
-      .subscribe(() => this.taskStateService.reloadTasks([...this.tasks]));
+      .subscribe(result => {
+        if (result) {
+          this.deleteTask(id);
+        }
+      });
+  }
+
+  /**
+   * Delete task method.
+   * @param id -> task id.
+   */
+  private deleteTask(id: string): void {
+    this.taskHttpService
+      .deleteTask(this.taskStateService.project.url, id)
+      .subscribe(() => this.taskStateService.taskChange(null));
   }
 
   /**
    * Open/close modal.
    */
-  toggleModal() {
+  public toggleModal(): void {
     this.isOpen = !this.isOpen;
   }
 
   /**
    * Unsubscribe from observables.
    */
-  ngOnDestroy() {
+  ngOnDestroy(): void {
     this.destroy$.next();
     this.destroy$.unsubscribe();
   }
