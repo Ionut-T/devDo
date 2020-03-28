@@ -7,11 +7,7 @@ import { Router } from '@angular/router';
 import { ProjectStateService } from './project-state.service';
 import { MatDialog } from '@angular/material/dialog';
 import { DialogComponent } from '../components/dialog/dialog.component';
-import { UIService } from '../shared/ui.service';
 
-/**
- * Board Component
- */
 @Component({
   selector: 'app-projects',
   templateUrl: './projects.component.html',
@@ -30,8 +26,7 @@ export class ProjectsComponent implements OnInit, OnDestroy {
     private projectHttpService: ProjectHttpService,
     private projectStateService: ProjectStateService,
     private router: Router,
-    private dialog: MatDialog,
-    private uiService: UIService
+    private dialog: MatDialog
   ) {}
 
   ngOnInit(): void {
