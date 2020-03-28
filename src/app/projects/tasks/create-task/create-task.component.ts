@@ -5,6 +5,7 @@ import { takeUntil } from 'rxjs/operators';
 import { TaskHttpService } from '../task-http.service';
 import { TaskStateService } from '../task-state.service';
 import { IProject } from '../../project.model';
+import { Mode, ModalTaskTitle } from 'src/app/shared/enums';
 
 /**
  * Dynamic component for creating new tasks
@@ -16,8 +17,8 @@ import { IProject } from '../../project.model';
 })
 export class CreateTaskComponent implements OnInit, OnDestroy {
   public taskForm: FormGroup;
-  public mode: 'create' | 'edit';
-  public modalTitle: 'Create Task' | 'Edit Task';
+  public mode: Mode;
+  public modalTitle: ModalTaskTitle;
   @Output() close = new EventEmitter<void>();
   private taskId: string;
   private project: IProject;
@@ -43,15 +44,15 @@ export class CreateTaskComponent implements OnInit, OnDestroy {
     this.project = this.taskStateService.project;
 
     if (this.taskId) {
-      this.mode = 'edit';
-      this.modalTitle = 'Edit Task';
+      this.mode = Mode.Edit;
+      this.modalTitle = ModalTaskTitle.Edit;
 
       this.taskStateService
         .getMappedTask(this.project.url, this.taskId)
         .subscribe(task => this.taskForm.setValue({ title: task.title, description: task.description }));
     } else {
-      this.mode = 'create';
-      this.modalTitle = 'Create Task';
+      this.mode = Mode.Create;
+      this.modalTitle = ModalTaskTitle.Create;
     }
   }
 

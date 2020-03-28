@@ -8,6 +8,7 @@ import { ActivatedRoute } from '@angular/router';
 import { IProject } from '../project.model';
 import { MatDialog } from '@angular/material/dialog';
 import { DialogComponent } from 'src/app/components/dialog/dialog.component';
+import { Status } from 'src/app/shared/enums';
 
 /**
  * Tasks List Component.
@@ -54,9 +55,9 @@ export class TasksComponent implements OnInit, OnDestroy {
       share()
     );
 
-    this.todoTasks$ = this.tasks$.pipe(map(tasks => tasks.filter(task => task.status.includes('todo'))));
-    this.doingTasks$ = this.tasks$.pipe(map(tasks => tasks.filter(task => task.status.includes('doing'))));
-    this.doneTasks$ = this.tasks$.pipe(map(tasks => tasks.filter(task => task.status.includes('done'))));
+    this.todoTasks$ = this.tasks$.pipe(map(tasks => tasks.filter(task => task.status === Status.Todo)));
+    this.doingTasks$ = this.tasks$.pipe(map(tasks => tasks.filter(task => task.status === Status.Doing)));
+    this.doneTasks$ = this.tasks$.pipe(map(tasks => tasks.filter(task => task.status === Status.Done)));
   }
 
   /**
@@ -88,12 +89,12 @@ export class TasksComponent implements OnInit, OnDestroy {
       .getMappedTask(this.taskStateService.project.url, id)
       .pipe(
         switchMap(task => {
-          let status: 'todo' | 'doing' | 'done';
+          let status: Status;
           if (this.forward) {
-            status = task.status.includes('todo') ? 'doing' : 'done';
+            status = task.status.includes(Status.Todo) ? Status.Doing : Status.Done;
           }
           if (this.backward) {
-            status = task.status.includes('done') ? 'doing' : 'todo';
+            status = task.status.includes(Status.Done) ? Status.Doing : Status.Todo;
           }
           return this.taskHttpService.updateTask(this.taskStateService.project.url, id, { status });
         })

@@ -4,6 +4,7 @@ import { ProjectHttpService } from '../project-http.service';
 import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
 import { ProjectStateService } from '../project-state.service';
+import { Mode, ModalProjectTitle } from 'src/app/shared/enums';
 
 @Component({
   selector: 'app-create-project',
@@ -12,8 +13,8 @@ import { ProjectStateService } from '../project-state.service';
 })
 export class CreateProjectComponent implements OnInit {
   public projectForm: FormGroup;
-  public mode: 'create' | 'edit';
-  public modalTitle: 'Create Project' | 'Edit Project';
+  public mode: Mode;
+  public modalTitle: ModalProjectTitle;
   @Output() close = new EventEmitter<void>();
   private projectId: string;
   private destroy$ = new Subject<void>();
@@ -33,14 +34,14 @@ export class CreateProjectComponent implements OnInit {
     this.projectStateService.projectIdListener$.pipe(takeUntil(this.destroy$)).subscribe(id => (this.projectId = id));
 
     if (this.projectId) {
-      this.mode = 'edit';
-      this.modalTitle = 'Edit Project';
+      this.mode = Mode.Edit;
+      this.modalTitle = ModalProjectTitle.Edit;
       this.projectStateService
         .getMappedProject(this.projectId)
         .subscribe(project => this.projectForm.setValue({ name: project.name, description: project.description }));
     } else {
-      this.mode = 'create';
-      this.modalTitle = 'Create Project';
+      this.mode = Mode.Create;
+      this.modalTitle = ModalProjectTitle.Create;
     }
   }
 
