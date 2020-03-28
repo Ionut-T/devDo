@@ -11,8 +11,8 @@
   <span><a mat-button class="app-title" routerLink="">devDo</a></span>
   <div class="spacer"></div>
   <mat-nav-list class="main-navigation" *ngIf="!(isHandset$ | async)">
-    <a mat-list-item routerLink="/board" routerLinkActive="active" *ngIf="isLoggedIn$ | async">
-      My Board
+    <a mat-list-item routerLink="/projects" routerLinkActive="active" *ngIf="isLoggedIn$ | async">
+      My Projects
     </a>
     <a mat-list-item routerLink="/authentication/signup" routerLinkActive="active" *ngIf="!(isLoggedIn$ | async)">
       Sign Up

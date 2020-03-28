@@ -71,7 +71,7 @@ export class AuthService {
             const expirationDate = new Date(now.getTime() + expiresInDuration * 1000);
             this.saveAuthData(token, expirationDate);
             this.uiService.showSnackBar('Logged in successfully!', null, 3000, 'bottom');
-            this.router.navigateByUrl('/board');
+            this.router.navigateByUrl('/projects');
           }
         })
       );
