@@ -2,11 +2,12 @@ import { Component, OnInit, OnDestroy } from '@angular/core';
 import { ProjectHttpService } from './project-http.service';
 import { Observable, Subject } from 'rxjs';
 import { IProject } from './project.model';
-import { takeUntil, switchMap } from 'rxjs/operators';
+import { takeUntil, switchMap, finalize } from 'rxjs/operators';
 import { Router } from '@angular/router';
 import { ProjectStateService } from './project-state.service';
 import { MatDialog } from '@angular/material/dialog';
 import { DialogComponent } from '../components/dialog/dialog.component';
+import { UIService } from '../shared/ui.service';
 
 /**
  * Board Component
@@ -19,6 +20,7 @@ import { DialogComponent } from '../components/dialog/dialog.component';
 export class ProjectsComponent implements OnInit, OnDestroy {
   public isOpen = false;
   public projects$: Observable<IProject[]>;
+  public isLoading: boolean;
   private destroy$ = new Subject<null>();
 
   projects: IProject[] = [];
@@ -28,12 +30,14 @@ export class ProjectsComponent implements OnInit, OnDestroy {
     private projectHttpService: ProjectHttpService,
     private projectStateService: ProjectStateService,
     private router: Router,
-    private dialog: MatDialog
+    private dialog: MatDialog,
+    private uiService: UIService
   ) {}
 
   ngOnInit(): void {
+    this.isLoading = true;
     this.projects$ = this.projectStateService.projectOnChange$.pipe(
-      switchMap(() => this.projectStateService.getMappedProjects())
+      switchMap(() => this.projectStateService.getMappedProjects().pipe(finalize(() => (this.isLoading = false))))
     );
   }
 
