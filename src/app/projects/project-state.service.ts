@@ -8,10 +8,10 @@ import { IProject } from './project.model';
   providedIn: 'root'
 })
 export class ProjectStateService {
-  private projectSubject = new BehaviorSubject<IProject | null>(null);
-  projectListener$ = this.projectSubject.asObservable();
+  private projectChanged = new BehaviorSubject<IProject | null>(null);
+  public projectOnChange$ = this.projectChanged.asObservable();
   private projectIdListener = new BehaviorSubject<string>(null);
-  projectIdListener$ = this.projectIdListener.asObservable();
+  public projectIdListener$ = this.projectIdListener.asObservable();
 
   constructor(private projectHttpService: ProjectHttpService) {}
 
@@ -20,7 +20,7 @@ export class ProjectStateService {
    * @param id -> project id.
    * @returns observable.
    */
-  getMappedProject(id: string): Observable<IProject> {
+  public getMappedProject(id: string): Observable<IProject> {
     return this.projectHttpService.getProject(id).pipe(
       map((res: any) => ({
         id: res.body.project._id,
@@ -35,7 +35,7 @@ export class ProjectStateService {
    * @param id -> project id.
    * @returns observable.
    */
-  getMappedProjects(): Observable<IProject[]> {
+  public getMappedProjects(): Observable<IProject[]> {
     return this.projectHttpService.getProjects().pipe(
       map(res =>
         res.body.projects.map((project: any) => ({
@@ -52,11 +52,15 @@ export class ProjectStateService {
    * Get project id.
    * @param id -> project id.
    */
-  getProjectId(id: string) {
+  public getProjectId(id: string) {
     this.projectIdListener.next(id);
   }
 
-  projectListener(project: IProject | null) {
-    this.projectSubject.next(project);
+  /**
+   * Update projects view.
+   * @param project -> IProject or null.
+   */
+  public projectChange(project: IProject | null) {
+    this.projectChanged.next(project);
   }
 }

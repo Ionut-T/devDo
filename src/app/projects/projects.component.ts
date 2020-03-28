@@ -1,11 +1,10 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { ProjectHttpService } from './project-http.service';
-import { Observable, Subject, BehaviorSubject } from 'rxjs';
+import { Observable, Subject } from 'rxjs';
 import { IProject } from './project.model';
-import { takeUntil, switchMap, map, filter, tap, mergeMap, concatMap } from 'rxjs/operators';
+import { takeUntil, switchMap } from 'rxjs/operators';
 import { Router } from '@angular/router';
 import { ProjectStateService } from './project-state.service';
-import { UIService } from '../shared/ui.service';
 import { MatDialog } from '@angular/material/dialog';
 import { DialogComponent } from '../components/dialog/dialog.component';
 
@@ -18,8 +17,8 @@ import { DialogComponent } from '../components/dialog/dialog.component';
   styleUrls: ['./projects.component.css']
 })
 export class ProjectsComponent implements OnInit, OnDestroy {
-  isOpen = false;
-  projects$: Observable<IProject[]>;
+  public isOpen = false;
+  public projects$: Observable<IProject[]>;
   private destroy$ = new Subject<null>();
 
   projects: IProject[] = [];
@@ -29,12 +28,11 @@ export class ProjectsComponent implements OnInit, OnDestroy {
     private projectHttpService: ProjectHttpService,
     private projectStateService: ProjectStateService,
     private router: Router,
-    private dialog: MatDialog,
-    private uiService: UIService
+    private dialog: MatDialog
   ) {}
 
-  ngOnInit() {
-    this.projects$ = this.projectStateService.projectListener$.pipe(
+  ngOnInit(): void {
+    this.projects$ = this.projectStateService.projectOnChange$.pipe(
       switchMap(() => this.projectStateService.getMappedProjects())
     );
   }
@@ -43,14 +41,14 @@ export class ProjectsComponent implements OnInit, OnDestroy {
    * Navigate to project page.
    * @param url -> slugified name from API.
    */
-  onViewProject(url: string) {
+  public onViewProject(url: string): void {
     this.router.navigateByUrl(`projects/${url}`);
   }
 
   /**
    * Retrieve project id and open modal.
    */
-  onEdit(id: string) {
+  public onEdit(id: string): void {
     this.isOpen = true;
     this.projectStateService.getProjectId(id);
   }
@@ -60,7 +58,7 @@ export class ProjectsComponent implements OnInit, OnDestroy {
    * @param id -> project id.
    * @param name -> project name.
    */
-  onDelete(name: string, id: string) {
+  public onDelete(name: string, id: string): void {
     const dialogRef = this.dialog.open(DialogComponent, {
       data: {
         title: `Delete Project "${name.toUpperCase()}"`,
@@ -82,14 +80,14 @@ export class ProjectsComponent implements OnInit, OnDestroy {
    * Delete project method.
    * @param id -> project id.
    */
-  deleteProject(id: string) {
-    this.projectHttpService.deleteProject(id).subscribe(() => this.projectStateService.projectListener(null));
+  public deleteProject(id: string): void {
+    this.projectHttpService.deleteProject(id).subscribe(() => this.projectStateService.projectChange(null));
   }
 
   /**
    * Close modal.
    */
-  closeModal() {
+  public closeModal(): void {
     this.isOpen = false;
     this.projectStateService.getProjectId(null);
   }
@@ -97,7 +95,7 @@ export class ProjectsComponent implements OnInit, OnDestroy {
   /**
    * Unsubscribe from observables.
    */
-  ngOnDestroy() {
+  ngOnDestroy(): void {
     this.destroy$.next();
     this.destroy$.unsubscribe();
   }

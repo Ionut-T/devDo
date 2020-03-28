@@ -2,8 +2,7 @@ import { Injectable } from '@angular/core';
 import { environment } from '../../environments/environment';
 import { HttpClient, HttpResponse } from '@angular/common/http';
 import { IProject } from './project.model';
-import { Observable, BehaviorSubject } from 'rxjs';
-import { map } from 'rxjs/operators';
+import { Observable } from 'rxjs';
 
 type ProjectResponseType = HttpResponse<{ project: IProject }>;
 type ProjectArrayResponseType = HttpResponse<{ projects: IProject[] }>;
@@ -19,14 +18,14 @@ export class ProjectHttpService {
   /**
    * Create project.
    */
-  createProject(project: IProject): Observable<ProjectResponseType> {
+  public createProject(project: IProject): Observable<ProjectResponseType> {
     return this.http.post<{ project: IProject }>(this.URL, project, { observe: 'response' });
   }
 
   /**
    * Get all projects.
    */
-  getProjects(): Observable<ProjectArrayResponseType> {
+  public getProjects(): Observable<ProjectArrayResponseType> {
     return this.http.get<{ projects: IProject[] }>(this.URL, { observe: 'response' });
   }
 
@@ -35,7 +34,7 @@ export class ProjectHttpService {
    * @param id -> project id.
    * @returns observable.
    */
-  getProject(id: string): Observable<ProjectResponseType> {
+  public getProject(id: string): Observable<ProjectResponseType> {
     return this.http.get<{ project: IProject }>(`${this.URL}/${id}`, { observe: 'response' });
   }
 
@@ -45,7 +44,7 @@ export class ProjectHttpService {
    * @param project -> Partial project.
    * @returns observable.
    */
-  updateProject(id: string, project: Partial<IProject>): Observable<ProjectResponseType> {
+  public updateProject(id: string, project: Partial<IProject>): Observable<ProjectResponseType> {
     return this.http.put<{ project: IProject }>(`${this.URL}/${id}`, project, { observe: 'response' });
   }
 
@@ -54,7 +53,7 @@ export class ProjectHttpService {
    * @param id -> project id.
    * @returns observable.
    */
-  deleteProject(id: string): Observable<HttpResponse<null>> {
+  public deleteProject(id: string): Observable<HttpResponse<null>> {
     return this.http.delete<null>(`${this.URL}/${id}`, { observe: 'response' });
   }
 }

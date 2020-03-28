@@ -11,16 +11,16 @@ import { ProjectStateService } from '../project-state.service';
   styleUrls: ['./create-project.component.css']
 })
 export class CreateProjectComponent implements OnInit {
-  projectForm: FormGroup;
-  mode: 'create' | 'edit';
-  modalTitle: 'Create Project' | 'Edit Project';
+  public projectForm: FormGroup;
+  public mode: 'create' | 'edit';
+  public modalTitle: 'Create Project' | 'Edit Project';
   @Output() close = new EventEmitter<void>();
   private projectId: string;
   private destroy$ = new Subject<void>();
 
   constructor(private projectHttpService: ProjectHttpService, private projectStateService: ProjectStateService) {}
 
-  ngOnInit() {
+  ngOnInit(): void {
     this.projectForm = new FormGroup({
       name: new FormControl(null, {
         validators: [Validators.required, Validators.minLength(3), Validators.maxLength(20)]
@@ -47,21 +47,21 @@ export class CreateProjectComponent implements OnInit {
   /**
    * Get title form control.
    */
-  get name(): AbstractControl {
+  public get name(): AbstractControl {
     return this.projectForm.get('name');
   }
 
   /**
    * Get descriptipon form control.
    */
-  get description(): AbstractControl {
+  public get description(): AbstractControl {
     return this.projectForm.get('description');
   }
 
   /**
    * Display title errors.
    */
-  getNameErrors(): string {
+  public getNameErrors(): string {
     if (this.name.hasError('required')) {
       return 'You must add a name!';
     } else if (this.name.hasError('minlength')) {
@@ -74,7 +74,7 @@ export class CreateProjectComponent implements OnInit {
   /**
    * Display title errors.
    */
-  getDescriptionErrors(): string {
+  public getDescriptionErrors(): string {
     if (this.description.hasError('required')) {
       return 'You must add a description!';
     } else if (this.description.hasError('minlength')) {
@@ -87,18 +87,18 @@ export class CreateProjectComponent implements OnInit {
   /**
    * Create or update project.
    */
-  onSave() {
+  public onSave(): void {
     if (this.mode === 'create') {
       this.projectHttpService
         .createProject({ id: null, name: this.name.value, description: this.description.value })
-        .subscribe(res => this.projectStateService.projectListener(res.body.project));
+        .subscribe(res => this.projectStateService.projectChange(res.body.project));
     } else if (this.mode === 'edit') {
       this.projectHttpService
         .updateProject(this.projectId, {
           name: this.name.value,
           description: this.description.value
         })
-        .subscribe(res => this.projectStateService.projectListener(res.body.project));
+        .subscribe(res => this.projectStateService.projectChange(res.body.project));
     }
 
     this.onClose();
@@ -107,7 +107,7 @@ export class CreateProjectComponent implements OnInit {
   /**
    * Close modal.
    */
-  onClose() {
+  public onClose(): void {
     this.close.emit();
   }
 }
