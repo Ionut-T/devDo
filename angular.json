@@ -138,5 +138,8 @@
       }
     }
   },
-  "defaultProject": "devdo"
+  "defaultProject": "devdo",
+  "cli": {
+    "analytics": false
+  }
 }
