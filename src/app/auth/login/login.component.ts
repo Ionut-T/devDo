@@ -3,6 +3,7 @@ import { FormGroup, FormControl, Validators, AbstractControl } from '@angular/fo
 import { AuthService } from '../auth.service';
 import { UIService } from 'src/app/shared/ui.service';
 import { displayFormErrors } from 'src/app/shared/form-errors.utils';
+import { finalize } from 'rxjs/operators';
 
 @Component({
   selector: 'app-login',
@@ -13,6 +14,7 @@ export class LoginComponent implements OnInit {
   public loginForm: FormGroup;
   public hidePassword = true;
   public isForgotPassword = false;
+  public isLoading = false;
 
   constructor(private authService: AuthService, private uiService: UIService) {}
 
@@ -43,12 +45,20 @@ export class LoginComponent implements OnInit {
   }
 
   /**
-   * Call log in user.
+   * Logs in user.
    */
   public onSubmit(): void {
-    this.authService.login(this.formCtrls.email.value, this.formCtrls.password.value).subscribe();
+    this.isLoading = true;
+
+    this.authService
+      .login(this.formCtrls.email.value, this.formCtrls.password.value)
+      .pipe(finalize(() => (this.isLoading = false)))
+      .subscribe();
   }
 
+  /**
+   * Opens forgot-password modal.
+   */
   public onForgotPassword(): void {
     this.isForgotPassword = true;
   }

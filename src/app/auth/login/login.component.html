@@ -1,5 +1,6 @@
+<mat-spinner *ngIf="isLoading"></mat-spinner>
 <app-forgot-password *ngIf="isForgotPassword" (close)="isForgotPassword = false"></app-forgot-password>
-<form class="form user-form" [formGroup]="loginForm" (ngSubmit)="onSubmit()">
+<form class="form user-form" *ngIf="!isLoading" [formGroup]="loginForm" (ngSubmit)="onSubmit()">
   <mat-form-field>
     <input matInput type="email" placeholder="Enter your email" formControlName="email" />
     <mat-error *ngIf="formCtrls.email.invalid">
