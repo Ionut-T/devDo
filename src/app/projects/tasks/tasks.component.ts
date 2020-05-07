@@ -96,7 +96,7 @@ export class TasksComponent implements OnInit, OnDestroy {
           if (this.backward) {
             status = task.status.includes(Status.Done) ? Status.Doing : Status.Todo;
           }
-          return this.taskHttpService.updateTask(this.taskStateService.project.url, id, { status });
+          return this.taskHttpService.updateTask(this.taskStateService.project.url, id, { ...task, status });
         })
       )
       .subscribe(res => this.taskStateService.taskChange(res.body.task));
