@@ -2,6 +2,7 @@ import { Component, OnInit, Output, EventEmitter } from '@angular/core';
 import { FormControl, Validators } from '@angular/forms';
 import { AuthService } from '../auth.service';
 import { UIService } from 'src/app/shared/ui.service';
+import { displayFormErrors } from 'src/app/shared/form-errors.utils';
 
 @Component({
   selector: 'app-forgot-password',
@@ -9,31 +10,26 @@ import { UIService } from 'src/app/shared/ui.service';
   styleUrls: ['./forgot-password.component.css']
 })
 export class ForgotPasswordComponent implements OnInit {
-  email: FormControl;
+  public email: FormControl;
   @Output() close = new EventEmitter<void>();
 
   constructor(private authService: AuthService, private uiService: UIService) {}
 
-  ngOnInit() {
+  ngOnInit(): void {
     this.email = new FormControl(null, [Validators.required, Validators.email]);
   }
 
   /**
-   * Handle email errors.
+   * Displays control errors.
    */
-  getEmailErrors(): string {
-    if (this.email.hasError('required')) {
-      return 'You must enter your email';
-    } else if (this.email.hasError('email')) {
-      return 'This is not a valid email';
-    }
-    return null;
+  public displayFormErrors(control: FormControl, placeholder: string): string {
+    return displayFormErrors(control, placeholder);
   }
 
   /**
-   * Send email.
+   * Send reset password email.
    */
-  onSubmit() {
+  public onSubmit(): void {
     this.authService.forgotPassword(this.email.value).subscribe(() => {
       this.uiService.showSnackBar('A link for resetting your password is in its way to your inbox.', null, 5000, 'top');
       this.onClose();
@@ -43,7 +39,7 @@ export class ForgotPasswordComponent implements OnInit {
   /**
    * Close modal.
    */
-  onClose() {
+  public onClose(): void {
     this.close.emit();
   }
 }

@@ -2,11 +2,11 @@
   <form class="modal__form" [formGroup]="taskForm" (ngSubmit)="onSave()">
     <mat-form-field>
       <input matInput placeholder="title" formControlName="title" />
-      <mat-error *ngIf="title.invalid"> {{ getTitleErrors() }} </mat-error>
+      <mat-error *ngIf="title.invalid"> {{ displayFormErrors(title, 'Name', 3, 20) }} </mat-error>
     </mat-form-field>
     <mat-form-field>
       <textarea matInput placeholder="description" rows="5" formControlName="description"></textarea>
-      <mat-error *ngIf="description.invalid"> {{ getDescriptionErrors() }} </mat-error>
+      <mat-error *ngIf="description.invalid"> {{ displayFormErrors(description, 'Name', 3, 1000) }} </mat-error>
     </mat-form-field>
     <div>
       <button type="submit" mat-button color="primary" [disabled]="taskForm.invalid">SAVE</button>

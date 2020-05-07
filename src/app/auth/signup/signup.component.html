@@ -2,12 +2,14 @@
 <form class="form user-form" [formGroup]="signupForm" (ngSubmit)="onSubmit()" *ngIf="!isLoading">
   <mat-form-field>
     <input matInput type="text" placeholder="First Name" formControlName="firstName" />
-    <mat-error *ngIf="formCtrls.firstName.invalid">{{ getFirstNameErrors() }}</mat-error>
+    <mat-error *ngIf="formCtrls.firstName.invalid">
+      {{ displayFormErrors(formCtrls.firstName, 'First name') }}
+    </mat-error>
   </mat-form-field>
 
   <mat-form-field>
     <input matInput type="email" placeholder="Enter your email" formControlName="email" />
-    <mat-error *ngIf="formCtrls.email.invalid">{{ getEmailErrors() }}</mat-error>
+    <mat-error *ngIf="formCtrls.email.invalid">{{ displayFormErrors(formCtrls.email, 'Email') }}</mat-error>
   </mat-form-field>
 
   <mat-form-field hintLabel="Password must contain minim 6 characters">
@@ -21,7 +23,7 @@
       {{ hidePassword ? 'visibility_off' : 'visibility' }}
     </mat-icon>
     <mat-hint align="end">{{ formCtrls.password.value?.length || 0 }}/6</mat-hint>
-    <mat-error *ngIf="formCtrls.password.invalid">{{ getPasswordErrors() }}</mat-error>
+    <mat-error *ngIf="formCtrls.password.invalid">{{ displayFormErrors(formCtrls.password, 'Password', 6) }}</mat-error>
   </mat-form-field>
 
   <mat-form-field>
@@ -34,7 +36,9 @@
     <mat-icon matSuffix (click)="hideConfirmPassword = !hideConfirmPassword">
       {{ hideConfirmPassword ? 'visibility_off' : 'visibility' }}
     </mat-icon>
-    <mat-error *ngIf="formCtrls.confirmPassword.invalid">{{ getConfirmPasswordErrors() }}</mat-error>
+    <mat-error *ngIf="formCtrls.confirmPassword.invalid">
+      {{ displayFormErrors(formCtrls.confirmPassword, 'Confirm password') }}
+    </mat-error>
   </mat-form-field>
   <button mat-button type="submit" color="primary" [disabled]="signupForm.invalid">Sign Up</button>
 </form>

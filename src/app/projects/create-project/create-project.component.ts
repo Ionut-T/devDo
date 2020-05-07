@@ -5,6 +5,7 @@ import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
 import { ProjectStateService } from '../project-state.service';
 import { Mode, ModalProjectTitle } from 'src/app/shared/enums';
+import { displayFormErrors } from 'src/app/shared/form-errors.utils';
 
 @Component({
   selector: 'app-create-project',
@@ -60,29 +61,15 @@ export class CreateProjectComponent implements OnInit {
   }
 
   /**
-   * Display title errors.
+   * Displays form errors.
    */
-  public getNameErrors(): string {
-    if (this.name.hasError('required')) {
-      return 'You must add a name!';
-    } else if (this.name.hasError('minlength')) {
-      return 'The name must have minimum 3 characters';
-    } else if (this.name.hasError('maxlength')) {
-      return 'The name must have maximum 20 characters';
-    }
-  }
-
-  /**
-   * Display title errors.
-   */
-  public getDescriptionErrors(): string {
-    if (this.description.hasError('required')) {
-      return 'You must add a description!';
-    } else if (this.description.hasError('minlength')) {
-      return 'The description must have minimum 3 characters';
-    } else if (this.description.hasError('maxlength')) {
-      return 'The description must have maximum 1000 characters';
-    }
+  public displayFormErrors(
+    control: AbstractControl,
+    placeholder: string,
+    minLength: number,
+    maxlength: number
+  ): string {
+    return displayFormErrors(control, placeholder, minLength, maxlength);
   }
 
   /**

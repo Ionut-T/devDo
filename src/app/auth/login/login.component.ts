@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { FormGroup, FormControl, Validators, AbstractControl } from '@angular/forms';
 import { AuthService } from '../auth.service';
 import { UIService } from 'src/app/shared/ui.service';
+import { displayFormErrors } from 'src/app/shared/form-errors.utils';
 
 @Component({
   selector: 'app-login',
@@ -9,16 +10,16 @@ import { UIService } from 'src/app/shared/ui.service';
   styleUrls: ['./login.component.css']
 })
 export class LoginComponent implements OnInit {
-  hidePassword = true;
-  loginForm: FormGroup;
-  isForgotPassword = false;
+  public loginForm: FormGroup;
+  public hidePassword = true;
+  public isForgotPassword = false;
 
   constructor(private authService: AuthService, private uiService: UIService) {}
 
   /**
    * Create and validate the reactive login form.
    */
-  ngOnInit() {
+  ngOnInit(): void {
     this.loginForm = new FormGroup({
       email: new FormControl(null, {
         validators: [Validators.required, Validators.email]
@@ -30,40 +31,25 @@ export class LoginComponent implements OnInit {
   /**
    *  Getter for easy access to form fields.
    */
-  get formCtrls(): { [key: string]: AbstractControl } {
+  public get formCtrls(): { [key: string]: AbstractControl } {
     return this.loginForm.controls;
   }
 
   /**
-   *  Handle log in form errors -> email.
+   * Displays form errors.
    */
-  emailErrorHandler() {
-    if (this.formCtrls.email.hasError('required')) {
-      return 'Please enter your email';
-    } else if (this.formCtrls.email.hasError('email')) {
-      return 'Please enter a valid email';
-    }
-    return null;
-  }
-
-  /**
-   * Handle log in form errors -> password.
-   */
-  passwordErrorHandler() {
-    if (this.formCtrls.password.hasError('required')) {
-      return 'Please enter your password';
-    }
-    return null;
+  public displayFormErrors(control: AbstractControl, placeholder: string): string {
+    return displayFormErrors(control, placeholder);
   }
 
   /**
    * Call log in user.
    */
-  onSubmit() {
+  public onSubmit(): void {
     this.authService.login(this.formCtrls.email.value, this.formCtrls.password.value).subscribe();
   }
 
-  onForgotPassword() {
+  public onForgotPassword(): void {
     this.isForgotPassword = true;
   }
 }

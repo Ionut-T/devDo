@@ -4,7 +4,8 @@ import { MustMatch } from './must-match.validator';
 import { AuthService } from '../auth.service';
 import { UIService } from 'src/app/shared/ui.service';
 import { Router } from '@angular/router';
-import { finalize } from 'rxjs/operators';
+import { finalize, min } from 'rxjs/operators';
+import { displayFormErrors } from 'src/app/shared/form-errors.utils';
 
 @Component({
   selector: 'app-signup',
@@ -12,10 +13,10 @@ import { finalize } from 'rxjs/operators';
   styleUrls: ['./signup.component.css']
 })
 export class SignupComponent implements OnInit {
-  signupForm: FormGroup;
-  hidePassword = true;
-  hideConfirmPassword = true;
-  isLoading = false;
+  public signupForm: FormGroup;
+  public hidePassword = true;
+  public hideConfirmPassword = true;
+  public isLoading = false;
 
   constructor(
     private fb: FormBuilder,
@@ -27,7 +28,7 @@ export class SignupComponent implements OnInit {
   /**
    * Create and validate the reactive sign up form.
    */
-  ngOnInit() {
+  ngOnInit(): void {
     this.signupForm = this.fb.group(
       {
         firstName: ['', [Validators.required, Validators.minLength(2)]],
@@ -44,62 +45,21 @@ export class SignupComponent implements OnInit {
   /**
    *  Getter for easy access to form fields.
    */
-  get formCtrls(): { [key: string]: AbstractControl } {
+  public get formCtrls(): { [key: string]: AbstractControl } {
     return this.signupForm.controls;
   }
 
   /**
-   * Handle sign up form errors -> email field.
+   * Displays form errors.
    */
-  getFirstNameErrors() {
-    if (this.formCtrls.firstName.hasError('required')) {
-      return 'This field is required';
-    } else if (this.formCtrls.firstName.hasError('minlength')) {
-      return 'Username must have minimum 2 characters';
-    }
-    return null;
-  }
-
-  /**
-   * Handle sign up form errors -> email field.
-   */
-  getEmailErrors() {
-    if (this.formCtrls.email.hasError('required')) {
-      return 'You must enter a valid email';
-    } else if (this.formCtrls.email.hasError('email')) {
-      return 'This.form is not a valid email';
-    }
-    return null;
-  }
-
-  /**
-   * Handle sign up form errors -> password field.
-   */
-  getPasswordErrors() {
-    if (this.formCtrls.password.hasError('required')) {
-      return 'You must enter a password';
-    } else if (this.formCtrls.password.hasError('minlength')) {
-      return 'The password is too short. Please enter minimum 6 characters';
-    }
-    return null;
-  }
-
-  /**
-   * Handle sign up form errors -> confirm-password field.
-   */
-  getConfirmPasswordErrors() {
-    if (this.formCtrls.confirmPassword.hasError('required')) {
-      return 'You must confirm your password';
-    } else if (this.formCtrls.confirmPassword.hasError('mustMatch')) {
-      return 'Passwords do not match';
-    }
-    return null;
+  public displayFormErrors(control: AbstractControl, placeholder: string, minLength?: number): string {
+    return displayFormErrors(control, placeholder, minLength);
   }
 
   /**
    * Signup user.
    */
-  onSubmit() {
+  public onSubmit(): void {
     this.isLoading = true;
     this.authService
       .signup(

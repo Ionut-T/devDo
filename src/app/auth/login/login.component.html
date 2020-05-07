@@ -3,7 +3,7 @@
   <mat-form-field>
     <input matInput type="email" placeholder="Enter your email" formControlName="email" />
     <mat-error *ngIf="formCtrls.email.invalid">
-      {{ emailErrorHandler() }}
+      {{ displayFormErrors(formCtrls.email, 'Email') }}
     </mat-error>
   </mat-form-field>
 
@@ -18,7 +18,7 @@
       {{ hidePassword ? 'visibility_off' : 'visibility' }}
     </mat-icon>
     <mat-error *ngIf="formCtrls.password.invalid">
-      {{ passwordErrorHandler() }}
+      {{ displayFormErrors(formCtrls.password, 'Password') }}
     </mat-error>
   </mat-form-field>
   <button mat-button type="submit" color="primary" [disabled]="loginForm.invalid">Log In</button>

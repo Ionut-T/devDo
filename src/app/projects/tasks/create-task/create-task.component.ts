@@ -6,6 +6,7 @@ import { TaskHttpService } from '../task-http.service';
 import { TaskStateService } from '../task-state.service';
 import { IProject } from '../../project.model';
 import { Mode, ModalTaskTitle } from 'src/app/shared/enums';
+import { displayFormErrors } from 'src/app/shared/form-errors.utils';
 
 /**
  * Dynamic component for creating new tasks
@@ -71,29 +72,15 @@ export class CreateTaskComponent implements OnInit, OnDestroy {
   }
 
   /**
-   * Display title errors.
+   * Displays form errors.
    */
-  public getTitleErrors(): string {
-    if (this.title.hasError('required')) {
-      return 'You must add a title!';
-    } else if (this.title.hasError('minlength')) {
-      return 'The title must have minimum 3 characters';
-    } else if (this.title.hasError('maxlength')) {
-      return 'The title must have maximum 20 characters';
-    }
-  }
-
-  /**
-   * Display title errors.
-   */
-  public getDescriptionErrors(): string {
-    if (this.description.hasError('required')) {
-      return 'You must add a description!';
-    } else if (this.description.hasError('minlength')) {
-      return 'The description must have minimum 3 characters';
-    } else if (this.description.hasError('maxlength')) {
-      return 'The description must have maximum 1000 characters';
-    }
+  public displayFormErrors(
+    control: AbstractControl,
+    placeholder: string,
+    minLength: number,
+    maxlength: number
+  ): string {
+    return displayFormErrors(control, placeholder, minLength, maxlength);
   }
 
   /**
