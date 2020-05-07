@@ -7,8 +7,8 @@ import { PageNotFoundComponent } from './core/page-not-found/page-not-found.comp
 const routes: Routes = [
   { path: '', component: HomeComponent, data: { animation: 'isLeft' } },
   {
-    path: 'board',
-    loadChildren: () => import('./board/board.module').then(m => m.BoardModule),
+    path: 'projects',
+    loadChildren: () => import('./projects/projects.module').then(m => m.ProjectsModule),
     canLoad: [AuthGuard]
   },
   {

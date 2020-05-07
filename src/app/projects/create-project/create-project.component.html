@@ -1,0 +1,16 @@
+<app-modal [title]="modalTitle" (close)="onClose()">
+  <form class="modal__form" [formGroup]="projectForm" (ngSubmit)="onSave()">
+    <mat-form-field>
+      <input matInput placeholder="name" formControlName="name" />
+      <mat-error *ngIf="name.invalid"> {{ displayFormErrors(name, 'Name', 3, 20) }} </mat-error>
+    </mat-form-field>
+    <mat-form-field>
+      <textarea matInput placeholder="description" rows="5" formControlName="description"></textarea>
+      <mat-error *ngIf="description.invalid"> {{ displayFormErrors(description, 'Description', 3, 100) }} </mat-error>
+    </mat-form-field>
+    <div>
+      <button type="submit" mat-button color="primary" [disabled]="projectForm.invalid">SAVE</button>
+      <button type="button" mat-button color="warn" (click)="onClose()">CANCEL</button>
+    </div>
+  </form>
+</app-modal>

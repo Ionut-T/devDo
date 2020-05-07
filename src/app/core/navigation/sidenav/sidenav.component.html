@@ -10,12 +10,12 @@
     <mat-nav-list>
       <a
         mat-list-item
-        routerLink="/board"
+        routerLink="/projects"
         routerLinkActive="active"
         *ngIf="isLoggedIn$ | async"
         (click)="drawer.close()"
       >
-        My Board
+        My Projects
       </a>
       <a
         mat-list-item

@@ -4,6 +4,9 @@ import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
 import { TaskHttpService } from '../task-http.service';
 import { TaskStateService } from '../task-state.service';
+import { IProject } from '../../project.model';
+import { Mode, ModalTaskTitle } from 'src/app/shared/enums';
+import { displayFormErrors } from 'src/app/shared/form-errors.utils';
 
 /**
  * Dynamic component for creating new tasks
@@ -14,11 +17,12 @@ import { TaskStateService } from '../task-state.service';
   styleUrls: ['./create-task.component.css']
 })
 export class CreateTaskComponent implements OnInit, OnDestroy {
-  taskForm: FormGroup;
-  mode: 'create' | 'edit';
-  modalTitle: 'Create Task' | 'Edit Task';
+  public taskForm: FormGroup;
+  public mode: Mode;
+  public modalTitle: ModalTaskTitle;
   @Output() close = new EventEmitter<void>();
   private taskId: string;
+  private project: IProject;
   private destroy$ = new Subject<void>();
 
   constructor(private taskHttpService: TaskHttpService, private taskStateService: TaskStateService) {}
@@ -26,7 +30,7 @@ export class CreateTaskComponent implements OnInit, OnDestroy {
   /**
    * Initialize task form.
    */
-  ngOnInit() {
+  ngOnInit(): void {
     this.taskForm = new FormGroup({
       title: new FormControl(null, {
         validators: [Validators.required, Validators.minLength(3), Validators.maxLength(20)]
@@ -38,70 +42,63 @@ export class CreateTaskComponent implements OnInit, OnDestroy {
 
     this.taskStateService.taskIdListener$.pipe(takeUntil(this.destroy$)).subscribe(id => (this.taskId = id));
 
+    this.project = this.taskStateService.project;
+
     if (this.taskId) {
-      this.mode = 'edit';
-      this.modalTitle = 'Edit Task';
+      this.mode = Mode.Edit;
+      this.modalTitle = ModalTaskTitle.Edit;
+
       this.taskStateService
-        .getMappedTask(this.taskId)
+        .getMappedTask(this.project.url, this.taskId)
         .subscribe(task => this.taskForm.setValue({ title: task.title, description: task.description }));
     } else {
-      this.mode = 'create';
-      this.modalTitle = 'Create Task';
+      this.mode = Mode.Create;
+      this.modalTitle = ModalTaskTitle.Create;
     }
   }
 
   /**
    * Get title form control.
    */
-  get title(): AbstractControl {
+  public get title(): AbstractControl {
     return this.taskForm.get('title');
   }
 
   /**
    * Get descriptipon form control.
    */
-  get description(): AbstractControl {
+  public get description(): AbstractControl {
     return this.taskForm.get('description');
   }
 
   /**
-   * Display title errors.
+   * Displays form errors.
    */
-  getTitleErrors(): string {
-    if (this.title.hasError('required')) {
-      return 'You must add a title!';
-    } else if (this.title.hasError('minlength')) {
-      return 'The title must have minimum 3 characters';
-    } else if (this.title.hasError('maxlength')) {
-      return 'The title must have maximum 20 characters';
-    }
-  }
-
-  /**
-   * Display title errors.
-   */
-  getDescriptionErrors(): string {
-    if (this.description.hasError('required')) {
-      return 'You must add a description!';
-    } else if (this.description.hasError('minlength')) {
-      return 'The description must have minimum 3 characters';
-    } else if (this.description.hasError('maxlength')) {
-      return 'The description must have maximum 1000 characters';
-    }
+  public displayFormErrors(
+    control: AbstractControl,
+    placeholder: string,
+    minLength: number,
+    maxlength: number
+  ): string {
+    return displayFormErrors(control, placeholder, minLength, maxlength);
   }
 
   /**
    * Create or edit task.
    */
-  onSave() {
+  public onSave(): void {
     if (this.mode === 'create') {
       this.taskHttpService
-        .createTask({ id: null, title: this.title.value, description: this.description.value })
-        .subscribe(res => this.taskStateService.updateTasksList(res.body.task));
+        .createTask(this.project.url, (this.project as any)._id, {
+          id: null,
+          title: this.title.value,
+          description: this.description.value
+        })
+        .subscribe(res => this.taskStateService.taskChange(res.body.task));
     } else if (this.mode === 'edit') {
       this.taskHttpService
-        .updateTask(this.taskId, { title: this.title.value, description: this.description.value })
-        .subscribe(res => this.taskStateService.updateTasksList(res.body.task));
+        .updateTask(this.project.url, this.taskId, { title: this.title.value, description: this.description.value })
+        .subscribe(res => this.taskStateService.taskChange(res.body.task));
     }
 
     this.taskForm.reset();
@@ -111,7 +108,7 @@ export class CreateTaskComponent implements OnInit, OnDestroy {
   /**
    * Close modal.
    */
-  onClose() {
+  public onClose(): void {
     this.close.emit();
   }
 

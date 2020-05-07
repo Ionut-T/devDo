@@ -14,7 +14,7 @@ export class SidenavComponent implements OnInit {
   isDarkTheme = false;
   isHandset$: Observable<boolean>;
   isLoggedIn$: Observable<boolean>;
-  @ViewChild('drawer', { static: false }) drawer: MatSidenav;
+  @ViewChild('drawer') drawer: MatSidenav;
 
   constructor(private breakpointObserver: BreakpointObserver, private authService: AuthService) {}
 
