@@ -2,8 +2,8 @@
   display: flex;
   flex-direction: column;
   align-items: center;
-}
 
-.mat-raised-button:not(:last-child) {
-  margin-right: 30px;
+  .mat-raised-button:not(:last-child) {
+    margin-right: 30px;
+  }
 }

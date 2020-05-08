@@ -7,7 +7,7 @@ import { AuthService } from 'src/app/auth/auth.service';
 @Component({
   selector: 'app-topnav',
   templateUrl: './topnav.component.html',
-  styleUrls: ['./topnav.component.css']
+  styleUrls: ['./topnav.component.scss']
 })
 export class TopnavComponent implements OnInit {
   isHandset$: Observable<boolean>;

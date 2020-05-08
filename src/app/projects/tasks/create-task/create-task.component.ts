@@ -14,7 +14,7 @@ import { displayFormErrors } from 'src/app/shared/form-errors.utils';
 @Component({
   selector: 'app-create-task',
   templateUrl: './create-task.component.html',
-  styleUrls: ['./create-task.component.css']
+  styleUrls: ['./create-task.component.scss']
 })
 export class CreateTaskComponent implements OnInit, OnDestroy {
   public taskForm: FormGroup;
