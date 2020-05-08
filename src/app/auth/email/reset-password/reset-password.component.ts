@@ -1,15 +1,16 @@
 import { Component, OnInit } from '@angular/core';
-import { FormGroup, FormBuilder, Validators, AbstractControl } from '@angular/forms';
+import { FormGroup, FormBuilder, Validators, AbstractControl, FormControl } from '@angular/forms';
 import { MustMatch } from '../../signup/must-match.validator';
 import { AuthService } from '../../auth.service';
 import { UIService } from 'src/app/shared/ui.service';
 import { Router, ActivatedRoute } from '@angular/router';
 import { map, switchMap } from 'rxjs/operators';
+import { displayFormErrors } from 'src/app/shared/form-errors.utils';
 
 @Component({
   selector: 'app-reset-password',
   templateUrl: './reset-password.component.html',
-  styleUrls: ['./reset-password.component.css']
+  styleUrls: ['./reset-password.component.scss']
 })
 export class ResetPasswordComponent implements OnInit {
   resetForm: FormGroup;
@@ -44,27 +45,10 @@ export class ResetPasswordComponent implements OnInit {
   }
 
   /**
-   * Get password errors.
+   * Displays control errors.
    */
-  getPasswordErrors() {
-    if (this.formCtrls.password.hasError('required')) {
-      return 'You must enter a password';
-    } else if (this.formCtrls.password.hasError('minlength')) {
-      return 'The password is too short. Please enter minimum 6 characters';
-    }
-    return null;
-  }
-
-  /**
-   * Get confirm password errors.
-   */
-  getConfirmPasswordErrors() {
-    if (this.formCtrls.confirmPassword.hasError('required')) {
-      return 'You must confirm your password';
-    } else if (this.formCtrls.confirmPassword.hasError('mustMatch')) {
-      return 'Passwords do not match';
-    }
-    return null;
+  public displayFormErrors(control: FormControl, placeholder: string): string {
+    return displayFormErrors(control, placeholder);
   }
 
   /**

@@ -2,8 +2,8 @@
   margin-bottom: 10px;
 }
 
-@media only screen and (max-width: 1003px) {
-  .mat-h1 {
+.mat-h1 {
+  @media only screen and (max-width: 1003px) {
     margin-top: 20px;
   }
 }

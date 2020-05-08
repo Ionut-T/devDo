@@ -5,7 +5,7 @@ import { TaskStateService } from '../task-state.service';
 @Component({
   selector: 'app-tasks-card-list',
   templateUrl: './tasks-card-list.component.html',
-  styleUrls: ['./tasks-card-list.component.css']
+  styleUrls: ['./tasks-card-list.component.scss']
 })
 export class TasksCardListComponent {
   @Input() tasks: ITask[];

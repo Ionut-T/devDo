@@ -10,7 +10,7 @@ import { displayFormErrors } from 'src/app/shared/form-errors.utils';
 @Component({
   selector: 'app-signup',
   templateUrl: './signup.component.html',
-  styleUrls: ['./signup.component.css']
+  styleUrls: ['./signup.component.scss']
 })
 export class SignupComponent implements OnInit {
   public signupForm: FormGroup;
