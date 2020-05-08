@@ -5,11 +5,12 @@ import { UserService } from '../../user.service';
 import { map, concatMap, catchError } from 'rxjs/operators';
 import { FormControl, Validators } from '@angular/forms';
 import { UIService } from 'src/app/shared/ui.service';
+import { displayFormErrors } from 'src/app/shared/form-errors.utils';
 
 @Component({
   selector: 'app-verify-email',
   templateUrl: './verify-email.component.html',
-  styleUrls: ['./verify-email.component.css']
+  styleUrls: ['./verify-email.component.scss']
 })
 export class VerifyEmailComponent implements OnInit {
   email: FormControl;
@@ -47,15 +48,10 @@ export class VerifyEmailComponent implements OnInit {
   }
 
   /**
-   * Handle email errors.
+   * Displays control errors.
    */
-  getEmailErrors(): string {
-    if (this.email.hasError('required')) {
-      return 'You must enter your email';
-    } else if (this.email.hasError('email')) {
-      return 'This is not a valid email';
-    }
-    return null;
+  public displayFormErrors(control: FormControl, placeholder: string): string {
+    return displayFormErrors(control, placeholder);
   }
 
   /**

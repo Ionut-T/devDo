@@ -1,9 +1,6 @@
 import { Injectable } from '@angular/core';
 import { BehaviorSubject } from 'rxjs';
-import {
-  MatSnackBar,
-  MatSnackBarVerticalPosition
-} from '@angular/material/snack-bar';
+import { MatSnackBar, MatSnackBarVerticalPosition } from '@angular/material/snack-bar';
 
 /**
  * User interface service
@@ -19,12 +16,7 @@ export class UIService {
   /**
    * Display a snack bar to inform user about a change or error
    */
-  showSnackBar(
-    message: string,
-    action: any,
-    duration: number,
-    position: MatSnackBarVerticalPosition
-  ) {
+  showSnackBar(message: string, action: any, duration: number, position: MatSnackBarVerticalPosition) {
     this.snackBar.open(message, action, {
       duration,
       verticalPosition: position

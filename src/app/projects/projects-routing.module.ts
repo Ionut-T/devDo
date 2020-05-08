@@ -5,7 +5,7 @@ import { TasksComponent } from './tasks/tasks.component';
 
 const routes: Routes = [
   { path: '', component: ProjectsComponent },
-  { path: ':projectUrl', component: TasksComponent }
+  { path: ':projectUrl', loadChildren: () => import('./tasks/tasks.module').then(m => m.TasksModule) }
 ];
 
 @NgModule({
