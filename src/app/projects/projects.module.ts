@@ -9,21 +9,11 @@ import { ModalModule } from '../components/modal/modal.module';
 
 import { ProjectsRoutingModule } from './projects-routing.module';
 import { ProjectsComponent } from './projects.component';
-import { TasksComponent } from './tasks/tasks.component';
-import { CreateTaskComponent } from './tasks/create-task/create-task.component';
-import { UppercaseFirstLetterPipe } from './uppercase-first-letter.pipe';
 import { CreateProjectComponent } from './create-project/create-project.component';
-import { TasksCardListComponent } from './tasks/tasks-card-list/tasks-card-list.component';
+import { PipesModule } from '../pipes/pipes.module';
 
 @NgModule({
-  declarations: [
-    ProjectsComponent,
-    TasksComponent,
-    CreateTaskComponent,
-    UppercaseFirstLetterPipe,
-    CreateProjectComponent,
-    TasksCardListComponent
-  ],
+  declarations: [ProjectsComponent, CreateProjectComponent],
   imports: [
     CommonModule,
     FormsModule,
@@ -31,7 +21,8 @@ import { TasksCardListComponent } from './tasks/tasks-card-list/tasks-card-list.
     ProjectsRoutingModule,
     MaterialModule,
     DialogModule,
-    ModalModule
+    ModalModule,
+    PipesModule
   ]
 })
 export class ProjectsModule {}
